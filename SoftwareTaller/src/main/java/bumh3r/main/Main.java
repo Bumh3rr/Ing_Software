@@ -44,7 +44,6 @@ public class Main extends JFrame {
             System.setProperty("apple.awt.application.appearance", "system");
             getRootPane().putClientProperty("apple.awt.windowTitleVisible", false);
             getRootPane().putClientProperty("apple.awt.fullscreenable", true);
-
         } else if (SystemInfo.isWindows) {
             System.setProperty("Flatlaf.useWindowDecorations", "true");
             System.setProperty("JRootPane.useWindowDecorations", "true");
