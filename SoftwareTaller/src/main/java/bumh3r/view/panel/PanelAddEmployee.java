@@ -177,9 +177,9 @@ public class PanelAddEmployee extends Panel {
             this.street.setText("");
             this.zip.setValue(null);
             this.sex.setSelectedIndex(0);
-            this.comboBoxAddress.getStates().getModel().setSelectedItem(0);
-            this.typeEmployee.getModel().setSelectedItem(0);
+            this.comboBoxAddress.getStates().setSelectedIndex(0);
             this.comboBoxAddress.getMunicipality().removeAllItems();
+            this.typeEmployee.setSelectedIndex(0);
         });
     }
 }

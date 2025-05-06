@@ -113,19 +113,6 @@ public class FormsManager {
         });
     }
 
-    public void showFormsLogin(Class<? extends Form> clase) {
-        EventQueue.invokeLater(() -> {
-            FlatAnimatedLafChange.showSnapshot();
-            frame.getContentPane().removeAll();
-            Form form = AllFormsMain.getForm(clase);
-            form.formCheckUI();
-            frame.getContentPane().add(form);
-            frame.revalidate();
-            frame.repaint();
-            FlatAnimatedLafChange.hideSnapshotWithAnimation();
-        });
-    }
-
     private static MainForms getMainForm() {
         if (mainForm == null) {
             mainForm = new MainForms();

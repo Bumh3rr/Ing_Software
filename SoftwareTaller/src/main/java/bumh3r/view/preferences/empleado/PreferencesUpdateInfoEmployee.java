@@ -1,4 +1,4 @@
-package bumh3r.view.panel.preferences.empleado;
+package bumh3r.view.preferences.empleado;
 
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.comboBox.ComboBoxAddress;
@@ -6,13 +6,9 @@ import bumh3r.components.comboBox.ComboBoxGenero;
 import bumh3r.components.input.InputText;
 import bumh3r.components.input.InputTextCP;
 import bumh3r.components.input.InputTextPhone;
-import bumh3r.controller.EmpleadoViewController;
-import bumh3r.dao.EmpleadoDAO;
 import bumh3r.dao.TipoEmpleadoDAO;
-import bumh3r.model.Empleado;
 import bumh3r.model.New.EmpleadoN;
 import bumh3r.model.New.TipoEmpleado;
-import bumh3r.model.TypeEmpleado;
 import bumh3r.model.other.EstadosMx;
 import bumh3r.notifications.Notify;
 import bumh3r.request.DireccionRequest;
@@ -22,10 +18,10 @@ import bumh3r.thread.PoolThreads;
 import bumh3r.utils.CheckExpression;
 import bumh3r.utils.CheckInput;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
+import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import net.miginfocom.swing.MigLayout;
 import raven.modal.Toast;
@@ -39,26 +35,20 @@ public class PreferencesUpdateInfoEmployee extends Preferences {
     private ComboBoxAddress comboBoxAddress;
     private FlatComboBox<TipoEmpleado> typeEmployee;
 
-    public PreferencesUpdateInfoEmployee(Object id, String key) {
-        super(id, key);
+    public PreferencesUpdateInfoEmployee(Object id, String key, ActionListener... events) {
+        super(id, key,events);
         initComponents();
-        setupEvent();
         init();
-    }
-
-    public void setupEvent() {
-        saveButton.addActionListener((x) -> {
-            Toast.closeAll();
-            EmpleadoRequest value = getValue();
-            if (Toast.checkPromiseId(EmpleadoViewController.KEY) || value == null) return;
-            EmpleadoN empleado = (EmpleadoN) getIdentifier();
-            empleado = new EmpleadoDAO().update(empleado.getId(), value);
-        });
     }
 
     @Override
     public String title() {
         return "Actualizar Información";
+    }
+
+    @Override
+    public void installEvents() {
+        saveButton.addActionListener(getEvents()[0]);
     }
 
     @Override

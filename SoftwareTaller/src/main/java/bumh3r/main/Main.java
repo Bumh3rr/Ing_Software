@@ -1,6 +1,7 @@
 package bumh3r.main;
 
 import bumh3r.dao.EmpleadoDAO;
+import bumh3r.dao.JPAUtil;
 import bumh3r.dao.UsuarioDao;
 import bumh3r.fonts.FontPublicaSans;
 import bumh3r.model.New.DireccionN;
@@ -62,12 +63,14 @@ public class Main extends JFrame {
             //getRootPane().putClientProperty("apple.awt.fullWindowContent", true);
             getRootPane().putClientProperty("apple.awt.transparentTitleBar", true);
         }
+        setVisible(true);
     }
 
     public static void main(String[] args) {
         FlatLaf.registerCustomDefaultsSource("theme");
         FlatMacDarkLaf.setup();
         UIManager.put("defaultFont", FontPublicaSans.getInstance().getFont(FontPublicaSans.FontType.MEDIUM, 13f));
-        EventQueue.invokeLater(() -> new Main().setVisible(true));
+        EventQueue.invokeLater(Main::new);
+        PoolThreads.getInstance().execute(JPAUtil::getEntityManager);
     }
 }

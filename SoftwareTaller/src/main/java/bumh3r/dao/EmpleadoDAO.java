@@ -1,14 +1,14 @@
 package bumh3r.dao;
 
-import bumh3r.model.New.DireccionN;
 import bumh3r.model.New.EmpleadoN;
 import bumh3r.request.EmpleadoRequest;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 import lombok.Cleanup;
 
 public class EmpleadoDAO {
-    public EmpleadoN guardar(EmpleadoN empleado) {
+    public EmpleadoN save(EmpleadoN empleado) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
@@ -34,7 +34,24 @@ public class EmpleadoDAO {
         }
     }
 
-    public List<EmpleadoN> getList() {
+    public Optional<EmpleadoN> findById(Long id){
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            EmpleadoN empleado = em.find(EmpleadoN.class, id);
+            em.getTransaction().commit();
+            return Optional.ofNullable(empleado);
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<EmpleadoN> findAll() throws Exception{
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
@@ -45,7 +62,6 @@ public class EmpleadoDAO {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
-            e.printStackTrace();
             throw e;
         } finally {
             em.close();
@@ -77,7 +93,22 @@ public class EmpleadoDAO {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
-            e.printStackTrace();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    public void update(EmpleadoN empleado) throws Exception{
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.merge(empleado);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
             throw e;
         } finally {
             em.close();

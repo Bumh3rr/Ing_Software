@@ -25,7 +25,7 @@ public class FormEmployee extends Form {
     @Override
     public void formInit() {
         containerCards.installDependent1(controller.eventShowPreferences);
-        getEventFormRefresh().run();
+        getEventFormInit().run();
     }
 
     @Override

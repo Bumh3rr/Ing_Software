@@ -1,9 +1,8 @@
-package bumh3r.view.panel.preferences.empleado;
+package bumh3r.view.preferences.empleado;
 
 import bumh3r.archive.PathResources;
 import bumh3r.components.button.ButtonRefreshIcon;
 import bumh3r.components.input.InputText;
-import bumh3r.controller.EmpleadoViewController;
 import bumh3r.fonts.FontPublicaSans;
 import bumh3r.model.Empleado;
 import bumh3r.model.New.EmpleadoN;
@@ -15,7 +14,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import net.miginfocom.swing.MigLayout;
-import raven.modal.Toast;
 
 public class PreferencesGeneralEmpleado<T> extends Preferences {
     private JLabel image, type_employee;
@@ -25,7 +23,6 @@ public class PreferencesGeneralEmpleado<T> extends Preferences {
     public PreferencesGeneralEmpleado(T identifier, String idModal, ActionListener... events) {
         super(identifier, idModal,events);
         initComponents();
-        setupEvents();
         init();
     }
 
@@ -47,31 +44,6 @@ public class PreferencesGeneralEmpleado<T> extends Preferences {
     @Override
     public String title() {
         return "Información del Empleado";
-    }
-
-    private void setupEvents() {
-        refreshButton.addActionListener((x) -> {
-//            Toast.closeAll();
-//            if (Toast.checkPromiseId(EmpleadoViewController.KEY)) return;
-//            EmpleadoN empleado = (EmpleadoN) getIdentifier();
-//            if (empleado == null) return;
-//            new EmployeeController()
-//                    .getInfoEmployee(empleado.getId(),
-//                            (response) -> {
-//                                empleado.setType_employee(response.getType_employee());
-//                                empleado.setFirstname(response.getFirstname());
-//                                empleado.setLastname(response.getLastname());
-//                                empleado.setEmail(response.getEmail());
-//                                empleado.setPhone(response.getPhone());
-//                                empleado.setRfc(response.getRfc());
-//                                empleado.setDireccion(response.getDireccion());
-//                                empleado.setSex(response.getSex());
-//                                empleado.setDate_low(response.getDate_low());
-//                                empleado.setStatus_activo(response.getStatus_activo());
-//                                empleado.setFavorite(response.isFavorite());
-//                                setValue(empleado);
-//                            });
-        });
     }
 
     private void setValue() {
