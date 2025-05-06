@@ -10,27 +10,24 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Preferences extends JPanel {
-    private Object identifier;
+public class Preferences<T> extends JPanel{
+    private T identifier;
     private String idModal;
-    private ActionListener eventButton;
-    private Runnable actionOpen;
+    private ActionListener[] events;
     private LookAndFeel oldTheme = UIManager.getLookAndFeel();
 
-    public Preferences(Object identifier, String idModal) {
+    public Preferences(T identifier, String idModal,ActionListener... events) {
         this.identifier = identifier;
         this.idModal = idModal;
+        this.events = events;
         putClientProperty(FlatClientProperties.STYLE,
                 "[light]background:lighten($Panel.background,4%);" +
-                "[dark]background:null;"
+                        "[dark]background:null;"
         );
     }
 
     public String title() {
         return "Preferences";
-    }
-
-    public void installController() {
     }
 
     public void initPreference() {
@@ -41,16 +38,7 @@ public class Preferences extends JPanel {
 
     }
 
-    public Object getValue(){
-        return null;
-    }
-
-    public void clearValue(){
-
-    }
-
-
-    public JComponent createdGramatical(String title) {
+    public JComponent createdGramaticalP(String title) {
         JLabel label = new JLabel(title);
         label.putClientProperty(FlatClientProperties.STYLE, ""
                 + "[light]foreground:lighten(@foreground,30%);"
@@ -64,4 +52,7 @@ public class Preferences extends JPanel {
         return new LabelPublicaSans(title).size(15f).type(FontPublicaSans.FontType.BOLD_BLACK);
     }
 
+    public void installEvents() {
+
+    }
 }

@@ -9,20 +9,21 @@ public class MyScrollPane extends JScrollPane {
         super(view);
         putClientProperty(FlatClientProperties.STYLE, ""
                 + "border:0,0,0,0;");
-        getHorizontalScrollBar().setUnitIncrement(10);
-        getVerticalScrollBar().setUnitIncrement(10);
+        getHorizontalScrollBar().setUnitIncrement(25);
+        getVerticalScrollBar().setUnitIncrement(25);
+        setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         setColorScroll("@background");
     }
+
     public void setColorScroll(String color) {
-        getHorizontalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
-                + "width:0;"
-        );
         getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
+                + "border:0,0,0,0;"
                 + "thumbInsets:0,0,0,0;"
                 + "thumb:lighten($ScrollBar.thumb,10%);"
                 + "pressedThumbColor:$ScrollBar.thumb;"
-                + "width:5;"
+                + "width:9;"
                 + "track:" + color + ";"
         );
     }
 }
+

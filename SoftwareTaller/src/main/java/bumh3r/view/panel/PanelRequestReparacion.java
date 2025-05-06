@@ -184,7 +184,6 @@ public class PanelRequestReparacion extends Panel {
 
         button_helpLimit.addActionListener((x)->{
             Notify.closeAll();
-            Notify.getInstance().showToast(Notify.optionBottom(), Toast.Type.DEFAULT,"El Precio y Anticipo tiene un límite de 50,000.00");
         });
         buttontRefreshTecnicos.addActionListener((x) -> {
 //            Empleado.ListTecnicos.getInstance().clean();

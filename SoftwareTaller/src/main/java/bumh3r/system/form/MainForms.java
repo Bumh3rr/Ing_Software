@@ -83,6 +83,6 @@ public class MainForms extends JPanel {
     }
 
     public void refresh() {
-        refreshLine.refresh();
+        //refreshLine.refresh();
     }
 }

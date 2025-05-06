@@ -334,7 +334,7 @@ public class PanelRequestDevice extends Panel {
     private void showReparaciones() {
         Toast.closeAll();
         ModalDialog.pushModal(new CustomModal(getPanelRequestReparacion(),
-                "Reparaciones", modal + "ic_repair.svg", PanelCreateNote.ID, eventBack, false), PanelCreateNote.ID);
+                "Reparaciones", modal + "ic_repair.svg", PanelCreateNote.ID, null, false), PanelCreateNote.ID);
     }
 
     public Consumer<Boolean> eventBack = (e) -> {

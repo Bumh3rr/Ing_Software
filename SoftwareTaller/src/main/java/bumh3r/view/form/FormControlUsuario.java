@@ -2,6 +2,7 @@ package bumh3r.view.form;
 
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.card.CardUsuario;
+import bumh3r.components.card.ContainerCards;
 import bumh3r.components.resposive.ResponsiveLayout;
 import bumh3r.modal.Config;
 import bumh3r.modal.CustomModal;
@@ -25,24 +26,20 @@ import static bumh3r.archive.PathResources.Icon.modal;
 
 public class FormControlUsuario extends Form {
     public static String ID = FormControlUsuario.class.getName();
+    private ContainerCards<Usuario> containerCards;
     private ButtonDefault buttonAddUsuario;
-    private ResponsiveLayout responsiveLayout;
-    private JPanel panelControlUsuario;
-    private JScrollPane scrollPane;
+    private ControlUsuarioViewController controller;
 
     @Override
     public void formInit() {
-        Usuario usuario = new Usuario(1L, "Usuario 1", "description", "Example", "Exmaple", LocalDateTime.now(), "Recepcionista", null);
-        Usuario usuario1 = new Usuario(2L, "Usuario 2", "description", "Example", "Exmaple", LocalDateTime.now(), "Técnico", null);
-        Usuario usuario2 = new Usuario(3L, "Usuario 3", "description", "Example", "Exmaple", LocalDateTime.now(), "Gerente", null);
-        Usuario usuario3 = new Usuario(4L, "Usuario 4", "description", "Example", "Exmaple", LocalDateTime.now(), "Administrador", null);
+        containerCards.installDependent1(controller.eventDelete);
+        containerCards.installDependent2(controller.eventChangePassword);
+        getEventFormInit().run();
+    }
 
-        List<Usuario> usuarios = new ArrayList<>();
-        usuarios.add(usuario);
-        usuarios.add(usuario1);
-        usuarios.add(usuario2);
-        usuarios.add(usuario3);
-        refreshPanelEmployee(usuarios);
+    @Override
+    public void installController() {
+        controller = new ControlUsuarioViewController(this);
     }
 
     public FormControlUsuario() {
@@ -56,6 +53,7 @@ public class FormControlUsuario extends Form {
     }
 
     private void initComponents() {
+        containerCards = new ContainerCards<>(CardUsuario.class, new ResponsiveLayout(ResponsiveLayout.JustifyContent.SPACE_AROUND, new Dimension(-1, -1), 10, 10));
         buttonAddUsuario = new ButtonDefault("Agregar Usuario");
     }
 
@@ -67,48 +65,13 @@ public class FormControlUsuario extends Form {
     }
 
     private JComponent body() {
-        JPanel panel = new JPanel(new MigLayout("fillx,wrap", "[fill]", "[][fill]"));
+        JPanel panel = new JPanel(new MigLayout("wrap,fillx,insets 0", "[fill]"));
+        panel.putClientProperty(FlatClientProperties.STYLE, ""
+                + "background:null");
         panel.add(buttonAddUsuario, "grow 0,al trail");
-        panel.add(createEmployeeContainers(), "grow,push,gapy 5 0,gapx 0 2");
+        panel.add(containerCards, "gapx 0 2,grow,push");
+        panel.add(containerCards.getPanelPaginacion(), "grow 0,al center");
         return panel;
-    }
-
-    private JComponent createEmployeeContainers() {
-        responsiveLayout = new ResponsiveLayout(ResponsiveLayout.JustifyContent.FIT_CONTENT, new Dimension(-1, -1), 10, 10);
-        panelControlUsuario = new JPanel(responsiveLayout);
-        panelControlUsuario.putClientProperty(FlatClientProperties.STYLE, ""
-                + "[light]background:darken(@background,3%);"
-                + "[dark]background:lighten(@background,3%)");
-        panelControlUsuario.putClientProperty(FlatClientProperties.STYLE, ""
-                + "border:10,10,10,10;");
-        scrollPane = new JScrollPane(panelControlUsuario);
-        scrollPane.putClientProperty(FlatClientProperties.STYLE, ""
-                + "[light]background:darken(@background,3%);"
-                + "[dark]background:lighten(@background,3%);");
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.getHorizontalScrollBar().setUnitIncrement(10);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
-        scrollPane.getHorizontalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
-                + "trackArc:$ScrollBar.thumbArc;"
-                + "thumbInsets:0,0,0,0;"
-                + "width:5;");
-        scrollPane.getVerticalScrollBar().putClientProperty(FlatClientProperties.STYLE, ""
-                + "trackArc:$ScrollBar.thumbArc;"
-                + "thumbInsets:0,0,0,0;"
-                + "width:5;");
-        return scrollPane;
-    }
-
-    public void refreshPanelEmployee(List<Usuario> list) {
-        SwingUtilities.invokeLater(() -> {
-            panelControlUsuario.removeAll();
-            list.forEach((tecnico) -> {
-                panelControlUsuario.add(new CardUsuario(tecnico, eventChangePassword, eventDelete));
-            });
-            panelControlUsuario.updateUI();
-            EventQueue.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(0));
-            updateUI();
-        });
     }
 
     private Consumer<Usuario> eventChangePassword = e -> {
@@ -132,5 +95,12 @@ public class FormControlUsuario extends Form {
                 Config.getModelShowModalFromNote(),
                 ID);
     };
+
+    public Consumer<Usuario> eventAddUsuario = (employee) ->
+            SwingUtilities.invokeLater(() -> containerCards.addItemOne(employee));
+
+    public Consumer<List<Usuario>> eventAddUsuarioCard = (list) ->
+            containerCards.addItemsAll(list);
+
 }
 

@@ -6,11 +6,17 @@ import com.formdev.flatlaf.FlatLaf;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import lombok.Getter;
+import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
 
+@Setter
+@Getter
 public class Form extends JPanel {
-
     private LookAndFeel oldTheme = UIManager.getLookAndFeel();
+    private Runnable eventFormInit;
+    private Runnable eventFormOpen;
+    private Runnable eventFormRefresh;
 
     public void formInit() {
     }

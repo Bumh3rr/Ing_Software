@@ -154,7 +154,7 @@ public class PanelModalInfoDevice extends Panel {
                                 .icon(modal + "ic_repair.svg")
                                 .buttonClose(false)
                                 .title("Reparaciones del Dispositivo")
-                                .consumer((x) -> ModalDialog.popModel(PanelModalInfoDevice.ID))
+                                .rollback(() -> ModalDialog.popModel(PanelModalInfoDevice.ID))
                                 .ID(PanelModalInfoDevice.ID)
                                 .build(),
                         PanelModalInfoDevice.ID);

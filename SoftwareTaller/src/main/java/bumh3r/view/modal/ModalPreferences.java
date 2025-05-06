@@ -1,95 +1,83 @@
-package bumh3r.view.modal.preferences;
+package bumh3r.view.modal;
 
 import bumh3r.archive.PathResources;
 import bumh3r.components.MyScrollPane;
 import bumh3r.components.button.ButtonInfoIcon;
 import bumh3r.components.label.LabelPublicaSans;
 import bumh3r.fonts.FontPublicaSans;
-import bumh3r.model.Empleado;
 import bumh3r.system.preferences.Preferences;
 import bumh3r.system.preferences.PreferencesInstance;
 import bumh3r.thread.PoolThreads;
-import bumh3r.view.panel.preferences.empleado.PreferencesInfoEmpleado;
-import bumh3r.view.panel.preferences.empleado.PreferencesUpdateInfoEmployee;
-import bumh3r.view.panel.preferences.empleado.PreferencesUpdateStatusEmployee;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import java.awt.Container;
 import java.awt.EventQueue;
+import java.awt.event.ActionListener;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
+import javax.swing.*;
+import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 import raven.modal.ModalDialog;
 import raven.modal.component.Modal;
+import raven.modal.component.ModalContainer;
 
-public class ModalPreferencesEmpleado extends Modal {
-    public static final String ID = ModalPreferencesEmpleado.class.getName();
+public class ModalPreferences<T> extends Modal {
     private JPanel panelMain;
     private LabelPublicaSans title, titleMain;
-    private ButtonInfoIcon infoIcon;
-    private JButton generalButton, updateInfoButton, updateStatusButton, closeButton;
-    private Empleado empleado;
-    private String idModal;
+    private JButton closeButton, infoIcon;
+    private T identifier;
+    private String ID;
     private int indexSelection = -1;
-    private Map<Class<? extends Preferences>, JButton> mapButtons;
+    private LinkedHashMap<Class<? extends Preferences>, ModalUtils> recurses;
 
-    public ModalPreferencesEmpleado(Empleado empleado, String idModal) {
+    public ModalPreferences(LinkedHashMap<Class<? extends Preferences>, ModalUtils> recurses, String ID) {
+        this.recurses = recurses;
+        this.ID = ID;
         initComponents();
-        initListeners();
         init();
-        this.empleado = empleado;
-        this.idModal = idModal;
-        setSelectionButton(PreferencesInfoEmpleado.class);
+    }
+
+    public ModalPreferences initial(T empleado, Class<? extends Preferences> classPreferences) {
+        this.identifier = empleado;
+        setSelectionButton(classPreferences);
+        return this;
+    }
+
+    public ModalPreferences installEventClose(Runnable eventClose) {
+        closeButton.addActionListener((x) -> eventClose.run());
+        return this;
+    }
+
+    public ModalPreferences installEventShowInfo(Runnable eventShowInfo) {
+        infoIcon.addActionListener((x) -> eventShowInfo.run());
+        return this;
     }
 
     private void initComponents() {
         title = new LabelPublicaSans("Preferences").size(18f).type(FontPublicaSans.FontType.BOLD_BLACK);
         titleMain = new LabelPublicaSans("").size(17f).type(FontPublicaSans.FontType.BOLD_BLACK_ITALIC);
-
         infoIcon = new ButtonInfoIcon();
-        generalButton = getInstanceButton("Información");
-        updateInfoButton = getInstanceButton("Actualizar Información");
-        panelMain = new JPanel(new MigLayout("wrap,fillx,insets 0", "[fill]", "[fill]"));
+        panelMain = new JPanel(new MigLayout("wrap,fillx,insets 0,h 300:n:n", "[fill]", "[fill]"));
         panelMain.putClientProperty(FlatClientProperties.STYLE, "background:null;");
-
         closeButton = new JButton();
+        closeButton.addActionListener((e) -> {
+            PreferencesInstance.getInstance().cleanPreferences(ID);
+            ModalDialog.closeModal(ID);
+            PoolThreads.getInstance().close();
+        });
         closeButton.setIcon(new FlatSVGIcon(PathResources.Icon.modal + "ic_close.svg", 0.65f));
         closeButton.putClientProperty(FlatClientProperties.STYLE, "" +
                 "margin:5,5,5,5;" +
                 getStylesNull() +
                 "background:darken(@background,1%);"
         );
-
-        updateStatusButton = new JButton("Actualizar Estado");
-        updateStatusButton.putClientProperty(FlatClientProperties.STYLE, "" +
-                "foreground: #ffaa00;" +
-                "margin:5,20,5,20;" +
-                "font:bold 0;" +
-                getStylesNull()
-        );
-        updateStatusButton.setIcon(new FlatSVGIcon(PathResources.Icon.home + "ic_status.svg", 0.65f)
-                .setColorFilter(new FlatSVGIcon.ColorFilter((x) -> UIManager.getColor("#ffaa00"))));
-
-        mapButtons = Map.of(
-                PreferencesInfoEmpleado.class, generalButton,
-                PreferencesUpdateInfoEmployee.class, updateInfoButton,
-                PreferencesUpdateStatusEmployee.class, updateStatusButton
-        );
+        recurses.forEach((key, value) ->
+                value.buttonPreferences.addActionListener(e -> setSelectionButton(key)));
     }
 
-    private JButton getInstanceButton(String text) {
-        JButton button = new JButton(text);
-        button.putClientProperty(FlatClientProperties.STYLE, "" +
-                "margin:5,20,5,20;" +
-                getStylesNull()
-        );
-        return button;
-    }
-
-    private String getStylesNull() {
+    private static String getStylesNull() {
         return "background: null;" +
                 "arc:16;" +
                 "borderWidth:0;" +
@@ -99,20 +87,8 @@ public class ModalPreferencesEmpleado extends Modal {
                 "innerFocusWidth:0;";
     }
 
-    private void initListeners() {
-        mapButtons.forEach((key, value) ->
-                value.addActionListener(e -> setSelectionButton(key)));
-        closeButton.addActionListener(e -> cleans());
-    }
-
-    private void cleans() {
-        PreferencesInstance.getInstance().cleanPreferences(idModal);
-        ModalDialog.closeModal(idModal);
-        PoolThreads.getInstance().close();
-    }
-
     private void init() {
-        setLayout(new MigLayout("wrap 2,fillx,insets 10, w 500:750", "[][grow]"));
+        setLayout(new MigLayout("wrap 2,fillx,insets 10, w 500:750", "[][grow]", ""));
         add(createdPanelOne(), "ay top");
         add(createdPanelMain(), "grow");
     }
@@ -148,17 +124,21 @@ public class ModalPreferencesEmpleado extends Modal {
         JPanel panel = new JPanel(new MigLayout("wrap,fillx,insets 10", "[fill]"));
         panel.add(title, "split 2,gapy 0 10,grow 0");
         panel.add(infoIcon, "grow 0");
-
-        panel.add(generalButton, "growx");
-        panel.add(updateInfoButton, "growx");
-        panel.add(updateStatusButton, "growx");
+        panel.add(createdButtons(), "growx");
         return panel;
     }
 
-    private void showPanelMain(Class<? extends Preferences> classForm) {
+    private JComponent createdButtons() {
+        JPanel panel = new JPanel(new MigLayout("wrap,fillx,insets 3", "[fill]"));
+        recurses.values().forEach((utils) -> panel.add(utils.buttonPreferences, "growx"));
+        return panel;
+    }
+
+    public void showPanelMain(Class<? extends Preferences> classForm) {
         EventQueue.invokeLater(() -> {
             FlatAnimatedLafChange.showSnapshot();
-            Preferences panel = PreferencesInstance.getInstance().getPreferencesPanel(classForm, empleado, idModal,null);
+            ActionListener[] events = this.recurses.get(classForm).getEvents();
+            Preferences panel = PreferencesInstance.getInstance().getPreferencesPanel(classForm, identifier, ID,events);
             titleMain.setText(panel.title());
             panelMain.removeAll();
             panelMain.add(new MyScrollPane(panel));
@@ -168,28 +148,77 @@ public class ModalPreferencesEmpleado extends Modal {
         });
     }
 
+    private void updateLayout() {
+        Container container = SwingUtilities.getAncestorOfClass(ModalContainer.class, ModalPreferences.this);
+        if (container != null) {
+            container.revalidate();
+        }
+    }
+
     private void setSelectionButton(Class<? extends Preferences> classPreferences) {
-        if (!mapButtons.containsKey(classPreferences)) {
+        if (!recurses.containsKey(classPreferences)) {
             throw new IllegalArgumentException("No se encontró la clase de preferencias");
         }
 
-        int newIndex = mapButtons.keySet().stream().toList().indexOf(classPreferences);
+        int newIndex = recurses.keySet().stream().toList().indexOf(classPreferences);
         if (indexSelection == newIndex) return;
 
         if (indexSelection != -1) {
-            getValueByIndex(mapButtons, indexSelection).setSelected(false);
+            getValueByIndex(recurses, indexSelection).buttonPreferences
+                    .setSelected(false);
         }
-
         indexSelection = newIndex;
-        mapButtons.get(classPreferences).setSelected(true);
+        recurses.get(classPreferences).buttonPreferences.setSelected(true);
         showPanelMain(classPreferences);
+        updateLayout();
     }
 
-    public <K, V> V getValueByIndex(Map<K, V> map, int index) {
+    private  <K, V> V getValueByIndex(Map<K, V> map, int index) {
         if (index < 0 || index >= map.size()) {
             throw new IndexOutOfBoundsException("Índice fuera de los límites del mapa");
         }
         return map.values().toArray((V[]) new Object[0])[index];
+    }
+
+
+    public static class ButtonPreferences extends JButton {
+        public ButtonPreferences(String text) {
+            this(text, null);
+            putClientProperty(FlatClientProperties.STYLE, "" +
+                    "margin:5,20,5,20;" +
+                    getStylesNull()
+            );
+        }
+
+        public ButtonPreferences(String text, String color) {
+            this(text, color, null);
+        }
+
+        public ButtonPreferences(String text, String color, String icon) {
+            super(text);
+            putClientProperty(FlatClientProperties.STYLE, "" +
+                    "foreground:" + color + ";" +
+                    "margin:5,20,5,20;" +
+                    "font:bold 0;" +
+                    getStylesNull()
+            );
+            if (icon == null) return;
+            setIcon(new FlatSVGIcon(icon, 0.65f)
+                    .setColorFilter(new FlatSVGIcon.ColorFilter((x) -> UIManager.getColor(color))));
+        }
+
+
+    }
+
+    public static class ModalUtils{
+        private ButtonPreferences buttonPreferences;
+        @Getter
+        private ActionListener[] events;
+
+        public ModalUtils(ButtonPreferences buttonPreferences, ActionListener... events) {
+            this.buttonPreferences = buttonPreferences;
+            this.events = events;
+        }
     }
 
 }

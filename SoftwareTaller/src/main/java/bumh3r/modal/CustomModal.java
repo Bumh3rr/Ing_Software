@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.util.function.Consumer;
 import javax.swing.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +16,8 @@ import raven.modal.ModalDialog;
 import raven.modal.Toast;
 import raven.modal.component.Modal;
 
-@Slf4j
 @Builder
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class CustomModal extends Modal {
 
@@ -24,32 +25,9 @@ public class CustomModal extends Modal {
     private final String title;
     private final String icon;
     private final String ID;
-    private final Consumer consumer;
+    private final Runnable rollback;
     private boolean buttonClose;
 
-    private static JLabel titleLabel;
-    private static  JLabel iconLabel;
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        log.info("titleLabel getWidth: " + titleLabel.getWidth());
-        log.info("titleLabel getHeight: " + titleLabel.getHeight());
-
-        log.info("iconLabel getWidth: " + iconLabel.getWidth());
-        log.info("iconLabel getHeight: " + iconLabel.getHeight());
-    }
-
-
-    public CustomModal(Component component, String title, String icon, String ID, Consumer<Boolean> consumer, boolean buttonClose) {
-        this.component = component;
-        this.title = title;
-        this.icon = icon;
-        this.ID = ID;
-        this.consumer = consumer;
-        this.buttonClose = buttonClose;
-    }
 
     @Override
     public void installComponent() {
@@ -62,7 +40,7 @@ public class CustomModal extends Modal {
         JPanel panel = new JPanel(new MigLayout("fillx,insets 5 20 3 20,gapx 10"));
         panel.putClientProperty(FlatClientProperties.STYLE, "" +
                 "background:null;");
-        if (consumer != null) {
+        if (rollback != null) {
             panel.add(createBackButton());
         }
         if (icon != null){
@@ -76,10 +54,10 @@ public class CustomModal extends Modal {
     }
 
     protected Component createTitle() {
-        titleLabel = new JLabel(title);
-        titleLabel.putClientProperty(FlatClientProperties.STYLE, "" +
+        JLabel label = new JLabel(title);
+        label.putClientProperty(FlatClientProperties.STYLE, "" +
                 "font:bold +5;");
-        return titleLabel;
+        return label;
     }
 
     protected JComponent createBackButton() {
@@ -108,15 +86,15 @@ public class CustomModal extends Modal {
 
     private void CallBack() {
         Toast.closeAll();
-        consumer.accept(true);
+        SwingUtilities.invokeLater(rollback::run);
     }
 
     protected JLabel createIcon() {
         FlatSVGIcon svgIcon = new FlatSVGIcon(icon, 0.4f).setColorFilter(new FlatSVGIcon.ColorFilter(color -> UIManager.getColor("Component.accentColor")));
-        iconLabel = new JLabel(svgIcon);
-        iconLabel.putClientProperty(FlatClientProperties.STYLE, "" +
+        JLabel label = new JLabel(svgIcon);
+        label.putClientProperty(FlatClientProperties.STYLE, "" +
                 "border:10,10,10,10,fade($Component.accentColor,50%),,999;" +
                 "background:fade($Component.accentColor,10%);");
-        return iconLabel;
+        return label;
     }
 }
