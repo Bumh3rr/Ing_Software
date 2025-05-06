@@ -13,7 +13,7 @@ Este softwar se está realizando para la materia de Ingeníria de Software,
 
 ## Administración de Empleados
 ![](images/image-1.png)
-![](images/image-1.png)
-![](images/image-1.png)
-![](images/image-1.png)
-![](images/image-1.png)
+![](images/image-2.png)
+![](images/image-3.png)
+![](images/image-4.png)
+![](images/image-5.png)
