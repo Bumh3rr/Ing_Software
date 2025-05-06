@@ -65,7 +65,7 @@ public class PanelRegisterSale extends Panel {
                             .title("Seleccionar Reparaciónes")
                             .icon(modal + "ic_select.svg")
                             .buttonClose(false)
-                            .consumer((x)-> ModalDialog.popModel(ID))
+                            .rollback(()-> ModalDialog.popModel(ID))
                             .ID(ID)
                             .build(),
                     ID
@@ -80,7 +80,7 @@ public class PanelRegisterSale extends Panel {
                             .title("Seleccionar Refacciones")
                             .icon(modal + "ic_repair.svg")
                             .buttonClose(false)
-                            .consumer((x)-> ModalDialog.popModel(ID))
+                            .rollback(()-> ModalDialog.popModel(ID))
                             .ID(ID)
                             .build(),
                     ID

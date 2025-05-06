@@ -39,5 +39,10 @@ public class PathResources {
         public static final ImageIcon LOGO_DEFAULT__SALE_NOTE_IMAGE = new ImageIcon(PathResources.class.getResource(Img.defaults + LOGO_DEFAULT_SALE_NOTE));
         public static final ImageIcon LOGO_DEFAULT_TECHNICIAN_IMAGE = new ImageIcon(PathResources.class.getResource(Img.defaults + LOGO_DEFAULT_TECHNICIAN));
         public static final ImageIcon LOGO_DEFAULT_TALLER_IMAGE = new ImageIcon(PathResources.class.getResource(Img.defaults + LOGO_DEFAULT_TALLER));
+
+        public static final String LOGO_DEFAULT_EMPLOYEE_MAM = "img_default-tecnico-2.png";
+        public static final String LOGO_DEFAULT_EMPLOYEE_WOMAN = "img_default-employee-woman.png";
+        public static final ImageIcon ICON_DEFAULT_EMPLOYEE_MAN_IMAGE = new ImageIcon(PathResources.class.getResource(Img.defaults + LOGO_DEFAULT_EMPLOYEE_MAM));
+        public static final ImageIcon ICON_DEFAULT_EMPLOYEE_WOMAN_IMAGE = new ImageIcon(PathResources.class.getResource(Img.defaults + LOGO_DEFAULT_EMPLOYEE_WOMAN));
     }
 }

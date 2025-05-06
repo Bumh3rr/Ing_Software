@@ -1,32 +1,38 @@
 package bumh3r.components.card;
 
 import bumh3r.archive.PathResources;
+import bumh3r.components.PanelStatus;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.model.Empleado;
+import bumh3r.model.New.EmpleadoN;
+import bumh3r.model.other.Genero;
+import bumh3r.thread.PoolThreads;
+import bumh3r.utils.CreatedAvatar;
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.FlatSVGIcon;
-import com.formdev.flatlaf.extras.components.FlatLabel;
 import java.awt.Cursor;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
-import raven.extras.AvatarIcon;
 
-public class CardTechnician extends JPanel {
+public class EmpleadoCard extends Card {
 
-    private final Empleado empleado;
-    private final Consumer<Empleado> event;
+    private final EmpleadoN empleado;
+    private final BiConsumer<EmpleadoN, Runnable> event;
     private JLabel icon;
+    @Getter
+    private Long id;
+    private PanelStatus status;
     private JButton button;
     private JTextPane description;
 
-    public CardTechnician(Empleado empleado, Consumer<Empleado> event) {
+    public EmpleadoCard(EmpleadoN empleado, BiConsumer<EmpleadoN, Runnable> event1) {
+        super(empleado, event1);
         this.empleado = empleado;
-        this.event = event;
+        this.event = event1;
         init();
     }
 
@@ -46,7 +52,8 @@ public class CardTechnician extends JPanel {
         JPanel header = new JPanel(new MigLayout("fill,insets 10 10 0 0", "[fill,center]", "[center]"));
         header.putClientProperty(FlatClientProperties.STYLE, ""
                 + "background:null");
-        icon = new JLabel(new AvatarIcon(CardTechnician.class.getResource(PathResources.Img.defaults + PathResources.Default.LOGO_DEFAULT_TECHNICIAN), 100, 100, 16));
+        icon = new JLabel();
+        setImageI();
         header.add(icon);
         return header;
     }
@@ -66,30 +73,37 @@ public class CardTechnician extends JPanel {
                 + "background:null;"
                 + "[light]foreground:tint($Label.foreground,30%);"
                 + "[dark]foreground:shade($Label.foreground,30%)");
-        description.setText(
-                "ID: " + empleado.getId()
-                        + "\nNombre: " + empleado.getFirstname() + ""
-                        + "\nApellidos: " + empleado.getLastname()
-                        + "\nTeléfono: " + empleado.getPhone()
-        );
-
         button = new ButtonDefault("Visualizar");
-        button.addActionListener(e -> event.accept(empleado));
-
-        FlatLabel label_status = new FlatLabel();
-        label_status.setText(empleado.getStatus_activo());
-        label_status.setIcon(new FlatSVGIcon(PathResources.Icon.modal + (empleado.getStatus_activo().equals(Empleado.Status.Activo.name()) ? "ic_active.svg" : "ic_inactive.svg")));
-        label_status.putClientProperty(FlatClientProperties.STYLE, ""
-                + "border:8,8,8,8;"
-                + "arc:$Component.arc;"
-                + ((empleado.getStatus_activo().equals(Empleado.Status.Activo.name())) ? "background:fade(#1aad2c,10%);" : "background:fade(#F17027,10%);"));
-
+        button.addActionListener(e -> event.accept(empleado, this::refresh));
+        status = new PanelStatus();
+        setInfo();
         body.add(title);
         body.add(description);
-        body.add(label_status);
+        body.add(status);
 
         body.add(button, "gapy 10,al trail");
         return body;
     }
 
+    public void setInfo() {
+        status.setValue(empleado.getIsActivo(), empleado.getIsActivo() ? Empleado.Status.Activo.name() : Empleado.Status.Inactivo.name());
+        description.setText(
+                "ID: " + empleado.getId()
+                        + "\nNombre: " + empleado.getNombre() + ""
+                        + "\nApellidos: " + empleado.getApellido()
+                        + "\nTeléfono: " + empleado.getTelefono()
+        );
+    }
+
+    public void setImageI() {
+        PoolThreads.getInstance().execute(() ->
+                icon.setIcon(CreatedAvatar.created(Genero.MASCULINO.getNombre().contains(this.empleado.getGenero()) ?
+                                PathResources.Default.ICON_DEFAULT_EMPLOYEE_MAN_IMAGE : PathResources.Default.ICON_DEFAULT_EMPLOYEE_WOMAN_IMAGE,
+                        80, 80, 3.9f)));
+    }
+
+    public void refresh() {
+        setInfo();
+        setImageI();
+    }
 }

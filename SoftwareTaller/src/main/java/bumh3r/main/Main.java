@@ -1,6 +1,12 @@
 package bumh3r.main;
 
+import bumh3r.dao.EmpleadoDAO;
+import bumh3r.dao.UsuarioDao;
 import bumh3r.fonts.FontPublicaSans;
+import bumh3r.model.New.DireccionN;
+import bumh3r.model.New.EmpleadoN;
+import bumh3r.model.New.TipoEmpleado;
+import bumh3r.model.Usuario;
 import bumh3r.notifications.Notify;
 import bumh3r.system.form.FormsManager;
 import bumh3r.thread.PoolThreads;
@@ -10,6 +16,8 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.formdev.flatlaf.util.SystemInfo;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.time.LocalDateTime;
+import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import raven.modal.ModalDialog;
@@ -28,7 +36,7 @@ public class Main extends JFrame {
         PoolThreads.getInstance().execute(() -> FormsManager.getInstance().initFrame(this));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(new Dimension(1240, 750));
-//        setLocationRelativeTo(null);
+        setLocationRelativeTo(null);
 
         System.setProperty("flatlaf.animation", "true");
 

@@ -169,7 +169,7 @@ public class PanelModalInfoNote extends Modal {
                                 .icon(home + "ic_device.svg")
                                 .buttonClose(false)
                                 .title("Dispositivo")
-                                .consumer((x) -> ModalDialog.popModel(PanelModalInfoDevice.ID))
+                                .rollback(() -> ModalDialog.popModel(PanelModalInfoDevice.ID))
                                 .ID(PanelModalInfoDevice.ID)
                                 .build(),
                         PanelModalInfoDevice.ID);

@@ -1,12 +1,13 @@
 package bumh3r.utils;
 
-public class CheckInputs {
-    public static boolean isOnlyLetters(String input) {
-        return input.matches("^[a-zA-Z]+$");
-    }
+public class CheckExpression {
 
     public static boolean isNameValid(String input) {
-        return input.matches("^[a-zA-Z\\s]+$");
+        return input.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$");
+    }
+
+    public static boolean isValidAddress(String address) {
+        return address.matches("^[a-zA-Z0-9\\s,\\-\\.\\#]+$");
     }
 
     public static boolean isValidEmail(String email) {

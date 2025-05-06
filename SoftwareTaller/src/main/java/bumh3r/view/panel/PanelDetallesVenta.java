@@ -73,7 +73,7 @@ public class PanelDetallesVenta extends Panel {
                             .title("Agregar Pago")
                             .buttonClose(false)
                             .icon(modal + "ic_pay.svg")
-                            .consumer((y)-> ModalDialog.popModel(ID))
+                            .rollback(()-> ModalDialog.popModel(ID))
                             .ID(ID)
                             .build(),
                     ID

@@ -76,7 +76,7 @@ public class PanelCreateNote extends Panel {
                             .icon(modal + "ic_search_panel.svg")
                             .title("Buscar Cliente")
                             .ID(PanelCreateNote.ID)
-                            .consumer((x)-> ModalDialog.popModel(ID))
+                            .rollback(()-> ModalDialog.popModel(ID))
                             .buttonClose(false)
                     .build(),
                     PanelCreateNote.ID
@@ -206,7 +206,7 @@ public class PanelCreateNote extends Panel {
 
     }
 
-    private Consumer<Boolean> createEventBack = (x) -> {
+    private Runnable createEventBack = () -> {
         Toast.closeAll();
         ModalDialog.popModel(PanelCreateNote.ID);
     };

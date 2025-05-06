@@ -113,7 +113,7 @@ public class PanelClienteNotes extends Panel {
                         .icon(modal + "ic_note.svg")
                         .buttonClose(false)
                         .title("Nota")
-                        .consumer((x)->ModalDialog.popModel(FormCliente.ID))
+                        .rollback(()->ModalDialog.popModel(FormCliente.ID))
                         .ID(FormCliente.ID)
                         .build(),
                 FormCliente.ID
