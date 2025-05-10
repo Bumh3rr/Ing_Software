@@ -21,7 +21,7 @@ public class Usuario {
     private String password;
     @CreationTimestamp
     private LocalDateTime fecha_registro;
-    private Boolean admin;
+    private Boolean isAdmin;
     @ManyToOne
     @JoinColumn(name = "E_id")
     private EmpleadoN empleado;

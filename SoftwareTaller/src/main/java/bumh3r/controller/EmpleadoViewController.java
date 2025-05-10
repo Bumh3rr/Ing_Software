@@ -17,7 +17,6 @@ import bumh3r.view.preferences.empleado.PreferencesUpdateStatusEmployee;
 import java.awt.event.ActionListener;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import raven.modal.ModalDialog;
 import raven.modal.Toast;

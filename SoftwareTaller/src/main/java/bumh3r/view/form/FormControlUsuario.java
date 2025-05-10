@@ -4,19 +4,16 @@ import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.card.CardUsuario;
 import bumh3r.components.card.ContainerCards;
 import bumh3r.components.resposive.ResponsiveLayout;
+import bumh3r.controller.ControladorUsuarios;
 import bumh3r.modal.Config;
 import bumh3r.modal.CustomModal;
 import bumh3r.model.Usuario;
-import bumh3r.model.other.DateFull;
 import bumh3r.system.form.Form;
 import bumh3r.system.panel.PanelsInstances;
 import bumh3r.view.modal.ModalToas;
 import bumh3r.view.panel.PanelChangePasswordUsuario;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.*;
@@ -28,7 +25,11 @@ public class FormControlUsuario extends Form {
     public static String ID = FormControlUsuario.class.getName();
     private ContainerCards<Usuario> containerCards;
     private ButtonDefault buttonAddUsuario;
-    private ControlUsuarioViewController controller;
+    private ControladorUsuarios controller;
+
+    public void installEventShowPanelAddUsuario(Runnable event) {
+        buttonAddUsuario.addActionListener((e) -> event.run());
+    }
 
     @Override
     public void formInit() {
@@ -39,17 +40,12 @@ public class FormControlUsuario extends Form {
 
     @Override
     public void installController() {
-        controller = new ControlUsuarioViewController(this);
+        controller = new ControladorUsuarios(this);
     }
 
     public FormControlUsuario() {
         initComponents();
-        initListeners();
         init();
-    }
-
-    private void initListeners() {
-        buttonAddUsuario.addActionListener((e) -> PanelsInstances.getInstance().showPanelAddUsuario());
     }
 
     private void initComponents() {
@@ -90,8 +86,7 @@ public class FormControlUsuario extends Form {
     private Consumer<Usuario> eventDelete = e -> {
         ModalDialog.showModal(SwingUtilities.windowForComponent(this),
                 new ModalToas(ModalToas.Type.WARNING, "Eliminar Usuario", "¿Estás seguro de eliminar a " + e.getUsername() + "?",
-                        (modal, action) -> {
-                        }),
+                        (modal, action) -> {}),
                 Config.getModelShowModalFromNote(),
                 ID);
     };
@@ -102,5 +97,8 @@ public class FormControlUsuario extends Form {
     public Consumer<List<Usuario>> eventAddUsuarioCard = (list) ->
             containerCards.addItemsAll(list);
 
+    public void cleanCards() {
+        containerCards.cleanCards();
+    }
 }
 

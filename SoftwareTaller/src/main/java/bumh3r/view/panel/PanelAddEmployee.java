@@ -26,7 +26,6 @@ import net.miginfocom.swing.MigLayout;
 import raven.modal.Toast;
 
 public class PanelAddEmployee extends Panel {
-    private JTextArea description;
     private InputText firstname, lastname, email, rfc, colony, street;
     private InputTextPhone phone;
     private InputTextCP zip;
@@ -62,13 +61,11 @@ public class PanelAddEmployee extends Panel {
         comboBoxAddress = new ComboBoxAddress();
         sex = new ComboBoxGenero();
         buttonAdd = new ButtonDefault("Agregar");
-        description = new LabelForDescription("Sistema que gestiona la entrada, reparación y entrega de celulares, reflejando en los tickets información del cliente, detalles del equipo, tipo de reparación, costos y fechas clave.");
     }
 
     private void init() {
         setLayout(new MigLayout("wrap,fillx,insets 5 45 20 45, w 450:520", "[fill,grow]"));
-        add(description);
-        add(createdSubTitle("Datos Personales", 15f), "grow 0,gapy 5 5,al center");
+        add(createdSubTitle("Datos Personales", 15f), "grow 0,al center");
         add(createdGramaticalP("Nombre Completo"), "gapy 10");
         add(firstname, "split 2");
         add(lastname);

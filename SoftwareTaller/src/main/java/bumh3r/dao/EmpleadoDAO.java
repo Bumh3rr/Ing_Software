@@ -68,6 +68,24 @@ public class EmpleadoDAO {
         }
     }
 
+    // Obtener los empleados que no están relacionados con algun usuario registrado
+    public List<EmpleadoN> findAllNoUser() throws Exception{
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            List<EmpleadoN> empleados = em.createQuery("SELECT e FROM EmpleadoN e LEFT JOIN Usuario u ON e.id = u.empleado.id WHERE u.empleado.id IS NULL", EmpleadoN.class).getResultList();
+            em.getTransaction().commit();
+            return empleados;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
     public EmpleadoN update(Long id, EmpleadoRequest value){
         EntityManager em = JPAUtil.getEntityManager();
         try {

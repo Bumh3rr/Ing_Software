@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `taller_jpa`.`usuario` (
   `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
   `fecha_registro` DATETIME NOT NULL,
-  `admin` TINYINT NOT NULL DEFAULT 0,
+  `isAdmin` TINYINT NOT NULL DEFAULT 0,
   `E_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_usuario_empleado1_idx` (`E_id` ASC) VISIBLE,

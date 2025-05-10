@@ -2,10 +2,7 @@ package bumh3r.model.New;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
@@ -13,7 +10,9 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
+@Getter
+@Setter
+
 public class EmpleadoN {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +34,9 @@ public class EmpleadoN {
     @ManyToOne
     @JoinColumn(name = "TE_id")
     private TipoEmpleado tipoEmpleado;
+
+    @Override
+    public String toString() {
+        return String.format("ID: %d | %s %s",id,nombre,apellido);
+    }
 }
