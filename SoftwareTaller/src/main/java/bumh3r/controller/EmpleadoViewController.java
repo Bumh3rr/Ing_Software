@@ -8,6 +8,8 @@ import bumh3r.request.EmpleadoRequest;
 import bumh3r.system.panel.PanelsInstances;
 import bumh3r.system.preferences.Preferences;
 import bumh3r.system.preferences.PreferencesInstance;
+import bumh3r.utils.CheckExpression;
+import bumh3r.utils.CheckInput;
 import bumh3r.view.form.FormEmployee;
 import bumh3r.view.modal.ModalPreferences;
 import bumh3r.view.panel.PanelAddEmployee;
@@ -33,7 +35,7 @@ public class EmpleadoViewController extends Controller {
         this.empleadoDAO = getInstance(EmpleadoDAO.class);
         this.view.setEventFormInit(this::showEmployeeAll);
         this.view.setEventFormRefresh(this::showEmployeeAll);
-        this.view.installEventShowAddEmployee(this::showPanelAddEmployee);
+        this.view.installEventShowAddEmployee(this::mostrarPantallaAgregarEmpleado);
     }
 
     private void showEmployeeAll() {
@@ -61,39 +63,69 @@ public class EmpleadoViewController extends Controller {
                 });
     }
 
-    private void showPanelAddEmployee() {
+    // S-1
+    private void mostrarPantallaAgregarEmpleado() {
         if (panelAddEmployee == null) {
             panelAddEmployee = (PanelAddEmployee) PanelsInstances.getInstance().getPanelModal(PanelAddEmployee.class);
-            panelAddEmployee.installEvent(() -> {
-                EmpleadoN value = panelAddEmployee.getValue();
-                if (value == null || Toast.checkPromiseId(KEY)) return;
-                Notify.showPromise("Guardando ...",
-                        new ToastPromise(KEY) {
-                            @Override
-                            public void execute(PromiseCallback callback) {
-                                try {
-                                    callback.update("Guardando ...");
-                                    EmpleadoN empleado = empleadoDAO.save(value);
-                                    view.eventAddUsuario.accept(empleado);
-                                    panelAddEmployee.cleanValue();
-                                    if (ModalDialog.isIdExist(ID)) ModalDialog.closeModal(ID);
-                                    callback.done(Toast.Type.SUCCESS, "El empleado fue agregado correctamente");
-                                } catch (Exception ex) {
-                                    callback.done(Toast.Type.ERROR, "Error agregar el empleado\n" +
-                                            "Causa: " + ex.getLocalizedMessage());
-                                }
-                            }
-                        });
-            });
+            panelAddEmployee.installEvent(this::registrarNuevoEmpleado);
         }
         showPanel(panelAddEmployee, "Agregar Empleado", "ic_add-user.svg", ID, null, false);
     }
 
-    private ActionListener eventGetEmployee = (x) -> {
+    private void registrarNuevoEmpleado() {
+        EmpleadoN value = panelAddEmployee.getValue();
+        if (value == null || validarDatosEmpleado(value) || Toast.checkPromiseId(KEY)) return;
+        agregarEmpleado(value);
+    }
+
+    private void agregarEmpleado(EmpleadoN value) {
+        Notify.showPromise("Agregando Empleado ...",
+                new ToastPromise(KEY) {
+                    @Override
+                    public void execute(PromiseCallback callback) {
+                        try {
+                            callback.update("Agregando Empleado ...");
+                            EmpleadoN empleado = empleadoDAO.save(value);
+                            view.eventAddUsuario.accept(empleado);
+                            panelAddEmployee.cleanValue();
+                            if (ModalDialog.isIdExist(ID)) ModalDialog.closeModal(ID);
+                            callback.done(Toast.Type.SUCCESS, "El empleado fue agregado correctamente");
+                        } catch (Exception ex) {
+                            callback.done(Toast.Type.ERROR, "Error agregar el empleado\n" +
+                                    "Causa: " + ex.getLocalizedMessage());
+                        }
+                    }
+                });
+    }
+
+    public boolean validarDatosEmpleado(EmpleadoN value) {
+        // Datos requeridos
+        Toast.closeAll();
+        if (CheckInput.isInvalidInput(value.getNombre(), CheckExpression::isNameValid, "Nombre", "solo debe contener letras"))
+            return true;
+        if (CheckInput.isInvalidInput(value.getApellido(), CheckExpression::isNameValid, "Apellidos", "solo debe contener letras"))
+            return true;
+        if (CheckInput.isNullInput(value.getTelefono(), "Teléfono")) return true;
+        if (CheckInput.isNullInput(value.getGenero(), "Genero")) return true;
+        if (CheckInput.isNullInput(value.getTipoEmpleado(), "Tipo de Empleado")) return true;
+
+        // Opcionales
+        if (CheckInput.isOptionalInvalidInput(value.getCorreo(), CheckExpression::isValidEmail, "Correo"))
+            return true;
+        if (CheckInput.isOptionalInvalidInput(value.getRfc(), CheckExpression::isValidRFC, "RFC"))
+            return true;
+        if (CheckInput.isOptionalInvalidInput(value.getDireccion().getColonia(), CheckExpression::isValidAddress, "Colonia"))
+            return true;
+        if (CheckInput.isOptionalInvalidInput(value.getDireccion().getCalle(), CheckExpression::isValidAddress, "Calle"))
+            return true;
+        return false;
+    }
+
+    private ActionListener obtenerEmpleado = (x) -> {
         Toast.closeAll();
         PreferencesGeneralEmpleado panel = (PreferencesGeneralEmpleado) PreferencesInstance.getInstance().getInstancePreferences(PreferencesGeneralEmpleado.class);
         EmpleadoN value = (EmpleadoN) panel.getIdentifier();
-        if (panel == null || value == null || Toast.checkPromiseId(KEY)) return;
+        if (value == null || Toast.checkPromiseId(KEY)) return;
         Notify.showPromise("Obteniendo ...",
                 new ToastPromise(KEY) {
                     @Override
@@ -165,12 +197,11 @@ public class EmpleadoViewController extends Controller {
     };
 
 
-
     public BiConsumer<EmpleadoN, Runnable> eventShowPreferences = (empleado, refresh) -> {
         LinkedHashMap<Class<? extends Preferences>, ModalPreferences.ModalUtils> mapActions = new LinkedHashMap<>();
-        mapActions.put(PreferencesGeneralEmpleado.class, new ModalPreferences.ModalUtils(new ModalPreferences.ButtonPreferences("General"), eventGetEmployee));
+        mapActions.put(PreferencesGeneralEmpleado.class, new ModalPreferences.ModalUtils(new ModalPreferences.ButtonPreferences("General"), obtenerEmpleado));
         mapActions.put(PreferencesUpdateInfoEmployee.class, new ModalPreferences.ModalUtils(new ModalPreferences.ButtonPreferences("Actualizar Información"), eventUpdateEmployee));
-        mapActions.put(PreferencesUpdateStatusEmployee.class, new ModalPreferences.ModalUtils(new ModalPreferences.ButtonPreferences("Actualizar Estado", "#ffaa00", PathResources.Icon.home + "ic_status.svg"),eventChangeStatusEmployee));
+        mapActions.put(PreferencesUpdateStatusEmployee.class, new ModalPreferences.ModalUtils(new ModalPreferences.ButtonPreferences("Actualizar Estado", "#ffaa00", PathResources.Icon.home + "ic_status.svg"), eventChangeStatusEmployee));
 
         showPanel(new ModalPreferences<EmpleadoN>(mapActions, ID)
                         .initial(empleado, PreferencesGeneralEmpleado.class)
@@ -196,6 +227,4 @@ public class EmpleadoViewController extends Controller {
         empleadoOrigin.getDireccion().setCalle(getEmpleado.getDireccion().getCalle());
         empleadoOrigin.getDireccion().setColonia(getEmpleado.getDireccion().getColonia());
     }
-
-
 }

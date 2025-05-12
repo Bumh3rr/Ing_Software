@@ -12,6 +12,7 @@ import bumh3r.dao.TipoEmpleadoDAO;
 import bumh3r.model.New.DireccionN;
 import bumh3r.model.New.EmpleadoN;
 import bumh3r.model.New.TipoEmpleado;
+import bumh3r.model.TypeEmpleado;
 import bumh3r.model.other.EstadosMx;
 import bumh3r.notifications.Notify;
 import bumh3r.system.panel.Panel;
@@ -94,23 +95,21 @@ public class PanelAddEmployee extends Panel {
     }
 
     public EmpleadoN getValue() {
-        Toast.closeAll();
-        if (checkInputs()) return null;
-
-        String firstnameValue = this.firstname.getText().strip();
-        String lastnameValue = this.lastname.getText().strip();
-        String phoneValue = this.phone.getValue().toString();
-        String sexValue = this.sex.getSelectedItem().toString();
-        TipoEmpleado type = ((TipoEmpleado) this.typeEmployee.getSelectedItem());
-        String stateValue = EstadosMx.getInstance().getStatesAbbreviation(this.comboBoxAddress.getStates().getSelectedItem().toString());
-        String municipalityValue = this.comboBoxAddress.getMunicipality().getSelectedItem().toString();
-        String streetValue = this.street.getText().strip();
-        String colonyValue = this.colony.getText().strip();
-        String zipValue = this.zip.getValue().toString();
+        String firstnameValue = !this.firstname.getText().isEmpty() ? this.firstname.getText().strip() : null;
+        String lastnameValue = !this.lastname.getText().isEmpty() ? this.lastname.getText().strip() : null;
+        String phoneValue = this.phone.getValue() != null ? this.phone.getValue().toString() : null;
+        String sexValue = this.sex.getSelectedItem() != null ? this.sex.getSelectedItem().toString() : null;
+        TipoEmpleado type = this.typeEmployee.getSelectedItem() != null ? ((TipoEmpleado) this.typeEmployee.getSelectedItem()) : null;
+        String stateValue = this.comboBoxAddress.getStates().getSelectedItem() != null ? EstadosMx.getInstance().getStatesAbbreviation(this.comboBoxAddress.getStates().getSelectedItem().toString()) : null;
 
         // Datos opcionales que puedes llegar hacer nulos
-        String rfcValue = (!rfc.getText().isEmpty()) ? rfc.getText().strip() : null;
-        String emailValue = (!email.getText().isEmpty()) ? email.getText().strip() : null;
+        String municipalityValue = this.comboBoxAddress.getMunicipality().getSelectedItem() != null ? this.comboBoxAddress.getMunicipality().getSelectedItem().toString() : null;
+        String streetValue = !this.street.getText().isEmpty() ? this.street.getText().strip() : null;
+        String colonyValue = !this.colony.getText().isEmpty() ? this.colony.getText().strip() : null;
+        String zipValue = this.zip.getValue() != null ? this.zip.getValue().toString() : null;
+        // Datos personales opcionales
+        String rfcValue = (!this.rfc.getText().isEmpty()) ? this.rfc.getText().strip() : null;
+        String emailValue = (!this.email.getText().isEmpty()) ? this.email.getText().strip() : null;
 
         DireccionN direccion = DireccionN.builder()
                 .estado(stateValue)

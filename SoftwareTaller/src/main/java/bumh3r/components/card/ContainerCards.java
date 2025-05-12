@@ -120,6 +120,18 @@ public class ContainerCards<T> extends JScrollPane {
         });
     }
 
+    public void delete(T usuario) {
+        SwingUtilities.invokeLater(() -> {
+            int i = list.indexOf(usuario);
+            if (i != -1) {
+                list.remove(i);
+                panelCards.remove(panelCards.getComponent(i));
+                panelCards.revalidate();
+                panelCards.repaint();
+            }
+        });
+    }
+
     public List<T> getListItems() {
         return new ArrayList<>(list);
     }

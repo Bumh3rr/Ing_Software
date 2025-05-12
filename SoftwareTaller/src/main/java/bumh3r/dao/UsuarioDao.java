@@ -1,6 +1,5 @@
 package bumh3r.dao;
 
-import bumh3r.model.New.EmpleadoN;
 import bumh3r.model.Usuario;
 import jakarta.persistence.EntityManager;
 import java.util.List;
@@ -50,4 +49,38 @@ public class UsuarioDao {
     }
 
 
+    public void update(Usuario usuario) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.merge(usuario);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    public void delete(Usuario usuario) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Usuario usuarioToDelete = em.find(Usuario.class, usuario.getId());
+            if (usuarioToDelete != null) {
+                em.remove(usuarioToDelete);
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
 }

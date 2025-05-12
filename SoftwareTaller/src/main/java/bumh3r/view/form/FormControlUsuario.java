@@ -5,21 +5,14 @@ import bumh3r.components.card.CardUsuario;
 import bumh3r.components.card.ContainerCards;
 import bumh3r.components.resposive.ResponsiveLayout;
 import bumh3r.controller.ControladorUsuarios;
-import bumh3r.modal.Config;
-import bumh3r.modal.CustomModal;
 import bumh3r.model.Usuario;
 import bumh3r.system.form.Form;
-import bumh3r.system.panel.PanelsInstances;
-import bumh3r.view.modal.ModalToas;
-import bumh3r.view.panel.PanelChangePasswordUsuario;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Dimension;
 import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
-import raven.modal.ModalDialog;
-import static bumh3r.archive.PathResources.Icon.modal;
 
 public class FormControlUsuario extends Form {
     public static String ID = FormControlUsuario.class.getName();
@@ -33,9 +26,14 @@ public class FormControlUsuario extends Form {
 
     @Override
     public void formInit() {
-        containerCards.installDependent1(controller.eventDelete);
-        containerCards.installDependent2(controller.eventChangePassword);
+        containerCards.installDependent1(controller.eventMostrarPanelEliminarUsuario);
+        containerCards.installDependent2(controller.eventMostrarPanelCambiarContraseñaUsuario);
         getEventFormInit().run();
+    }
+
+    @Override
+    public void formRefresh() {
+        getEventFormRefresh().run();
     }
 
     @Override
@@ -70,32 +68,13 @@ public class FormControlUsuario extends Form {
         return panel;
     }
 
-    private Consumer<Usuario> eventChangePassword = e -> {
-        ModalDialog.showModal(SwingUtilities.windowForComponent(this),
-                CustomModal.builder()
-                        .component(PanelsInstances.getInstance().getPanelModal(PanelChangePasswordUsuario.class))
-                        .title("Cambiar Contraseña")
-                        .icon(modal + "ic_update.svg")
-                        .buttonClose(true)
-                        .ID(ID)
-                        .build(),
-                Config.getModelShowModalFromNote(),
-                ID);
-    };
-
-    private Consumer<Usuario> eventDelete = e -> {
-        ModalDialog.showModal(SwingUtilities.windowForComponent(this),
-                new ModalToas(ModalToas.Type.WARNING, "Eliminar Usuario", "¿Estás seguro de eliminar a " + e.getUsername() + "?",
-                        (modal, action) -> {}),
-                Config.getModelShowModalFromNote(),
-                ID);
-    };
-
     public Consumer<Usuario> eventAddUsuario = (employee) ->
             SwingUtilities.invokeLater(() -> containerCards.addItemOne(employee));
 
     public Consumer<List<Usuario>> eventAddUsuarioCard = (list) ->
             containerCards.addItemsAll(list);
+
+    public Consumer<Usuario> eventDeleteUsuario = (usuario) -> containerCards.delete(usuario);
 
     public void cleanCards() {
         containerCards.cleanCards();

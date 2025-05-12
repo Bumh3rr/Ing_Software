@@ -3,11 +3,11 @@ package bumh3r.utils;
 public class CheckExpression {
 
     public static boolean isNameValid(String input) {
-        return input.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$");
+        return input.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]{3,}+$");
     }
 
     public static boolean isValidAddress(String address) {
-        return address.matches("^[a-zA-Z0-9\\s,\\-\\.\\#]+$");
+        return address.matches("^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s,\\-\\.\\#]+$");
     }
 
     public static boolean isValidEmail(String email) {
@@ -21,6 +21,7 @@ public class CheckExpression {
     public static boolean isValidRFCTaller(String rfc) {
         return rfc.matches("^[A-ZÑ&]{3}[0-9]{6}[A-Z0-9]{3}$");
     }
+
     public static boolean isValidUsername(String rfc) {
         return rfc.matches("^[a-zA-ZñÑ0-9._-]{3,20}$");
     }
