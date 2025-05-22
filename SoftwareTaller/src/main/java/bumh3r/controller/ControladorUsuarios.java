@@ -19,11 +19,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.SwingUtilities;
-import lombok.extern.slf4j.Slf4j;
 import raven.modal.ModalDialog;
 import raven.modal.Toast;
-import raven.modal.listener.ModalController;
 import raven.modal.toast.ToastPromise;
 
 public class ControladorUsuarios extends Controller {
@@ -82,17 +79,17 @@ public class ControladorUsuarios extends Controller {
     }
 
     private void registrarUsuario(UsuarioRegisterRequest value) {
-        Notify.showPromise("Registrando el usuario ...", new ToastPromise("KEYddd") {
+        Notify.showPromise("Registrando el usuario ...", new ToastPromise(KEY) {
             @Override
             public void execute(PromiseCallback callback) {
                 try {
                     callback.update("Registrando el usuario ...");
                     Usuario newUser = Usuario.builder().username(value.username()).password(value.password()).empleado(value.empleado()).fecha_registro(LocalDateTime.now()).isAdmin(false).build();
                     newUser = usuarioDao.save(newUser);
-                    actualizarListEmpleados(); // <- Actualizar la lista de empleados
-                    panelAddUsuario.cleanValue(); // <- Limpiar los campos
-                    view.eventAddUsuario.accept(newUser); // <- Agregar el empleado ala lista
-                    SwingUtilities.invokeLater(() -> ModalDialog.closeModal(ID));
+                    //actualizarListEmpleados(); // <- Actualizar la lista de empleados
+                    // panelAddUsuario.cleanValue(); // <- Limpiar los campos
+                    //view.eventAddUsuario.accept(newUser); // <- Agregar el empleado ala lista
+                    ModalDialog.closeModal(ID);
                     callback.done(Toast.Type.SUCCESS, "Usuario registrado correctamente");
                 } catch (Exception ex) {
                     callback.done(Toast.Type.ERROR, "Error al registrar el usuario\n" + "Causa: " + ex.getLocalizedMessage());
@@ -102,18 +99,20 @@ public class ControladorUsuarios extends Controller {
     }
 
     private void actualizarListEmpleados() {
-        SwingUtilities.invokeLater(() -> {
-            List<EmpleadoN> empleados;
+        PoolThreads.getInstance().execute(() -> {
             try {
-                empleados = empleadoDAO.findAllNoUser();
-                if (empleados == null || empleados.isEmpty()) {
-                    panelAddUsuario.getComboBoxEmpleados().removeAllItems();
-                    Notify.getInstance().showToast(Toast.Type.WARNING, "No hay empleados disponibles");
-                    return;
-                }
-                EventQueue.invokeLater(() -> panelAddUsuario.getComboBoxEmpleados().setModel(new DefaultComboBoxModel<>(empleados.toArray(new EmpleadoN[0]))));
+                List<EmpleadoN> empleados = empleadoDAO.findAllNoUser();
+                EventQueue.invokeLater(() -> {
+                    if (empleados == null || empleados.isEmpty()) {
+                        panelAddUsuario.getComboBoxEmpleados().removeAllItems();
+                        Notify.getInstance().showToast(Toast.Type.WARNING, "No hay empleados disponibles");
+                    } else {
+                        panelAddUsuario.getComboBoxEmpleados().setModel(new DefaultComboBoxModel<>(empleados.toArray(new EmpleadoN[0])));
+                    }
+                });
             } catch (Exception e) {
-                Notify.getInstance().showToast(Toast.Type.ERROR, "Error al obtener los empleados" + e.getMessage());
+                String errorMessage = e.getMessage() != null ? e.getMessage() : "Error desconocido";
+                EventQueue.invokeLater(() -> Notify.getInstance().showToast(Toast.Type.ERROR, "Error al obtener los empleados: " + errorMessage));
             }
         });
     }
