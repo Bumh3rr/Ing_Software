@@ -19,7 +19,6 @@ public class UsuarioDao {
             EntityManager emNew = JPAUtil.getEntityManager();
             Usuario usuarioRefresh = emNew.find(Usuario.class, usuario.getId());
             return usuarioRefresh;
-
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();

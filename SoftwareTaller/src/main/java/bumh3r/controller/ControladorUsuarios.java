@@ -14,6 +14,7 @@ import bumh3r.view.form.FormControlUsuario;
 import bumh3r.view.modal.ModalToas;
 import bumh3r.view.panel.PanelAddUsuario;
 import bumh3r.view.panel.PanelChangePasswordUsuario;
+import java.awt.EventQueue;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -44,26 +45,24 @@ public class ControladorUsuarios extends Controller {
     private void obtenerListaUsuarios() {
         Toast.closeAll();
         if (Toast.checkPromiseId(KEY)) return;
-        Notify.showPromise("Obteniendo los usuarios ...",
-                new ToastPromise(KEY) {
-                    @Override
-                    public void execute(PromiseCallback callback) {
-                        try {
-                            callback.update("Guardando ...");
-                            List<Usuario> list = usuarioDao.getList();
-                            if (list.isEmpty()) {
-                                callback.done(Toast.Type.WARNING, "No hay usuarios registrados");
-                                view.cleanCards();
-                                return;
-                            }
-                            view.eventAddUsuarioCard.accept(list);
-                            callback.done(Toast.Type.SUCCESS, "Los usuarios fueron obtenidos correctamente");
-                        } catch (Exception ex) {
-                            callback.done(Toast.Type.ERROR, "Error al obtener los usuarios\n" +
-                                    "Causa: " + ex.getLocalizedMessage());
-                        }
+        Notify.showPromise("Obteniendo los usuarios ...", new ToastPromise(KEY) {
+            @Override
+            public void execute(PromiseCallback callback) {
+                try {
+                    callback.update("Guardando ...");
+                    List<Usuario> list = usuarioDao.getList();
+                    if (list.isEmpty()) {
+                        callback.done(Toast.Type.WARNING, "No hay usuarios registrados");
+                        view.cleanCards();
+                        return;
                     }
-                });
+                    view.eventAddUsuarioCard.accept(list);
+                    callback.done(Toast.Type.SUCCESS, "Los usuarios fueron obtenidos correctamente");
+                } catch (Exception ex) {
+                    callback.done(Toast.Type.ERROR, "Error al obtener los usuarios\n" + "Causa: " + ex.getLocalizedMessage());
+                }
+            }
+        });
         view.eventAddUsuarioCard.accept(this.usuarioDao.getList());
     }
 
@@ -78,41 +77,32 @@ public class ControladorUsuarios extends Controller {
                 registrarUsuario(value);
             });
         }
-        if (panelAddUsuario.getComboBoxEmpleados().getSelectedItem() == null)
-            actualizarListEmpleados();
+        if (panelAddUsuario.getComboBoxEmpleados().getSelectedItem() == null) actualizarListEmpleados();
         showPanel(panelAddUsuario, "Agregar nuevo Usuario", "ic_add-user.svg", ID, null, false);
     }
 
     private void registrarUsuario(UsuarioRegisterRequest value) {
-        Notify.showPromise("Registrando el usuario ...",
-                new ToastPromise("KEYddd") {
-                    @Override
-                    public void execute(PromiseCallback callback) {
-                        try {
-                            callback.update("Registrando el usuario ...");
-                            Usuario newUser = Usuario.builder()
-                                    .username(value.username())
-                                    .password(value.password())
-                                    .empleado(value.empleado())
-                                    .fecha_registro(LocalDateTime.now())
-                                    .isAdmin(false)
-                                    .build();
-                            newUser = usuarioDao.save(newUser);
-                            actualizarListEmpleados(); // <- Actualizar la lista de empleados
-                            panelAddUsuario.cleanValue(); // <- Limpiar los campos
-                            view.eventAddUsuario.accept(newUser); // <- Agregar el empleado ala lista
-                            ModalDialog.closeModal(ID);
-                            callback.done(Toast.Type.SUCCESS, "Usuario registrado correctamente");
-                        } catch (Exception ex) {
-                            callback.done(Toast.Type.ERROR, "Error al registrar el usuario\n" +
-                                    "Causa: " + ex.getLocalizedMessage());
-                        }
-                    }
-                });
+        Notify.showPromise("Registrando el usuario ...", new ToastPromise("KEYddd") {
+            @Override
+            public void execute(PromiseCallback callback) {
+                try {
+                    callback.update("Registrando el usuario ...");
+                    Usuario newUser = Usuario.builder().username(value.username()).password(value.password()).empleado(value.empleado()).fecha_registro(LocalDateTime.now()).isAdmin(false).build();
+                    newUser = usuarioDao.save(newUser);
+                    actualizarListEmpleados(); // <- Actualizar la lista de empleados
+                    panelAddUsuario.cleanValue(); // <- Limpiar los campos
+                    view.eventAddUsuario.accept(newUser); // <- Agregar el empleado ala lista
+                    SwingUtilities.invokeLater(() -> ModalDialog.closeModal(ID));
+                    callback.done(Toast.Type.SUCCESS, "Usuario registrado correctamente");
+                } catch (Exception ex) {
+                    callback.done(Toast.Type.ERROR, "Error al registrar el usuario\n" + "Causa: " + ex.getLocalizedMessage());
+                }
+            }
+        });
     }
 
     private void actualizarListEmpleados() {
-        PoolThreads.getInstance().execute(() -> {
+        SwingUtilities.invokeLater(() -> {
             List<EmpleadoN> empleados;
             try {
                 empleados = empleadoDAO.findAllNoUser();
@@ -121,9 +111,7 @@ public class ControladorUsuarios extends Controller {
                     Notify.getInstance().showToast(Toast.Type.WARNING, "No hay empleados disponibles");
                     return;
                 }
-                SwingUtilities.invokeLater(() ->
-                        panelAddUsuario.getComboBoxEmpleados().setModel(new DefaultComboBoxModel<>(empleados.toArray(new EmpleadoN[0])))
-                );
+                EventQueue.invokeLater(() -> panelAddUsuario.getComboBoxEmpleados().setModel(new DefaultComboBoxModel<>(empleados.toArray(new EmpleadoN[0]))));
             } catch (Exception e) {
                 Notify.getInstance().showToast(Toast.Type.ERROR, "Error al obtener los empleados" + e.getMessage());
             }
@@ -140,22 +128,20 @@ public class ControladorUsuarios extends Controller {
             String confirmPassword = String.valueOf(panel.getConfirmPassword().getPassword());
             if (!validPassword(password, confirmPassword)) return;
 
-            Notify.showPromise("Cambiando la contraseña ...",
-                    new ToastPromise(KEY) {
-                        @Override
-                        public void execute(PromiseCallback callback) {
-                            try {
-                                callback.update("Cambiando la contraseña ...");
-                                x.setPassword(password);
-                                usuarioDao.update(x);
-                                callback.done(Toast.Type.SUCCESS, "Contraseña cambiada correctamente");
-                                ModalDialog.closeModal(ID);
-                            } catch (Exception ex) {
-                                callback.done(Toast.Type.ERROR, "Error al cambiar la contraseña\n" +
-                                        "Causa: " + ex.getLocalizedMessage());
-                            }
-                        }
-                    });
+            Notify.showPromise("Cambiando la contraseña ...", new ToastPromise(KEY) {
+                @Override
+                public void execute(PromiseCallback callback) {
+                    try {
+                        callback.update("Cambiando la contraseña ...");
+                        x.setPassword(password);
+                        usuarioDao.update(x);
+                        callback.done(Toast.Type.SUCCESS, "Contraseña cambiada correctamente");
+                        ModalDialog.closeModal(ID);
+                    } catch (Exception ex) {
+                        callback.done(Toast.Type.ERROR, "Error al cambiar la contraseña\n" + "Causa: " + ex.getLocalizedMessage());
+                    }
+                }
+            });
         });
 
         showPanel(panel, "Cambiar Contraseña", "ic_update.svg", ID, null, false);
@@ -163,37 +149,34 @@ public class ControladorUsuarios extends Controller {
     };
 
     public BiConsumer<Usuario, Runnable> eventMostrarPanelEliminarUsuario = (usuario, t) -> {
-        showPanel(new ModalToas(ModalToas.Type.WARNING, "Eliminar Usuario", "¿Estás seguro de eliminar a " + usuario.getUsername() + "?",
-                (modal, action) -> {
-                    modal.consume();
-                    if (action == ModalToas.ACCEPT_OPTION) {
-                        eliminarUsuario(usuario);
-                    }else{
-                        modal.close();
-                    }
-                }), null, null, ID, null, false);
+        showPanel(new ModalToas(ModalToas.Type.WARNING, "Eliminar Usuario", "¿Estás seguro de eliminar a " + usuario.getUsername() + "?", (modal, action) -> {
+            modal.consume();
+            if (action == ModalToas.ACCEPT_OPTION) {
+                eliminarUsuario(usuario);
+            } else {
+                modal.close();
+            }
+        }), null, null, ID, null, false);
 
     };
 
     private void eliminarUsuario(Usuario usuario) {
         Toast.closeAll();
         if (Toast.checkPromiseId(KEY)) return;
-        Notify.showPromise("Eliminando el usuario ...",
-                new ToastPromise(KEY) {
-                    @Override
-                    public void execute(PromiseCallback callback) {
-                        try {
-                            callback.update("Eliminando el usuario ...");
-                            usuarioDao.delete(usuario);
-                            view.eventDeleteUsuario.accept(usuario);
-                            ModalDialog.closeModal(ID);
-                            callback.done(Toast.Type.SUCCESS, "Usuario eliminado correctamente");
-                        } catch (Exception ex) {
-                            callback.done(Toast.Type.ERROR, "Error al eliminar el usuario\n" +
-                                    "Causa: " + ex.getLocalizedMessage());
-                        }
-                    }
-                });
+        Notify.showPromise("Eliminando el usuario ...", new ToastPromise(KEY) {
+            @Override
+            public void execute(PromiseCallback callback) {
+                try {
+                    callback.update("Eliminando el usuario ...");
+                    usuarioDao.delete(usuario);
+                    view.eventDeleteUsuario.accept(usuario);
+                    ModalDialog.closeModal(ID);
+                    callback.done(Toast.Type.SUCCESS, "Usuario eliminado correctamente");
+                } catch (Exception ex) {
+                    callback.done(Toast.Type.ERROR, "Error al eliminar el usuario\n" + "Causa: " + ex.getLocalizedMessage());
+                }
+            }
+        });
     }
 
     public boolean validPassword(String password, String confirmPassword) {
