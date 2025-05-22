@@ -79,12 +79,17 @@ public class TableSimple<T> extends JPanel {
         revalidate();
     }
 
-    public void setData(List<T> data, Function<T, Object[]> mapper) {
+    public void setDataAll(List<T> data, Function<T, Object[]> mapper) {
         cleanData();
         for (T item : data) {
             model.addRow(mapper.apply(item));
         }
     }
+
+    public void setDataOne(T data, Function<T, Object[]> mapper) {
+        model.addRow(mapper.apply(data));
+    }
+
 
     public void cleanData() {
         while (model.getRowCount() > 0) {

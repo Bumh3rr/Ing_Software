@@ -48,7 +48,7 @@ public class ClienteDao {
     }
 
 
-    public List<ClienteN> findByName(String nombre) {
+    public List<ClienteN> findByName(String nombre)throws Exception  {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();

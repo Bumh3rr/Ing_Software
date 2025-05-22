@@ -1,14 +1,18 @@
 package bumh3r.view.form;
 
+import bumh3r.components.TableSimple;
 import bumh3r.components.button.ButtonDefault;
+import bumh3r.controller.ControladorProveedor;
+import bumh3r.model.New.ProveedorN;
 import bumh3r.model.Proveedor;
+import bumh3r.model.other.DateFull;
 import bumh3r.system.form.Form;
-import bumh3r.system.panel.PanelsInstances;
+import bumh3r.thread.PoolThreads;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.components.FlatScrollPane;
 import com.formdev.flatlaf.extras.components.FlatTable;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -16,37 +20,52 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
 public class FormProveedor extends Form {
     private ButtonDefault buttonAddProveedor;
-    private Table table;
+    @Getter
+    private TableSimple<ProveedorN> table;
+    private final Function<ProveedorN, Object[]> dataMapper = usuarioMapper -> new Object[]{
+            usuarioMapper.getId(),
+            usuarioMapper.getNombre(),
+            usuarioMapper.getTelefono(),
+            usuarioMapper.getCorreo(),
+            usuarioMapper.getDireccion(),
+            DateFull.getDateFull(usuarioMapper.getFecha_registro())
+    };
 
+    @Override
+    public void installController() {
+        new ControladorProveedor(this);
+    }
 
     @Override
     public void formInit() {
-        List<Proveedor> proveedors = new ArrayList<>();
-        proveedors.add(new Proveedor(1L, "Proveedor 1", "1234567890", "example@gmail.com","Dirección 1", "2021-09-01"));
-        proveedors.add(new Proveedor(2L, "Proveedor 2", "1234567890", "example@gmail.com","Dirección 2", "2021-09-01"));
-        proveedors.add(new Proveedor(3L, "Proveedor 2", "1234567890", "example@gmail.com","Dirección 3", "2021-09-01"));
-        table.setData(proveedors);
+        PoolThreads.getInstance().execute(getEventFormInit());
+    }
+
+    @Override
+    public void formRefresh() {
+        PoolThreads.getInstance().execute(getEventFormRefresh());
+    }
+
+    public void installEventAddCliente(Runnable event) {
+        buttonAddProveedor.addActionListener(e -> event.run());
     }
 
     public FormProveedor() {
         initComponents();
-        initListeners();
         init();
-    }
-
-    private void initListeners() {
-        buttonAddProveedor.addActionListener((e) -> PanelsInstances.getInstance().showPanelAddProveedor());
     }
 
     private void initComponents() {
         buttonAddProveedor = new ButtonDefault("Agregar Proveedor");
-        table = new Table();
+        table = new TableSimple<>(new String[]{"ID", "Nombre", "Teléfono", "Correo", "Dirección", "Fecha de Registro"});
     }
 
     private void init() {
@@ -61,6 +80,14 @@ public class FormProveedor extends Form {
         panel.add(buttonAddProveedor, "grow 0,al trail");
         panel.add(table, "grow,push,gapx 0 2");
         return panel;
+    }
+
+    public void addAllTable(List<ProveedorN> list) {
+        SwingUtilities.invokeLater(() -> table.setDataAll(list, dataMapper));
+    }
+
+    public void addOneTable(ProveedorN proveedor) {
+        SwingUtilities.invokeLater(() -> table.setDataOne(proveedor, dataMapper));
     }
 
 

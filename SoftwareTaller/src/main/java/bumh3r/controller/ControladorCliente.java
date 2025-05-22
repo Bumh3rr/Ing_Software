@@ -104,17 +104,23 @@ public class ControladorCliente extends Controller {
     };
 
     public void buscarClientePorNombre() {
-        String nombre = view.getSearch().getText().trim().toLowerCase();
-        if (nombre.isEmpty()) {
-            Notify.getInstance().showToast(Toast.Type.WARNING, "Ingrese un nombre para buscar");
-            return;
+        List<ClienteN> list;
+        String nombre;
+        try {
+            nombre = view.getSearch().getText().trim().toLowerCase();
+            if (nombre.isEmpty()) {
+                Notify.getInstance().showToast(Toast.Type.WARNING, "Ingrese un nombre para buscar");
+                return;
+            }
+            list = clienteDao.findByName(nombre);
+            if (list.isEmpty()) {
+                Notify.getInstance().showToast(Toast.Type.WARNING, "No se encontraron resultados");
+                return;
+            }
+            view.addAllTable(list);
+        } catch (Exception e) {
+            Notify.getInstance().showToast(Toast.Type.ERROR, "Error al buscar el cliente\n" + "Causa: " + e.getLocalizedMessage());
         }
-        List<ClienteN> list = clienteDao.findByName(nombre);
-        if (list.isEmpty()) {
-            Notify.getInstance().showToast(Toast.Type.WARNING, "No se encontraron resultados");
-            return;
-        }
-        view.addAllTable(list);
     }
 
     public boolean validarDatosCliente(ClienteRequest value) {

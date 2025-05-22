@@ -70,9 +70,6 @@ public class PanelsInstances {
 //        showModal(PanelInfoLicence.class, "Información de Licencia", "ic_license.svg", PanelInfoLicence.ID);
 //    }
 
-    public void showPanelAddProveedor() {
-        showModal(PanelAddProveedor.class, "Agregar nuevo Proveedor", "ic_add-user.svg", PanelAddProveedor.ID);
-    }
 
     public void showPanelAddRefaccion() {
         showModal(PanelAddRefaccion.class, "Agregar nueva refacción", "ic_inventario.svg", PanelAddRefaccion.ID);
@@ -80,13 +77,6 @@ public class PanelsInstances {
 
     public void showPanelAddPedido() {
         showModal(PanelAddPedido.class, "Agregar nuevo pedido", "ic_inventario.svg", PanelAddPedido.ID);
-    }
-    public void showPanelAddCliente() {
-        showModal(PanelAddCliente.class, "Agregar nuevo Cliente", "ic_add-user.svg", PanelAddCliente.ID);
-    }
-
-    public void showPanelAddUsuario() {
-        showModal(PanelAddUsuario.class, "Agregar nuevo Usuario", "ic_add-user.svg", PanelAddUsuario.ID);
     }
 
     private void showModal(Class<? extends Panel> panelClass, String title, String icon, String id) {
