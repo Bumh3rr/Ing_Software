@@ -9,15 +9,16 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Font;
 import java.util.LinkedList;
+import java.util.List;
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 
 public class CardDeviceinfo extends JPanel {
     private String modelo;
     private String urlIcon;
-    private LinkedList<Reparacion_Dispositivo> listRepairs;
+    private List<Reparacion_Dispositivo> listRepairs;
 
-    public CardDeviceinfo(String modelo, String urlIcon, LinkedList<Reparacion_Dispositivo> listRepairs) {
+    public CardDeviceinfo(String modelo, String urlIcon, List<Reparacion_Dispositivo> listRepairs) {
         this.modelo = modelo;
         this.urlIcon = urlIcon;
         this.listRepairs = listRepairs;

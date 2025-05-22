@@ -12,21 +12,12 @@ import bumh3r.system.form.Form;
 import bumh3r.system.panel.PanelsInstances;
 import bumh3r.thread.PoolThreads;
 import bumh3r.view.panel.PanelDetailsPedido;
-import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.components.FlatScrollPane;
-import com.formdev.flatlaf.extras.components.FlatTable;
-import java.awt.Component;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.awt.event.ActionEvent;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 import raven.modal.ModalDialog;
 import static bumh3r.archive.PathResources.Icon.modal;
@@ -113,7 +104,7 @@ public class FormPedidos extends Form {
                     usuarioMapper.getEstado(),
                     usuarioMapper.getObservaciones()
             };
-            table.setData(pedidos, dataMapper);
+            table.addAll(pedidos, dataMapper);
         });
     }
     

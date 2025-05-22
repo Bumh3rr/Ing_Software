@@ -18,8 +18,6 @@ public class DateFull {
                 .ofPattern("dd 'de' '" + MONTHS[date.getMonth().getValue() - 1] + "' 'del' yyyy - hh:mm a"));
     }
 
-
-
     public static String getDateFull(LocalDateTime date) {
         return date.format(DateTimeFormatter.ofPattern("dd 'de' MMMM 'del' yyyy")).concat(" / " + WEEKS[date.getDayOfWeek().getValue() - 1]);
     }

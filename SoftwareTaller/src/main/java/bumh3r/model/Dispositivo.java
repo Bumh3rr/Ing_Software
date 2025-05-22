@@ -19,13 +19,13 @@ public class Dispositivo {
     private String model;
     private String serial;
     private Detalles detalles;
-    private LinkedList<Reparacion_Dispositivo> listReparaciones;
+    private List<Reparacion_Dispositivo> listReparaciones;
 
     public Dispositivo(TipoDispositivo type,Marca brand, String model) {
         this(type, brand, model, null, null, null);
     }
 
-    public Dispositivo(TipoDispositivo type, Marca brand, String model, String serial, Detalles detalles, LinkedList<Reparacion_Dispositivo> reparacionDispositivos) {
+    public Dispositivo(TipoDispositivo type, Marca brand, String model, String serial, Detalles detalles, List<Reparacion_Dispositivo> reparacionDispositivos) {
         this.type = type;
         this.brand = brand;
         this.model = model;

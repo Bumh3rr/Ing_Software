@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -34,10 +35,10 @@ public class Nota {
     private StatusNota status;
     private Empleado recido_por;
     private Cliente cliente;
-    private LinkedList<Dispositivo> dispositivos;
+    private List<Dispositivo> dispositivos;
 
 
-    public Nota(int id, String folio, LocalDateTime fecha_nota, StatusNota status, Empleado recido_por, Cliente cliente, double precioTotal, double anticipoTotal, double cantidadPendiente, LinkedList<Dispositivo> dispositivos) {
+    public Nota(int id, String folio, LocalDateTime fecha_nota, StatusNota status, Empleado recido_por, Cliente cliente, double precioTotal, double anticipoTotal, double cantidadPendiente, List<Dispositivo> dispositivos) {
         this.id = id;
         this.folio = folio;
         this.fecha_nota = fecha_nota;
@@ -47,7 +48,7 @@ public class Nota {
         this.dispositivos = dispositivos;
     }
 
-    public Nota(LocalDateTime fecha_nota, StatusNota status, Empleado recido_por, Cliente cliente, double precioTotal, double anticipoTotal, LinkedList<Dispositivo> dispositivos) {
+    public Nota(LocalDateTime fecha_nota, StatusNota status, Empleado recido_por, Cliente cliente, double precioTotal, double anticipoTotal, List<Dispositivo> dispositivos) {
         this(0,null,fecha_nota,status,recido_por,cliente,precioTotal,anticipoTotal,(precioTotal-anticipoTotal),dispositivos);
     }
 

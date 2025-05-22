@@ -22,6 +22,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
+import java.util.List;
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 
@@ -297,7 +298,7 @@ public class PanelRequestDetailsNote extends Panel {
         return label;
     }
 
-    private void addItemsCardDevice(LinkedList<Dispositivo> listdevice) {
+    private void addItemsCardDevice(List<Dispositivo> listdevice) {
         panelDevices.removeAll();
         for (Dispositivo device : listdevice) {
             SwingUtilities.invokeLater(() -> {

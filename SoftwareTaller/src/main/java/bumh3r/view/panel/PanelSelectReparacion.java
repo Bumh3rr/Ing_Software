@@ -5,20 +5,20 @@ import bumh3r.components.label.LabelForDescription;
 import bumh3r.model.Reparacion_Dispositivo;
 import bumh3r.system.panel.Panel;
 import bumh3r.thread.PoolThreads;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Function;
 import net.miginfocom.swing.MigLayout;
 
 public class PanelSelectReparacion extends Panel {
     private LabelForDescription description;
     private Table<Reparacion_Dispositivo> table;
-    private LinkedList<Reparacion_Dispositivo> reparacionDispositivos;
+    private List<Reparacion_Dispositivo> reparacionDispositivos;
 
     @Override
     public void panelInit() {
     }
 
-    public PanelSelectReparacion(LinkedList<Reparacion_Dispositivo> reparacionDispositivos) {
+    public PanelSelectReparacion(List<Reparacion_Dispositivo> reparacionDispositivos) {
         this.reparacionDispositivos = reparacionDispositivos;
         initComponents();
         init();
@@ -37,7 +37,7 @@ public class PanelSelectReparacion extends Panel {
         add(table, "h 300!,growx,gapy 5 0");
     }
 
-    public void showData(LinkedList<Reparacion_Dispositivo> reparacionDispositivos) {
+    public void showData(List<Reparacion_Dispositivo> reparacionDispositivos) {
         PoolThreads.getInstance().execute(() -> {
             Function<Reparacion_Dispositivo, Object[]> reparacion = repair -> new Object[]{
                     repair.getTipoReparacion().getNombre(),
@@ -47,7 +47,7 @@ public class PanelSelectReparacion extends Panel {
                     String.format("$%.2f", repair.getAbono()),
                     repair.getStatus().getValue()
             };
-            table.setData(reparacionDispositivos, reparacion);
+            table.addAll(reparacionDispositivos, reparacion);
         });
     }
 

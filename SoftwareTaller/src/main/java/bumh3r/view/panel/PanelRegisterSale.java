@@ -61,7 +61,7 @@ public class PanelRegisterSale extends Panel {
         buttonSelectReparation.addActionListener(e -> {
             ModalDialog.pushModal(
                     CustomModal.builder()
-                            .component(new PanelSelectReparacion(this.nota.getDispositivos().getFirst().getListReparaciones()))
+                            .component(new PanelSelectReparacion(this.nota.getDispositivos().get(0).getListReparaciones()))
                             .title("Seleccionar Reparaciónes")
                             .icon(modal + "ic_select.svg")
                             .buttonClose(false)

@@ -28,6 +28,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -69,7 +70,7 @@ public class PanelModalInfoReparacion extends Panel {
         });
     }
 
-    public PanelModalInfoReparacion setValue(LinkedList<Reparacion_Dispositivo> list) {
+    public PanelModalInfoReparacion setValue(List<Reparacion_Dispositivo> list) {
         addRepairsPanel(list);
         return this;
     }
@@ -262,7 +263,7 @@ public class PanelModalInfoReparacion extends Panel {
         return false;
     }
 
-    private void addRepairsPanel(LinkedList<Reparacion_Dispositivo> list) {
+    private void addRepairsPanel(List<Reparacion_Dispositivo> list) {
         panelReparaciones.removeAll();
         EventQueue.invokeLater(() -> {
             for (Reparacion_Dispositivo reparacionDispositivo : list) {

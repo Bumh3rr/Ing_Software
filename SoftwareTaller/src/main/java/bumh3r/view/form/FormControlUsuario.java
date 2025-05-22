@@ -7,6 +7,7 @@ import bumh3r.components.resposive.ResponsiveLayout;
 import bumh3r.controller.ControladorUsuarios;
 import bumh3r.model.Usuario;
 import bumh3r.system.form.Form;
+import bumh3r.thread.PoolThreads;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Dimension;
 import java.util.List;
@@ -28,7 +29,7 @@ public class FormControlUsuario extends Form {
     public void formInit() {
         containerCards.installDependent1(controller.eventMostrarPanelEliminarUsuario);
         containerCards.installDependent2(controller.eventMostrarPanelCambiarContraseñaUsuario);
-        getEventFormInit().run();
+        PoolThreads.getInstance().execute(getEventFormInit());
     }
 
     @Override
@@ -48,6 +49,7 @@ public class FormControlUsuario extends Form {
 
     private void initComponents() {
         containerCards = new ContainerCards<>(CardUsuario.class, new ResponsiveLayout(ResponsiveLayout.JustifyContent.SPACE_AROUND, new Dimension(-1, -1), 10, 10));
+        containerCards.setLongitud(6);
         buttonAddUsuario = new ButtonDefault("Agregar Usuario");
     }
 
@@ -60,19 +62,16 @@ public class FormControlUsuario extends Form {
 
     private JComponent body() {
         JPanel panel = new JPanel(new MigLayout("wrap,fillx,insets 0", "[fill]"));
-        panel.putClientProperty(FlatClientProperties.STYLE, ""
-                + "background:null");
+        panel.putClientProperty(FlatClientProperties.STYLE, "" + "background:null");
         panel.add(buttonAddUsuario, "grow 0,al trail");
         panel.add(containerCards, "gapx 0 2,grow,push");
-        panel.add(containerCards.getPanelPaginacion(), "grow 0,al center");
+        panel.add(containerCards.getPanelPaginacion(), "grow 0,gapy 0 5,al center");
         return panel;
     }
 
-    public Consumer<Usuario> eventAddUsuario = (employee) ->
-            SwingUtilities.invokeLater(() -> containerCards.addItemOne(employee));
+    public Consumer<Usuario> eventAddUsuario = (employee) -> containerCards.addItemOne(employee);
 
-    public Consumer<List<Usuario>> eventAddUsuarioCard = (list) ->
-            containerCards.addItemsAll(list);
+    public Consumer<List<Usuario>> eventAddUsuarioCard = (list) -> containerCards.addItemsAll(list);
 
     public Consumer<Usuario> eventDeleteUsuario = (usuario) -> containerCards.delete(usuario);
 

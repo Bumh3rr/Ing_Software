@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import javax.swing.*;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 
@@ -26,6 +27,7 @@ public class ContainerCards<T> extends JScrollPane {
     private BiConsumer<T, Runnable> event1;
     private BiConsumer<T, Runnable> event2;
 
+    @Setter
     private int longitud = 4;
     private int pagActual = 0;
     private int pagTotal;

@@ -8,7 +8,6 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 import javax.swing.*;
@@ -66,7 +65,7 @@ public class Table<T> extends JPanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         table.setModel(model);
 
-        table.getColumnModel().getColumn(0).setPreferredWidth(30);
+        table.getColumnModel().getColumn(0).setPreferredWidth(10);
         for (int i = 1; i < table.getColumnCount(); i++) {
             table.getColumnModel().getColumn(i).setPreferredWidth(100);
         }
@@ -112,7 +111,7 @@ public class Table<T> extends JPanel {
         });
     }
 
-    public void setData(LinkedList<T> data, Function<T, Object[]> dataMapper) {
+    public void addAll(List<T> data, Function<T, Object[]> dataMapper) {
         cleanData();
         dataList.clear();
         for (T item : data) {
@@ -124,6 +123,16 @@ public class Table<T> extends JPanel {
             model.addRow(rowWithButton);
             dataList.add(item);
         }
+    }
+
+    public void addOne(T item, Function<T, Object[]> dataMapper) {
+        Object[] rowData = dataMapper.apply(item);
+        Object[] rowWithButton = new Object[rowData.length + 1];
+        System.arraycopy(rowData, 0, rowWithButton, 0, rowData.length);
+        // Set "View" as button text
+        rowWithButton[rowData.length] = nameAccion;
+        model.addRow(rowWithButton);
+        dataList.add(item);
     }
 
     public void cleanData() {

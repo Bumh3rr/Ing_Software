@@ -18,7 +18,7 @@ public class Cliente {
     private String phone2;
     private String address;
     private LocalDate dete_register;
-    private LinkedList<Nota> notas;
+    private List<Nota> notas;
 
     public Object[] toArray() {
         return new Object[]{id, name, phone1, phone2,address, dete_register};

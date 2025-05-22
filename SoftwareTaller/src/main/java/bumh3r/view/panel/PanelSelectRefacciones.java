@@ -64,7 +64,7 @@ public class PanelSelectRefacciones extends Panel {
                     String.format("$%.2f", repair.getPrecioVenta()),
                     repair.getStock()
             };
-            table.setData(reparacionDispositivos, reparacion);
+            table.addAll(reparacionDispositivos, reparacion);
         });
     }
 

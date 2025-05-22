@@ -6,6 +6,7 @@ import bumh3r.components.input.InputText;
 import bumh3r.components.resposive.ResponsiveLayout;
 import bumh3r.modal.CustomModal;
 import bumh3r.model.Cliente;
+import bumh3r.model.New.ClienteN;
 import bumh3r.model.Nota;
 import bumh3r.model.other.DateFull;
 import bumh3r.system.panel.Panel;
@@ -17,6 +18,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,9 +32,9 @@ public class PanelClienteNotes extends Panel {
     private ContainerCards containerCards;
     private JPanel panelNotes;
     private InputText id, name, phone1, phone2, address;
-    private Cliente cliente;
+    private ClienteN cliente;
 
-    public PanelClienteNotes(Cliente cliente) {
+    public PanelClienteNotes(ClienteN cliente) {
         this.cliente = cliente;
         initComponents();
         init();
@@ -52,11 +54,11 @@ public class PanelClienteNotes extends Panel {
         phone2 = getInstance();
         address = getInstance();
         id.setText(cliente.getId().toString());
-        name.setText(cliente.getName());
-        phone1.setText(cliente.getPhone1());
-        phone2.setText(cliente.getPhone2());
-        address.setText(cliente.getAddress());
-        refreshPanelNotes(cliente.getNotas());
+        name.setText(cliente.getNombre());
+        phone1.setText(cliente.getTelefono_movil());
+        phone2.setText(cliente.getTelefono_fijo());
+        address.setText(cliente.getDireccion());
+//        refreshPanelNotes(cliente.getNotas());
     }
 
     private InputText getInstance() {
@@ -92,7 +94,7 @@ public class PanelClienteNotes extends Panel {
         add(containerCards, "span,grow,push");
     }
 
-    public void refreshPanelNotes(LinkedList<Nota> list) {
+    public void refreshPanelNotes(List<Nota> list) {
         SwingUtilities.invokeLater(() -> {
             panelNotes.removeAll();
             list.forEach((note) -> {

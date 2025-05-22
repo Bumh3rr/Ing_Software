@@ -17,6 +17,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
@@ -32,6 +33,7 @@ public class PanelAddUsuario extends Panel {
         initComponents();
         init();
     }
+
     public void installEventAdd(Runnable event) {
         buttonAdd.addActionListener((e) -> event.run());
     }
@@ -85,17 +87,19 @@ public class PanelAddUsuario extends Panel {
     }
 
     private boolean checkInputs() {
-        if (CheckInput.isEmptyInput(usuario.getText(),"Usuario")) return true;
-        if (CheckInput.isEmptyInput(password.getText(),"Contraseña")) return true;
-        if (CheckInput.isEmptyInput(confirmPassword.getText(),"Confirmar Contraseña")) return true;
+        if (CheckInput.isEmptyInput(usuario.getText(), "Usuario")) return true;
+        if (CheckInput.isEmptyInput(password.getText(), "Contraseña")) return true;
+        if (CheckInput.isEmptyInput(confirmPassword.getText(), "Confirmar Contraseña")) return true;
         if (CheckInput.isNullInput(comboBoxEmpleados.getSelectedItem(), "Empleado")) return true;
         return false;
     }
 
-    public void cleanValue(){
-        usuario.setText("");
-        password.setText("");
-        confirmPassword.setText("");
+    public void cleanValue() {
+        SwingUtilities.invokeLater(() -> {
+            usuario.setText("");
+            password.setText("");
+            confirmPassword.setText("");
+        });
     }
 
 }

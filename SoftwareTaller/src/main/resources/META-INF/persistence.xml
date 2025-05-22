@@ -10,6 +10,7 @@
         <class>bumh3r.model.New.DireccionN</class>
         <class>bumh3r.model.New.EmpleadoN</class>
         <class>bumh3r.model.New.TipoEmpleado</class>
+        <class>bumh3r.model.New.ClienteN</class>
 
         <properties>
             <!-- Configuración de la conexión a la base de datos -->

@@ -86,10 +86,10 @@ public class ControladorUsuarios extends Controller {
                     callback.update("Registrando el usuario ...");
                     Usuario newUser = Usuario.builder().username(value.username()).password(value.password()).empleado(value.empleado()).fecha_registro(LocalDateTime.now()).isAdmin(false).build();
                     newUser = usuarioDao.save(newUser);
-                    //actualizarListEmpleados(); // <- Actualizar la lista de empleados
-                    // panelAddUsuario.cleanValue(); // <- Limpiar los campos
-                    //view.eventAddUsuario.accept(newUser); // <- Agregar el empleado ala lista
-                    ModalDialog.closeModal(ID);
+                    actualizarListEmpleados(); // <- Actualizar la lista de empleados
+                    panelAddUsuario.cleanValue(); // <- Limpiar los campos
+                    view.eventAddUsuario.accept(newUser); // <- Agregar el empleado ala lista
+                    ModalDialog.closeModal(ID); // <- Cerrar la pantallaAgregarUsuario
                     callback.done(Toast.Type.SUCCESS, "Usuario registrado correctamente");
                 } catch (Exception ex) {
                     callback.done(Toast.Type.ERROR, "Error al registrar el usuario\n" + "Causa: " + ex.getLocalizedMessage());

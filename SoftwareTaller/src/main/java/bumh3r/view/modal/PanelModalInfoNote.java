@@ -23,6 +23,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
@@ -153,7 +154,7 @@ public class PanelModalInfoNote extends Modal {
         return panel;
     }
 
-    private void refreshPanelDevice(LinkedList<Dispositivo> list) {
+    private void refreshPanelDevice(List<Dispositivo> list) {
         panelDevices.removeAll();
         for (Dispositivo device : list) {
             panelDevices.add(new CardDeviceNote(device, createEventCard()));

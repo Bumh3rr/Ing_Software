@@ -22,14 +22,12 @@ import bumh3r.model.other.DateFull;
 import bumh3r.system.form.Form;
 import bumh3r.thread.PoolThreads;
 import bumh3r.view.panel.PanelDetallesVenta;
-import bumh3r.view.panel.PanelRegisterSale;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
@@ -229,7 +227,7 @@ public class FormHistorialVentas extends Form {
                     repair.getEstado().getNombre(),
                     DateFull.getDateFull(repair.getFecha())
             };
-            table.setData(reparacionDispositivos, reparacion);
+            table.addAll(reparacionDispositivos, reparacion);
         });
     }
 

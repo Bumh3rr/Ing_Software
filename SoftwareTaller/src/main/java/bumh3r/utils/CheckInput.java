@@ -47,7 +47,7 @@ public class CheckInput {
      * <b>Mensaje de error</b>: El campo {fieldName} debe ser válido
      */
     public static boolean isOptionalInvalidInput(String input, Predicate<String> validator, String fieldName) {
-        if (!input.isBlank() && !validator.test(input.strip())) {
+        if (input != null && !input.isBlank() && !validator.test(input.strip())) {
             show("El campo " + fieldName + " debe ser válido");
             return true;
         }

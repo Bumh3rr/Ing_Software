@@ -22,6 +22,7 @@ import com.formdev.flatlaf.extras.components.FlatComboBox;
 import com.formdev.flatlaf.extras.components.FlatTextArea;
 import java.awt.EventQueue;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
@@ -46,7 +47,7 @@ public class PanelRequestDevice extends Panel {
     private ButtonDefault button_add;
     private ButtonAccentBase button_delete, button_update;
 
-    public static LinkedList<Reparacion_Dispositivo> listRepair;
+    public static List<Reparacion_Dispositivo> listRepair;
     private PanelRequestReparacion panelRequestReparacion;
 
     private Consumer<Dispositivo> consumerAddDevice;
