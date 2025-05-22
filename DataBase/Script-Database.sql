@@ -118,6 +118,17 @@ CREATE TABLE IF NOT EXISTS `taller_jpa`.`cliente` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
+DROP TABLE IF EXISTS `taller_jpa`.`proveedor` ;
+
+CREATE TABLE IF NOT EXISTS `taller_jpa`.`proveedor` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(45) NULL,
+  `correo` VARCHAR(45) NULL,
+  `telefono` VARCHAR(12) NULL,
+  `direccion` VARCHAR(45) NULL,
+  `fecha_registro` DATETIME NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
 
 
 insert into tipo_empleado(nombre) values ("Recepcionista"),("Técnico"),("Gerente");

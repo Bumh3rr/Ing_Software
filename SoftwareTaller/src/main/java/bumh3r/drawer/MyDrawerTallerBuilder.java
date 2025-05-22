@@ -11,8 +11,6 @@ import javax.swing.JComponent;
 import raven.modal.drawer.DrawerPanel;
 import raven.modal.drawer.data.Item;
 import raven.modal.drawer.data.MenuItem;
-import raven.modal.drawer.menu.MenuAction;
-import raven.modal.drawer.menu.MenuEvent;
 import raven.modal.drawer.menu.MenuOption;
 import raven.modal.drawer.menu.MenuStyle;
 import raven.modal.drawer.renderer.DrawerStraightDotLineStyle;
@@ -39,11 +37,6 @@ public class MyDrawerTallerBuilder extends SimpleDrawerBuilder {
                 .setTitle("Taller de Celulares")
                 .setDescription(null);
     }
-
-    public String getNameRol() {
-        return "Admin";
-    }
-
     @Override
     public SimpleFooterData getSimpleFooterData() {
         return new SimpleFooterData()
@@ -80,19 +73,17 @@ public class MyDrawerTallerBuilder extends SimpleDrawerBuilder {
 
         simpleMenuOption.getMenuStyle().setDrawerLineStyleRenderer(new DrawerStraightDotLineStyle());
         simpleMenuOption.setMenuItemAutoSelectionMode(MenuOption.MenuItemAutoSelectionMode.SELECT_SUB_MENU_LEVEL);
-        simpleMenuOption.addMenuEvent(new MenuEvent() {
-            @Override
-            public void selected(MenuAction action, int[] index) {
-                System.out.println("Drawer menu selected " + Arrays.toString(index));
-                Class<?> itemClass = action.getItem().getItemClass();
-                if (itemClass == null || !Form.class.isAssignableFrom(itemClass)) {
-                    action.consume();
-                    return;
-                }
-                Class<? extends Form> formClass = (Class<? extends Form>) itemClass;
-                FormsManager.showFormMain(AllFormsMain.getForm(formClass));
+        simpleMenuOption.addMenuEvent((action,index)->{
+            System.out.println("Drawer menu selected " + Arrays.toString(index));
+            Class<?> itemClass = action.getItem().getItemClass();
+            if (itemClass == null || !Form.class.isAssignableFrom(itemClass)) {
+                action.consume();
+                return;
             }
+            Class<? extends Form> formClass = (Class<? extends Form>) itemClass;
+            FormsManager.showFormMain(AllFormsMain.getForm(formClass));
         });
+
 
         simpleMenuOption.setMenus(items)
                 .setBaseIconPath(PathResources.Icon.drawer)
@@ -103,7 +94,7 @@ public class MyDrawerTallerBuilder extends SimpleDrawerBuilder {
 
     @Override
     public int getDrawerWidth() {
-        return 270 + SHADOW_SIZE;
+        return 220 + SHADOW_SIZE;
     }
 
     @Override
@@ -137,7 +128,7 @@ public class MyDrawerTallerBuilder extends SimpleDrawerBuilder {
 
     private static String getDrawerBackgroundStyle() {
         return ""
-                + "border:10,0,0,0;"
+                + "border:8,0,0,0;"
                 + "[light]background:tint($Panel.background,100%);"
                 + "[dark]background:tint($Panel.background,5%);";
     }

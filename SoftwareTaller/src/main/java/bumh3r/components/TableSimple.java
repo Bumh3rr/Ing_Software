@@ -40,7 +40,7 @@ public class TableSimple<T> extends JPanel {
     }
 
     private void initTable() {
-        setLayout(new MigLayout("wrap,fillx,insets n", "fill", "[]-1[fill,grow]"));
+        setLayout(new MigLayout("wrap,fillx,insets n", "fill", "[fill,grow]"));
         putClientProperty(FlatClientProperties.STYLE, ""
                 + "arc:16;"
                 + "background:$Table.background");
@@ -72,8 +72,6 @@ public class TableSimple<T> extends JPanel {
                 + "selectionForeground:$Table.foreground;");
 
         scrollPane.setViewportView(table);
-
-        add(new JSeparator(), "grow");
         add(scrollPane);
         updateUI();
         revalidate();

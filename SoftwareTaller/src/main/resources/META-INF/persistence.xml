@@ -12,6 +12,8 @@
         <class>bumh3r.model.New.TipoEmpleado</class>
         <class>bumh3r.model.New.ClienteN</class>
         <class>bumh3r.model.New.ProveedorN</class>
+        <class>bumh3r.model.New.RefaccionN</class>
+        <class>bumh3r.model.New.CategoriaN</class>
 
         <properties>
             <!-- Configuración de la conexión a la base de datos -->

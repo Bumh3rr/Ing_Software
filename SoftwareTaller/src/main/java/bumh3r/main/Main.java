@@ -60,7 +60,7 @@ public class Main extends JFrame {
         }
 
         if (SystemInfo.isMacFullWindowContentSupported) {
-            //getRootPane().putClientProperty("apple.awt.fullWindowContent", true);
+            getRootPane().putClientProperty("apple.awt.fullWindowContent", true);
             getRootPane().putClientProperty("apple.awt.transparentTitleBar", true);
         }
         setVisible(true);

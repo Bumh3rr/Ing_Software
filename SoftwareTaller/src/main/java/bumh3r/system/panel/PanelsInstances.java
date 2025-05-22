@@ -28,21 +28,11 @@ public class PanelsInstances {
         frame = application;
     }
 
-    public static void closeSession() {
-        instance = null;
-    }
-
     public static PanelsInstances getInstance() {
         if (instance == null) {
             instance = new PanelsInstances();
         }
         return instance;
-    }
-
-    public void showAbout() {
-//        ModalDialog.showModal(this.frame,
-//                new SimpleModalBorder(new PanelAbout(), "Acerca De", SimpleModalBorder.DEFAULT_OPTION, null),
-//                Config.getModelShowModalFromNote());
     }
 
     public void showPanelCreateNote() {
@@ -51,30 +41,6 @@ public class PanelsInstances {
         }
         showModal(PanelCreateNote.class, "Nueva Nota", "ic_newNote.svg", PanelCreateNote.ID);
     }
-
-//
-
-//    public void showFormSingUpUser() {
-//        showModal(PanelSingUpUser.class, "Registro del Taller", "ic_add-user.svg", PanelSingUpUser.ID);
-//    }
-//
-//    public void showFormSingUpTaller() {
-//        showModal(PanelSingUpTaller.class, "Registro del Taller", "ic_add-user.svg", PanelSingUpTaller.ID);
-//    }
-//
-//    public void showPanelUpdateLicense() {
-//        showModal(PanelUpdateLicense.class, "Actualizar Licencia", "ic_update-license.svg", PanelUpdateLicense.ID);
-//    }
-//
-//    public void showPanelInfoLicense() {
-//        showModal(PanelInfoLicence.class, "Información de Licencia", "ic_license.svg", PanelInfoLicence.ID);
-//    }
-
-
-    public void showPanelAddRefaccion() {
-        showModal(PanelAddRefaccion.class, "Agregar nueva refacción", "ic_inventario.svg", PanelAddRefaccion.ID);
-    }
-
     public void showPanelAddPedido() {
         showModal(PanelAddPedido.class, "Agregar nuevo pedido", "ic_inventario.svg", PanelAddPedido.ID);
     }
