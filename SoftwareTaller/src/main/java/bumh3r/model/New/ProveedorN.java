@@ -11,11 +11,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Builder
-@ToString
 @Getter
 @Setter
 @NoArgsConstructor
@@ -32,4 +30,9 @@ public class ProveedorN {
     private String direccion;
     @CreationTimestamp
     private LocalDateTime fecha_registro;
+
+    @Override
+    public String toString() {
+        return String.format("%d | %s", id, nombre);
+    }
 }

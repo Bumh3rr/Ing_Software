@@ -8,7 +8,6 @@ import java.util.function.Function;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -48,6 +47,11 @@ public class TableSimple<T> extends JPanel {
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         table.setModel(model);
 
+        table.getColumnModel().getColumn(0).setPreferredWidth(10);
+        for (int i = 1; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setPreferredWidth(100);
+        }
+
         // Center Data
         DefaultTableCellRenderer defaultTableCellRenderer = new DefaultTableCellRenderer();
         defaultTableCellRenderer.setHorizontalAlignment(SwingConstants.CENTER);
@@ -77,14 +81,14 @@ public class TableSimple<T> extends JPanel {
         revalidate();
     }
 
-    public void setDataAll(List<T> data, Function<T, Object[]> mapper) {
+    public void addAll(List<T> data, Function<T, Object[]> mapper) {
         cleanData();
         for (T item : data) {
             model.addRow(mapper.apply(item));
         }
     }
 
-    public void setDataOne(T data, Function<T, Object[]> mapper) {
+    public void addOne(T data, Function<T, Object[]> mapper) {
         model.addRow(mapper.apply(data));
     }
 

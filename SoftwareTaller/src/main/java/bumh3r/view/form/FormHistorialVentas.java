@@ -182,6 +182,7 @@ public class FormHistorialVentas extends Form {
         datePicker.setCloseAfterSelected(true);
         datePicker.setUsePanelOption(true);
         table = new Table<>(new String[]{"ID", "ID Nota", "Total Venta", "Estado", "Fecha"});
+        table.installParentScroll(this);
         table.setNameAccion("Ver Detalles");
         table.setRowClickListener(
                 (venta) -> {

@@ -10,15 +10,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Builder
-@ToString
 @Getter
 @Setter
 @NoArgsConstructor
@@ -34,11 +34,17 @@ public class RefaccionN {
     private int stock;
     private double precio_venta;
     private double precio_compra;
-    private LocalDate fecha_registro;
+    @CreationTimestamp
+    private LocalDateTime fecha_registro;
     @ManyToOne
     @JoinColumn(name = "proveedor_id")
     private ProveedorN proveedor;
     @ManyToOne
     @JoinColumn(name = "categoria_id")
     private CategoriaN categoria;
+
+    @Override
+    public String toString() {
+        return String.format("%d | %s", id, nombre);
+    }
 }

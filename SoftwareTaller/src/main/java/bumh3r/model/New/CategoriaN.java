@@ -13,7 +13,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Builder
-@ToString
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,4 +24,9 @@ public class CategoriaN {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
+
+    @Override
+    public String toString() {
+        return String.format("%s", nombre);
+    }
 }

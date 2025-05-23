@@ -25,7 +25,7 @@ public class FormProveedor extends Form {
             usuarioMapper.getTelefono(),
             usuarioMapper.getCorreo(),
             usuarioMapper.getDireccion(),
-            DateFull.getDateFull(usuarioMapper.getFecha_registro())
+            DateFull.getDateOnly(usuarioMapper.getFecha_registro())
     };
 
     @Override
@@ -72,10 +72,10 @@ public class FormProveedor extends Form {
     }
 
     public void addAllTable(List<ProveedorN> list) {
-        SwingUtilities.invokeLater(() -> table.setDataAll(list, dataMapper));
+        SwingUtilities.invokeLater(() -> table.addAll(list, dataMapper));
     }
 
     public void addOneTable(ProveedorN proveedor) {
-        SwingUtilities.invokeLater(() -> table.setDataOne(proveedor, dataMapper));
+        SwingUtilities.invokeLater(() -> table.addOne(proveedor, dataMapper));
     }
 }

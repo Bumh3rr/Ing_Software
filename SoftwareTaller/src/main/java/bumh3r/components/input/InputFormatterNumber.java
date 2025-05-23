@@ -1,5 +1,6 @@
 package bumh3r.components.input;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.components.FlatFormattedTextField;
 import java.text.NumberFormat;
 import javax.swing.JFormattedTextField;
@@ -14,11 +15,13 @@ public class InputFormatterNumber extends FlatFormattedTextField {
         NumberFormatter formatter = new NumberFormatter(integerFormat);
         formatter.setValueClass(Integer.class);
         formatter.setAllowsInvalid(false);
-        formatter.setMinimum(0);
-        formatter.setMaximum(Integer.MAX_VALUE);
+        formatter.setMinimum(null);
+        formatter.setMaximum(limit);
         setFormatterFactory(new DefaultFormatterFactory(formatter));
         setFocusLostBehavior(JFormattedTextField.COMMIT_OR_REVERT);
         setValue(null);
+        putClientProperty(FlatClientProperties.STYLE, ""
+                + "showClearButton:true");
         putClientProperty("JTextField.clearCallback", (Runnable) () -> {
             setText("");
             setValue(null);

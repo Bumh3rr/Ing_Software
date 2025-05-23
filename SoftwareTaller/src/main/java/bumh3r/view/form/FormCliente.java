@@ -31,7 +31,7 @@ public class FormCliente extends Form {
             usuarioMapper.getTelefono_movil(),
             usuarioMapper.getTelefono_fijo(),
             usuarioMapper.getDireccion(),
-            DateFull.getDateFull(usuarioMapper.getFecha_registro())
+            DateFull.getDateOnly(usuarioMapper.getFecha_registro())
     };
 
     @Override
@@ -56,6 +56,7 @@ public class FormCliente extends Form {
 
     public void installEventSearchCliente(Runnable runnable) {
         buttonSearch.addActionListener(e -> runnable.run());
+        search.addActionListener(e -> runnable.run());
     }
 
     public FormCliente() {

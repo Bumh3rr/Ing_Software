@@ -12,7 +12,6 @@ import org.hibernate.annotations.CreationTimestamp;
 @Builder
 @Getter
 @Setter
-
 public class EmpleadoN {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

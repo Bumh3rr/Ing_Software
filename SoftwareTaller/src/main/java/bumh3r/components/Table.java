@@ -7,6 +7,7 @@ import com.formdev.flatlaf.extras.components.FlatTable;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -14,11 +15,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import lombok.Getter;
 import lombok.Setter;
 import net.miginfocom.swing.MigLayout;
 
 public class Table<T> extends JPanel {
     private JTable table;
+    @Getter
     private JScrollPane scrollPane;
     private DefaultTableModel model;
     private String[] columnNames;
@@ -27,6 +30,7 @@ public class Table<T> extends JPanel {
     private List<T> dataList;
     @Setter
     private String nameAccion = "Acción";
+    private JPanel parent;
 
     public Table(String[] columnNames) {
         this.columnNames = columnNames;
@@ -38,7 +42,6 @@ public class Table<T> extends JPanel {
     private void initComponentsTable() {
         table = new FlatTable();
         scrollPane = new FlatScrollPane();
-
         String[] columnsWithAction = new String[columnNames.length + 1];
         System.arraycopy(columnNames, 0, columnsWithAction, 0, columnNames.length);
         columnsWithAction[columnNames.length] = "Acción";
@@ -56,8 +59,27 @@ public class Table<T> extends JPanel {
         };
     }
 
+    public void installParentScroll(JPanel parent) {
+        scrollPane.addMouseWheelListener(e -> {
+            e.consume();
+            MouseWheelEvent newEvent = new MouseWheelEvent(
+                    parent,
+                    e.getID(),
+                    e.getWhen(),
+                    e.getModifiers(),
+                    e.getX(), e.getY(),
+                    e.getClickCount(),
+                    e.isPopupTrigger(),
+                    e.getScrollType(),
+                    e.getScrollAmount(),
+                    e.getWheelRotation()
+            );
+            parent.dispatchEvent(newEvent);
+        });
+    }
+
     private void initTable() {
-        setLayout(new MigLayout("wrap,fill,insets n", "fill","grow 0"));
+        setLayout(new MigLayout("wrap,fill,insets n", "fill", "grow 0"));
         putClientProperty(FlatClientProperties.STYLE, ""
                 + "arc:16;"
                 + "background:$Table.background");

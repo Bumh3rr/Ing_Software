@@ -22,6 +22,8 @@ public class DateFull {
         return date.format(DateTimeFormatter.ofPattern("dd 'de' MMMM 'del' yyyy")).concat(" / " + WEEKS[date.getDayOfWeek().getValue() - 1]);
     }
 
+
+
     public static String getDateOnly(LocalDateTime date) {
         return date.format(DateTimeFormatter.ofPattern("dd 'de' MMMM 'del' yyyy"));
     }

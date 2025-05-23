@@ -27,29 +27,6 @@ public class FormPedidos extends Form {
     private ButtonDefault buttonAddProducto;
     private Table<Pedido> table;
 
-    @Override
-    public void formInit() {
-        Proveedor proveedor = new Proveedor(1L, "Proveedor 1", "1234567890", "example@gmail.com", "Dirección 1", "2021-09-01");
-        Proveedor proveedor2 = new Proveedor(2L, "Proveedor 2", "1234567890", "example@gmail.com", "Dirección 2", "2021-09-01");
-        Proveedor proveedor3 = new Proveedor(3L, "Proveedor 3", "1234567890", "example@gmail.com", "Dirección 3", "2021-09-01");
-
-        List<Refaccion> refacciones = new ArrayList<>();
-        refacciones.add(new Refaccion(1L, "Refacción 1", "description","Display", 10, 100.0, 150.0, LocalDate.now(), proveedor));
-        refacciones.add(new Refaccion(2L, "Refacción 2", "description","Display", 10, 100.0, 150.0, LocalDate.now(), proveedor2));
-        refacciones.add(new Refaccion(3L, "Refacción 3", "description","Display", 10, 100.0, 150.0, LocalDate.now(), proveedor3));
-
-
-        LinkedList<DetallesPedido> detallesPedidos = new LinkedList<>();
-        detallesPedidos.add(new DetallesPedido(1L, proveedor, refacciones.get(0),12));
-        detallesPedidos.add(new DetallesPedido(2L, proveedor, refacciones.get(1),12));
-        detallesPedidos.add(new DetallesPedido(3L, proveedor, refacciones.get(2),12));
-
-        LinkedList<Pedido> pedidos = new LinkedList<>();
-        pedidos.add(new Pedido(1L, proveedor, LocalDate.now(), Pedido.Estado.CANCELADO, "Observaciones",detallesPedidos));
-        pedidos.add(new Pedido(2L, proveedor2, LocalDate.now(), Pedido.Estado.PENDIENTE, "Observaciones",detallesPedidos));
-        pedidos.add(new Pedido(3L, proveedor3, LocalDate.now(), Pedido.Estado.ENTREGADO, "Observaciones",detallesPedidos));
-        showData(pedidos);
-    }
 
     public FormPedidos() {
         initComponents();

@@ -30,8 +30,6 @@ public class PanelRegisterSale extends Panel {
     private Table<Reparacion_Dispositivo> reparacionTable;
     private Table<Refaccion> refaccionTable;
     private JButton buttonSelectReparation, buttonSelectRepair, buttonGenerateSale;
-    private List<Reparacion_Dispositivo> reparacionList;
-    private List<Refaccion> refaccionList;
     private FlatComboBox<MetodoPago> comboBoxMethodPago;
     private InputText inputDescuento,inputMonto;
 
@@ -48,9 +46,11 @@ public class PanelRegisterSale extends Panel {
         buttonGenerateSale = new ButtonDefault("Generar Venta");
 
         reparacionTable = new Table<>(new String[]{"Tipo Reparación", "Reparación", "Precio","Abono"});
+        reparacionTable.installParentScroll(this);
         reparacionTable.setNameAccion("Remover");
 
         refaccionTable = new Table<>(new String[]{"Nombre", "Unidades", "Precio Unidad","SubTotal"});
+        refaccionTable.installParentScroll(this);
         refaccionTable.setNameAccion("Remover");
 
         comboBoxMethodPago = new FlatComboBox<>();
