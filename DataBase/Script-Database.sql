@@ -131,7 +131,52 @@ CREATE TABLE IF NOT EXISTS `taller_jpa`.`proveedor` (
 ENGINE = InnoDB;
 
 
+
+
+-- -----------------------------------------------------
+-- Table `taller_jpa`.`categoria`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `taller_jpa`.`categoria` ;
+
+CREATE TABLE IF NOT EXISTS `taller_jpa`.`categoria` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(50) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `taller_jpa`.`refaccion`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `taller_jpa`.`refaccion` ;
+
+CREATE TABLE IF NOT EXISTS `taller_jpa`.`refaccion` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(100) NULL,
+  `descripcion` VARCHAR(200) NULL,
+  `stock` INT NULL DEFAULT 0,
+  `precio_venta` FLOAT NULL,
+  `precio_compra` FLOAT NULL,
+  `fecha_registro` DATETIME NOT NULL,
+  `proveedor_id` BIGINT NOT NULL,
+  `categoria_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_refaccion_proveedor_idx` (`proveedor_id` ASC) VISIBLE,
+  INDEX `fk_refaccion_categoria1_idx` (`categoria_id` ASC) VISIBLE,
+  CONSTRAINT `fk_refaccion_proveedor`
+    FOREIGN KEY (`proveedor_id`)
+    REFERENCES `taller_jpa`.`proveedor` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_refaccion_categoria1`
+    FOREIGN KEY (`categoria_id`)
+    REFERENCES `taller_jpa`.`categoria` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 insert into tipo_empleado(nombre) values ("Recepcionista"),("Técnico"),("Gerente");
+insert into categoria(nombre) values ("Pantall"),("Bateria"),("Centro de Carga");
 select * from usuario;
 select * from empleado;
 select * from tipo_empleado;
