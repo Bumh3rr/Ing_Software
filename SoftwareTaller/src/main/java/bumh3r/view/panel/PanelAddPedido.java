@@ -8,6 +8,10 @@ import bumh3r.components.input.InputFormatterNumber;
 import bumh3r.components.input.InputText;
 import bumh3r.components.label.LabelForDescription;
 import bumh3r.modal.CustomModal;
+import bumh3r.model.New.CategoriaN;
+import bumh3r.model.New.ProveedorN;
+import bumh3r.model.New.RefaccionN;
+import bumh3r.request.DetallesPedidosRequest;
 import bumh3r.request.PedidoRequest;
 import bumh3r.system.panel.Panel;
 import bumh3r.system.panel.PanelsInstances;
@@ -16,6 +20,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.List;
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 import raven.modal.ModalDialog;
@@ -30,11 +35,17 @@ public class PanelAddPedido extends Panel {
     private FlatComboBox<Object> refaccion, proveedor;
     private ButtonDefault buttonAdd;
     private ButtonAccentBase buttonAddDetalle;
-    private Table table;
+    private Table<DetallesPedidosRequest> table;
 
     public PanelAddPedido() {
         initComponents();
+        initListeners();
         init();
+    }
+
+    private void initListeners() {
+        buttonAddDetalle.addActionListener((x) -> {
+        });
     }
 
     private void initComponents() {
@@ -76,8 +87,21 @@ public class PanelAddPedido extends Panel {
         add(buttonAdd, "grow 0,gapy 5,al trail");
     }
 
-    public PedidoRequest getValue(){
+    public PedidoRequest getValue() {
+        String descriptionValue = !this.descriptionArea.getText().isEmpty() ? this.descriptionArea.getText().strip() : null;
+        ProveedorN proveedorValue = this.proveedor.getSelectedItem() instanceof ProveedorN ? (ProveedorN) this.proveedor.getSelectedItem() : null;
+        List<DetallesPedidosRequest> detalles = table.getDataList();
+        return new PedidoRequest(descriptionValue, proveedorValue, detalles);
+    }
 
+    public void cleanValue() {
+        SwingUtilities.invokeLater(() -> {
+            this.descriptionArea.setText("");
+            this.refaccion.setSelectedIndex(0);
+            this.proveedor.setSelectedIndex(0);
+            this.unidades.setValue(null);
+            table.cleanData();
+        });
     }
 
 }

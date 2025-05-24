@@ -27,10 +27,10 @@ public class Table<T> extends JPanel {
     private String[] columnNames;
     @Setter
     private Function<T, Void> rowClickListener;
+    @Getter
     private List<T> dataList;
     @Setter
     private String nameAccion = "Acción";
-    private JPanel parent;
 
     public Table(String[] columnNames) {
         this.columnNames = columnNames;
@@ -161,6 +161,7 @@ public class Table<T> extends JPanel {
         while (model.getRowCount() > 0) {
             model.removeRow(0);
         }
+        dataList.clear();
     }
 
     private class ButtonRenderer extends JButton implements TableCellRenderer {
