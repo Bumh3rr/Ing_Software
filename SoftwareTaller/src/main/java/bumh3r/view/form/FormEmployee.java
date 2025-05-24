@@ -7,6 +7,7 @@ import bumh3r.components.resposive.ResponsiveLayout;
 import bumh3r.controller.ControladorEmpleado;
 import bumh3r.model.New.EmpleadoN;
 import bumh3r.system.form.Form;
+import bumh3r.thread.PoolThreads;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Dimension;
 import java.util.List;
@@ -22,7 +23,7 @@ public class FormEmployee extends Form {
     @Override
     public void formInit() {
         containerCards.installDependent1(controller.eventShowPreferences);
-        getEventFormInit().run();
+        PoolThreads.getInstance().execute(getEventFormInit());
     }
 
     @Override
@@ -33,7 +34,7 @@ public class FormEmployee extends Form {
     @Override
     public void formRefresh() {
         eventCleanUser();
-        getEventFormRefresh().run();
+        PoolThreads.getInstance().execute(getEventFormRefresh());
     }
 
     public void installEventShowAddEmployee(Runnable event) {
@@ -67,11 +68,10 @@ public class FormEmployee extends Form {
         panel.add(containerCards.getPanelPaginacion(), "grow 0,gapy 0 5,al center");
         return panel;
     }
-    public Consumer<EmpleadoN> eventAddUsuario = (employee) ->
-            SwingUtilities.invokeLater(() -> containerCards.addItemOne(employee));
 
-    public Consumer<List<EmpleadoN>> eventAddUsuarioCard = (list) ->
-            containerCards.addItemsAll(list);
+    public Consumer<EmpleadoN> eventAddUsuario = (employee) -> containerCards.addItemOne(employee);
+
+    public Consumer<List<EmpleadoN>> eventAddUsuarioCard = (list) -> containerCards.addItemsAll(list);
 
     public void eventCleanUser() {
         containerCards.cleanCards();

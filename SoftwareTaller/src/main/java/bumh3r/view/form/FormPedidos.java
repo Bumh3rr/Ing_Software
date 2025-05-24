@@ -28,7 +28,7 @@ public class FormPedidos extends Form {
 
     @Override
     public void installController() {
-       this.controladorPedido =  new ControladorPedido(this);
+        this.controladorPedido = new ControladorPedido(this);
     }
 
     @Override

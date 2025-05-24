@@ -18,21 +18,18 @@ import bumh3r.model.Reparacion_Dispositivo;
 import bumh3r.model.TipoReparacion;
 import bumh3r.notifications.Notify;
 import bumh3r.system.panel.Panel;
-import bumh3r.thread.PoolThreads;
 import bumh3r.utils.Promiseld;
-import bumh3r.view.panel.PanelRequestDevice;
+import bumh3r.view.panel.PanelAddDispositivo;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -45,7 +42,6 @@ import net.miginfocom.swing.MigLayout;
 import raven.extras.AvatarIcon;
 import raven.modal.Toast;
 
-import static bumh3r.archive.PathResources.Img.categorydevice;
 import static bumh3r.model.other.Verify.isNotNull;
 
 public class PanelModalInfoReparacion extends Panel {
@@ -209,7 +205,7 @@ public class PanelModalInfoReparacion extends Panel {
             try {
                 Reparacion_Dispositivo reparacionDispositivo = getReparacion();
                 if (isNotNull(reparacionDispositivo)) {
-                    PanelRequestDevice.listRepair.add(reparacionDispositivo);
+                    PanelAddDispositivo.listRepair.add(reparacionDispositivo);
                     panelReparaciones.add(new CardRepair(reparacionDispositivo, createEventCardDelete()));
                     panelReparaciones.updateUI();
                 }
@@ -274,9 +270,9 @@ public class PanelModalInfoReparacion extends Panel {
 
     private Consumer<Reparacion_Dispositivo> createEventCardDelete() {
         return e -> {
-            int i = PanelRequestDevice.listRepair.indexOf(e);
+            int i = PanelAddDispositivo.listRepair.indexOf(e);
             if (i != -1) {
-                PanelRequestDevice.listRepair.remove(i);
+                PanelAddDispositivo.listRepair.remove(i);
                 EventQueue.invokeLater(() -> {
                     panelReparaciones.remove(i);
                     panelReparaciones.revalidate();

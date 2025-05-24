@@ -175,6 +175,53 @@ CREATE TABLE IF NOT EXISTS `taller_jpa`.`refaccion` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `taller_jpa`.`pedido`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `taller_jpa`.`pedido` ;
+
+CREATE TABLE IF NOT EXISTS `taller_jpa`.`pedido` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `fecha_pedido` DATETIME NOT NULL,
+  `estado` VARCHAR(100) NOT NULL,
+  `observaciones` VARCHAR(250) NULL,
+  `proveedor_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_pedidos_proveedor1_idx` (`proveedor_id` ASC) VISIBLE,
+  CONSTRAINT `fk_pedidos_proveedor1`
+    FOREIGN KEY (`proveedor_id`)
+    REFERENCES `taller_jpa`.`proveedor` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `taller_jpa`.`detalles_pedido`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `taller_jpa`.`detalles_pedido` ;
+
+CREATE TABLE IF NOT EXISTS `taller_jpa`.`detalles_pedido` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `cantidad` INT NOT NULL DEFAULT 0,
+  `pedido_id` BIGINT NOT NULL,
+  `refaccion_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_detalles_pedido_pedidos1_idx` (`pedido_id` ASC) VISIBLE,
+  INDEX `fk_detalles_pedido_refaccion1_idx` (`refaccion_id` ASC) VISIBLE,
+  CONSTRAINT `fk_detalles_pedido_pedidos1`
+    FOREIGN KEY (`pedido_id`)
+    REFERENCES `taller_jpa`.`pedido` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_detalles_pedido_refaccion1`
+    FOREIGN KEY (`refaccion_id`)
+    REFERENCES `taller_jpa`.`refaccion` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 insert into tipo_empleado(nombre) values ("Recepcionista"),("Técnico"),("Gerente");
 insert into categoria(nombre) values ("Pantall"),("Bateria"),("Centro de Carga");
 select * from usuario;

@@ -35,26 +35,6 @@ public class PanelsInstances {
         return instance;
     }
 
-    public void showPanelCreateNote() {
-        if (ModalDialog.isIdExist(PanelCreateNote.ID)) {
-            return;
-        }
-        showModal(PanelCreateNote.class, "Nueva Nota", "ic_newNote.svg", PanelCreateNote.ID);
-    }
-
-    private void showModal(Class<? extends Panel> panelClass, String title, String icon, String id) {
-        ModalDialog.showModal(this.frame,
-                CustomModal.builder()
-                        .component(getPanelModal(panelClass))
-                        .title(title)
-                        .icon(modal + icon)
-                        .buttonClose(true)
-                        .ID(id)
-                        .build(),
-                Config.getModelShowModalFromNote(),
-                id);
-    }
-
     public Panel getPanelModal(Class<? extends Panel> cls) {
         if (getInstance().formsMap.containsKey(cls)) {
             Panel panel = getInstance().formsMap.get(cls);

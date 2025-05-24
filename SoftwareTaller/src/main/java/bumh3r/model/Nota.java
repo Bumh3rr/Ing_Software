@@ -164,8 +164,6 @@ public class Nota {
 
 
 
-
-
         public String getBackgroundStatus() {
             switch (this) {
                 case EN_PROCESO:

@@ -2,24 +2,27 @@
 package bumh3r.components.card;
 
 import bumh3r.components.input.InputFormattedDecimal;
+import bumh3r.model.New.ReparacionN;
 import bumh3r.model.Reparacion_Dispositivo;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 import raven.extras.AvatarIcon;
+
 import static bumh3r.archive.PathResources.Img.categorydevice;
 import static bumh3r.archive.PathResources.Img.repair;
 
-public class CardRepair extends JPanel {
+public class CardRepair extends Card {
+    private final ReparacionN reparacion;
+    private final BiConsumer<ReparacionN, Consumer<Void>> event;
 
-    private final Reparacion_Dispositivo reparacionDispositivo;
-    private final Consumer<Reparacion_Dispositivo> event;
-
-    public CardRepair(Reparacion_Dispositivo reparacionDispositivo, Consumer<Reparacion_Dispositivo> event) {
-        this.reparacionDispositivo = reparacionDispositivo;
+    public CardRepair(ReparacionN reparacion, BiConsumer<ReparacionN, Consumer<Void>> event) {
+        super(reparacion, event);
+        this.reparacion = reparacion;
         this.event = event;
         init();
     }
@@ -31,7 +34,7 @@ public class CardRepair extends JPanel {
                 "[dark]background:lighten($Panel.background,3%);");
 
         setLayout(new MigLayout("wrap 2,insets 5", "[fill,center][]", "[grow 0,center]"));
-        add(createIcon(),"gapx 15");
+        add(createIcon(), "gapx 15");
         add(createBody());
         revalidate();
         updateUI();
@@ -40,7 +43,7 @@ public class CardRepair extends JPanel {
     private JComponent createIcon() {
         AvatarIcon icon = new AvatarIcon(createdIcon(), 100, 100, 3.9f);
         icon.setType(AvatarIcon.Type.MASK_SQUIRCLE);
-        icon.setBorder(2,2);
+        icon.setBorder(2, 2);
         icon.setBorderColor(new AvatarIcon.BorderColor(Color.decode("#6d6d6d"), 0.2f));
         return new JLabel(icon);
     }
@@ -49,7 +52,7 @@ public class CardRepair extends JPanel {
         JPanel body = new JPanel(new MigLayout("wrap", "[200]", "[][][]push"));
         body.putClientProperty(FlatClientProperties.STYLE, "" +
                 "background:null");
-        JLabel title = new JLabel(reparacionDispositivo.getCategoria().getName());
+        JLabel title = new JLabel(reparacion.getCategoria());
         title.putClientProperty(FlatClientProperties.STYLE, "" +
                 "font:bold +1;");
         JTextPane description = new JTextPane();
@@ -61,16 +64,17 @@ public class CardRepair extends JPanel {
                 "[light]foreground:tint($Label.foreground,30%);" +
                 "[dark]foreground:shade($Label.foreground,30%)");
         description.setText(
-                "Reparación: " + reparacionDispositivo.getReparacion()
-                        + "\nDescripción: " + (reparacionDispositivo.getDescripcion() == null || reparacionDispositivo.getDescripcion().isEmpty() ?
-                                                "campo vacío" : reparacionDispositivo.getDescripcion())
-                        + "\nPrecio: $" + InputFormattedDecimal.decimalFormat.format(reparacionDispositivo.getPrecio())
-                        + "\nAnticipo: $" + InputFormattedDecimal.decimalFormat.format(reparacionDispositivo.getAbono())
-                        + "\nTécnico Encargado:\n " + reparacionDispositivo.getEmpleado().toString());
+                "Reparación: " + reparacion.getReparacion()
+                        + "\nDescripción: " + (reparacion.getDescripcion() == null || reparacion.getDescripcion().isEmpty() ?
+                        "campo vacío" : reparacion.getDescripcion())
+                        + "\nPrecio: $" + InputFormattedDecimal.decimalFormat.format(reparacion.getPrecio())
+                        + "\nAnticipo: $" + InputFormattedDecimal.decimalFormat.format(reparacion.getAbono())
+                        + "\nTécnico Encargado:\n " + reparacion.getEmpleado().toString());
 
         JButton button = new JButton();
         button.setText("Eliminar");
-        button.addActionListener(e -> event.accept(reparacionDispositivo));
+        button.addActionListener(e -> event.accept(reparacion, (x) -> {
+        }));
         button.setBackground(new Color(255, 51, 102));
         button.setForeground(new Color(255, 255, 255));
 
@@ -80,13 +84,12 @@ public class CardRepair extends JPanel {
         return body;
     }
 
-
     private ImageIcon createdIcon() {
         String reparacion = this.reparacionDispositivo.getReparacion().getNameBaseIcon();
-        if (reparacion!= null){
+        if (reparacion != null) {
             return new ImageIcon(CardRepair.class.getResource(repair + reparacion + ".png"));
         }
-        return new ImageIcon(CardRepair.class.getResource(categorydevice +"hardware.png"));
+        return new ImageIcon(CardRepair.class.getResource(categorydevice + "hardware.png"));
     }
 
 }
