@@ -3,6 +3,7 @@ package bumh3r.components;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.components.FlatScrollPane;
 import com.formdev.flatlaf.extras.components.FlatTable;
+import java.awt.event.MouseWheelEvent;
 import java.util.List;
 import java.util.function.Function;
 import javax.swing.BorderFactory;
@@ -36,6 +37,25 @@ public class TableSimple<T> extends JPanel {
                 return canEdit[columnIndex];
             }
         };
+    }
+
+    public void installParentScroll(JPanel parent) {
+        scrollPane.addMouseWheelListener(e -> {
+            e.consume();
+            MouseWheelEvent newEvent = new MouseWheelEvent(
+                    parent,
+                    e.getID(),
+                    e.getWhen(),
+                    e.getModifiers(),
+                    e.getX(), e.getY(),
+                    e.getClickCount(),
+                    e.isPopupTrigger(),
+                    e.getScrollType(),
+                    e.getScrollAmount(),
+                    e.getWheelRotation()
+            );
+            parent.dispatchEvent(newEvent);
+        });
     }
 
     private void initTable() {

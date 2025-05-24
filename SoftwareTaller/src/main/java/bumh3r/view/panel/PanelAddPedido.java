@@ -5,62 +5,63 @@ import bumh3r.components.button.ButtonAccentBase;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.input.InputArea;
 import bumh3r.components.input.InputFormatterNumber;
-import bumh3r.components.input.InputText;
 import bumh3r.components.label.LabelForDescription;
-import bumh3r.modal.CustomModal;
-import bumh3r.model.New.CategoriaN;
 import bumh3r.model.New.ProveedorN;
 import bumh3r.model.New.RefaccionN;
 import bumh3r.request.DetallesPedidosRequest;
 import bumh3r.request.PedidoRequest;
 import bumh3r.system.panel.Panel;
-import bumh3r.system.panel.PanelsInstances;
-import bumh3r.utils.LimitTextDocument;
-import com.formdev.flatlaf.FlatClientProperties;
+import bumh3r.thread.PoolThreads;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.util.List;
+import java.util.function.Function;
 import javax.swing.*;
+import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
-import raven.modal.ModalDialog;
-
-import static bumh3r.archive.PathResources.Icon.modal;
 
 public class PanelAddPedido extends Panel {
     public static final String ID = PanelAddPedido.class.getName();
     private InputFormatterNumber unidades;
     private LabelForDescription description;
     private InputArea descriptionArea;
+    @Getter
     private FlatComboBox<Object> refaccion, proveedor;
     private ButtonDefault buttonAdd;
     private ButtonAccentBase buttonAddDetalle;
+    @Getter
     private Table<DetallesPedidosRequest> table;
+    private final Function<DetallesPedidosRequest, Object[]> dataMapper = usuarioMapper -> new Object[]{
+            usuarioMapper.cantidad(),
+            usuarioMapper.refaccionN()
+    };
+
+    public void installEventAddDetalle(Runnable runnable) {
+        buttonAddDetalle.addActionListener(e -> runnable.run());
+    }
+
+    public void installEventAddPedido(Runnable runnable) {
+        buttonAdd.addActionListener(e -> runnable.run());
+    }
+
+    public void installEventRemoveDetalle(Function<DetallesPedidosRequest,Void> event) {
+        table.setRowClickListener(event);
+    }
 
     public PanelAddPedido() {
         initComponents();
-        initListeners();
         init();
     }
 
-    private void initListeners() {
-        buttonAddDetalle.addActionListener((x) -> {
-        });
-    }
-
     private void initComponents() {
-        table = new Table<>(new String[]{"Unidades", "Refacción"});
+        table = new Table<>(new String[]{"Unidades", "Refacción"},dataMapper);
         table.setNameAccion("Eliminar");
         table.installParentScroll(this);
-
         buttonAddDetalle = new ButtonAccentBase("Agregar Detalle");
-        unidades = new InputFormatterNumber(100);
-
+        unidades = new InputFormatterNumber(10000);
         refaccion = new FlatComboBox<>();
         proveedor = new FlatComboBox<>();
         proveedor.setModel(new DefaultComboBoxModel<>(new String[]{"Seleccione el proveedor"}));
         refaccion.setModel(new DefaultComboBoxModel<>(new String[]{"Seleccione la refacción a pedir"}));
-
         buttonAdd = new ButtonDefault("Agregar pedido");
         description = new LabelForDescription("En este apartado podrás registrar los productos a solicitar al pedido, asegurate de ingresar los datos correctos.");
         descriptionArea = new InputArea();
@@ -83,7 +84,7 @@ public class PanelAddPedido extends Panel {
         add(buttonAddDetalle, "grow 0,gapy 3,al trail");
 
         add(createdSubTitle("Detalles", 15), "grow 0,gapy 5 0,al center");
-        add(table, "grow,push,gapy 5 0,h 130!");
+        add(table, "grow,push,gapy 5 0,h 230!");
         add(buttonAdd, "grow 0,gapy 5,al trail");
     }
 
@@ -94,6 +95,19 @@ public class PanelAddPedido extends Panel {
         return new PedidoRequest(descriptionValue, proveedorValue, detalles);
     }
 
+    public DetallesPedidosRequest getValueDetail() {
+        Integer unidadesValue = this.unidades.getValue() != null ? Integer.valueOf(this.unidades.getValue().toString()) : null;
+        RefaccionN refaccionValue = this.refaccion.getSelectedItem() instanceof RefaccionN ? (RefaccionN) this.refaccion.getSelectedItem() : null;
+        return new DetallesPedidosRequest(unidadesValue, refaccionValue);
+    }
+
+    public void cleanValueDetail() {
+        SwingUtilities.invokeLater(() -> {
+            this.refaccion.setSelectedIndex(0);
+            this.unidades.setValue(null);
+        });
+    }
+
     public void cleanValue() {
         SwingUtilities.invokeLater(() -> {
             this.descriptionArea.setText("");
@@ -101,6 +115,26 @@ public class PanelAddPedido extends Panel {
             this.proveedor.setSelectedIndex(0);
             this.unidades.setValue(null);
             table.cleanData();
+        });
+    }
+
+    public void addOneTable(DetallesPedidosRequest cliente) {
+        PoolThreads.getInstance().execute(() -> table.addOne(cliente));
+    }
+
+    public void setProveedorModel(List<ProveedorN> list) {
+        SwingUtilities.invokeLater(() -> {
+            this.proveedor.removeAllItems();
+            this.proveedor.addItem("Seleccione un Proveedor");
+            list.forEach((proveedorN) -> this.proveedor.addItem(proveedorN));
+        });
+    }
+
+    public void setRefaccionModel(List<RefaccionN> list) {
+        SwingUtilities.invokeLater(() -> {
+            this.refaccion.removeAllItems();
+            this.refaccion.addItem("Seleccione la refacción a pedir");
+            list.forEach((refaccionN) -> this.refaccion.addItem(refaccionN));
         });
     }
 

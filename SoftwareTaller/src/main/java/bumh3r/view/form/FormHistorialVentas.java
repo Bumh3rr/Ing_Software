@@ -181,7 +181,7 @@ public class FormHistorialVentas extends Form {
         datePicker.setSelectedDate(LocalDate.now());
         datePicker.setCloseAfterSelected(true);
         datePicker.setUsePanelOption(true);
-        table = new Table<>(new String[]{"ID", "ID Nota", "Total Venta", "Estado", "Fecha"});
+        table = new Table<>(new String[]{"ID", "ID Nota", "Total Venta", "Estado", "Fecha"},null);
         table.installParentScroll(this);
         table.setNameAccion("Ver Detalles");
         table.setRowClickListener(
@@ -228,7 +228,7 @@ public class FormHistorialVentas extends Form {
                     repair.getEstado().getNombre(),
                     DateFull.getDateFull(repair.getFecha())
             };
-            table.addAll(reparacionDispositivos, reparacion);
+            table.addAll(reparacionDispositivos);
         });
     }
 

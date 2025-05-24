@@ -39,7 +39,7 @@ public class Reparacion_Dispositivo {
 //                .append("idTipoReparacion", this.tipoReparacion.getId())
 //                .append("idCategoria", this.categoria.getId())
 //                .append("idReparacion", this.reparacion.getId())
-//                .append("descripcion", descripcion)
+//                .append("observaciones", observaciones)
 //                .append("precio", precio)
 //                .append("abono", abono)
 //                .append("idStatus", status.getKey())

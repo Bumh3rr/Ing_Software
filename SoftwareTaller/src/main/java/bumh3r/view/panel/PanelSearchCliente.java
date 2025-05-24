@@ -23,7 +23,7 @@ public class PanelSearchCliente extends Panel {
     private void initComponents() {
         input = new InputText("Introduce el numero teléfono").setIcon(modal + "ic_search.svg");
         buttonSearch = new ButtonDefault("Buscar");
-        table = new Table<>(new String[]{"ID", "Nombre","Teléfono 1", "Teléfono 2", "Dirección", "Fecha de registro"});
+        table = new Table<>(new String[]{"ID", "Nombre","Teléfono 1", "Teléfono 2", "Dirección", "Fecha de registro"},null);
         description = new LabelForDescription("En este panel puedes buscar al cliente por su número de teléfono y seleccionarlo.");
     }
 

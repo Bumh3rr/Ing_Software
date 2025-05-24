@@ -2,6 +2,7 @@ package bumh3r.controller;
 
 import bumh3r.dao.ClienteDao;
 import bumh3r.model.New.ClienteN;
+import bumh3r.model.New.EmpleadoN;
 import bumh3r.notifications.Notify;
 import bumh3r.request.ClienteRequest;
 import bumh3r.system.panel.PanelsInstances;
@@ -88,7 +89,7 @@ public class ControladorCliente extends Controller {
                     view.addOneTable(newCustomer);
                     panelAddCliente.cleanValue(); // <- Limpiar los campos
                     ModalDialog.closeModal(ID); // <- Cerrar la pantallaAgregarCliente
-                    callback.done(Toast.Type.SUCCESS, "Usuario Cliente correctamente");
+                    callback.done(Toast.Type.SUCCESS, "Cliente agregado correctamente");
                 } catch (Exception ex) {
                     callback.done(Toast.Type.ERROR, "Error al registrar el Cliente\n" + "Causa: " + ex.getLocalizedMessage());
                 }

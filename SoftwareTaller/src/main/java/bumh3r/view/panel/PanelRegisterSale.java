@@ -45,11 +45,11 @@ public class PanelRegisterSale extends Panel {
         buttonSelectRepair = new ButtonAccentBase("Seleccionar Refacciones","#ff4013");
         buttonGenerateSale = new ButtonDefault("Generar Venta");
 
-        reparacionTable = new Table<>(new String[]{"Tipo Reparación", "Reparación", "Precio","Abono"});
+        reparacionTable = new Table<>(new String[]{"Tipo Reparación", "Reparación", "Precio","Abono"},null);
         reparacionTable.installParentScroll(this);
         reparacionTable.setNameAccion("Remover");
 
-        refaccionTable = new Table<>(new String[]{"Nombre", "Unidades", "Precio Unidad","SubTotal"});
+        refaccionTable = new Table<>(new String[]{"Nombre", "Unidades", "Precio Unidad","SubTotal"},null);
         refaccionTable.installParentScroll(this);
         refaccionTable.setNameAccion("Remover");
 

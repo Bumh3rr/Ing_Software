@@ -41,9 +41,6 @@ public class PanelsInstances {
         }
         showModal(PanelCreateNote.class, "Nueva Nota", "ic_newNote.svg", PanelCreateNote.ID);
     }
-    public void showPanelAddPedido() {
-        showModal(PanelAddPedido.class, "Agregar nuevo pedido", "ic_inventario.svg", PanelAddPedido.ID);
-    }
 
     private void showModal(Class<? extends Panel> panelClass, String title, String icon, String id) {
         ModalDialog.showModal(this.frame,

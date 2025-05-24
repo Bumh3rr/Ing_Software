@@ -4,7 +4,7 @@ import bumh3r.model.New.ProveedorN;
 import java.util.List;
 
 public record PedidoRequest(
-        String descripcion,
+        String observaciones,
         ProveedorN proveedor,
         List<DetallesPedidosRequest> detalles
 ) {

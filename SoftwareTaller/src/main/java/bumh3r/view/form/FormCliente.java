@@ -68,7 +68,7 @@ public class FormCliente extends Form {
         search = new InputText("Nombre del Cliente", 100).setIcon(modal + "ic_search.svg");
         buttonSearch = new ButtonAccentBase("Buscar");
         buttonAddProducto = new ButtonDefault("Agregar Cliente");
-        table = new Table<>(new String[]{"ID", "Nombre", "Teléfono Móvil", "Teléfono Fijo", "Dirección", "Fecha de Registro"});
+        table = new Table<>(new String[]{"ID", "Nombre", "Teléfono Móvil", "Teléfono Fijo", "Dirección", "Fecha de Registro"}, dataMapper);
         table.setNameAccion("Ver Notas");
     }
 
@@ -89,10 +89,10 @@ public class FormCliente extends Form {
     }
 
     public void addAllTable(List<ClienteN> clientes) {
-        PoolThreads.getInstance().execute(() -> table.addAll(clientes, dataMapper));
+        PoolThreads.getInstance().execute(() -> table.addAll(clientes));
     }
 
     public void addOneTable(ClienteN cliente) {
-        PoolThreads.getInstance().execute(() -> table.addOne(cliente, dataMapper));
+        PoolThreads.getInstance().execute(() -> table.addOne(cliente));
     }
 }

@@ -26,7 +26,7 @@ public class PanelSelectReparacion extends Panel {
     }
 
     private void initComponents() {
-        table = new Table<>(new String[]{"Tipo", "Categoría ","Reparación", "Precio", "Abono","Estado"});
+        table = new Table<>(new String[]{"Tipo", "Categoría ","Reparación", "Precio", "Abono","Estado"},null);
         table.setNameAccion("Seleccionar");
         description = new LabelForDescription("En este apartado podrás seleccionar las reparaciones que deseas agregar a la venta.");
     }
@@ -47,7 +47,7 @@ public class PanelSelectReparacion extends Panel {
                     String.format("$%.2f", repair.getAbono()),
                     repair.getStatus().getValue()
             };
-            table.addAll(reparacionDispositivos, reparacion);
+            table.addAll(reparacionDispositivos);
         });
     }
 

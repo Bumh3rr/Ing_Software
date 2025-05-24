@@ -43,7 +43,7 @@ public class PanelSelectRefacciones extends Panel {
     private void initComponents() {
         input = new InputText("Introduce el nombre refacción").setIcon(modal + "ic_search.svg");
         buttonSearch = new ButtonDefault("Buscar");
-        table = new Table<>(new String[]{"Nombre", "Categoría", "Precio", "Stock"});
+        table = new Table<>(new String[]{"Nombre", "Categoría", "Precio", "Stock"},null);
         table.setNameAccion("Agregar");
         description = new LabelForDescription("En este panel puedes buscar la refacción por su nombre y seleccionarla.");
     }
@@ -64,7 +64,7 @@ public class PanelSelectRefacciones extends Panel {
                     String.format("$%.2f", repair.getPrecioVenta()),
                     repair.getStock()
             };
-            table.addAll(reparacionDispositivos, reparacion);
+            table.addAll(reparacionDispositivos);
         });
     }
 

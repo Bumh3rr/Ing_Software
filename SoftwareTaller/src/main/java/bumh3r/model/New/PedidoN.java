@@ -1,6 +1,8 @@
 package bumh3r.model.New;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,6 +28,7 @@ public class PedidoN {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDateTime fecha_pedido;
+    @Enumerated(EnumType.STRING)
     private EstadoPedido estado;
     private String observaciones;
     @ManyToOne

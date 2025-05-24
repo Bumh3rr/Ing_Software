@@ -31,8 +31,10 @@ public class Table<T> extends JPanel {
     private List<T> dataList;
     @Setter
     private String nameAccion = "Acción";
+    private Function<T, Object[]> dataMapper;
 
-    public Table(String[] columnNames) {
+    public Table(String[] columnNames,Function<T, Object[]> dataMapper) {
+        this.dataMapper = dataMapper;
         this.columnNames = columnNames;
         this.dataList = new ArrayList<>();
         initComponentsTable();
@@ -133,7 +135,7 @@ public class Table<T> extends JPanel {
         });
     }
 
-    public void addAll(List<T> data, Function<T, Object[]> dataMapper) {
+    public void addAll(List<T> data) {
         cleanData();
         dataList.clear();
         for (T item : data) {
@@ -147,7 +149,7 @@ public class Table<T> extends JPanel {
         }
     }
 
-    public void addOne(T item, Function<T, Object[]> dataMapper) {
+    public void addOne(T item) {
         Object[] rowData = dataMapper.apply(item);
         Object[] rowWithButton = new Object[rowData.length + 1];
         System.arraycopy(rowData, 0, rowWithButton, 0, rowData.length);
@@ -155,6 +157,20 @@ public class Table<T> extends JPanel {
         rowWithButton[rowData.length] = nameAccion;
         model.addRow(rowWithButton);
         dataList.add(item);
+    }
+
+    public void update(){
+        while (model.getRowCount() > 0) {
+            model.removeRow(0);
+        }
+        for (T item : dataList) {
+            Object[] rowData = dataMapper.apply(item);
+            Object[] rowWithButton = new Object[rowData.length + 1];
+            System.arraycopy(rowData, 0, rowWithButton, 0, rowData.length);
+            // Set "View" as button text
+            rowWithButton[rowData.length] = nameAccion;
+            model.addRow(rowWithButton);
+        }
     }
 
     public void cleanData() {
