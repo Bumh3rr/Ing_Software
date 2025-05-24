@@ -20,13 +20,19 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.*;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 import raven.datetime.DatePicker;
+import raven.datetime.PanelDateOptionLabel;
 import raven.modal.ModalDialog;
 
+@Slf4j
 public class FormNotes extends Form {
+    @Getter
     private InputText search;
     private JFormattedTextField inputDate;
+    @Getter
     private DatePicker datePicker;
     private ButtonDefault button_createNote;
     private ButtonAccentBase buttonSearch;
@@ -56,6 +62,11 @@ public class FormNotes extends Form {
 
     public void installEventSearchNote(Runnable event) {
         buttonSearch.addActionListener(e -> event.run());
+        search.addActionListener(e -> event.run());
+    }
+
+    public void installEventFilterByDate(Runnable event) {
+        datePicker.addDateSelectionListener((x) -> event.run());
     }
 
     public FormNotes() {
@@ -64,18 +75,30 @@ public class FormNotes extends Form {
     }
 
     private void initComponents() {
-        containerCards = new ContainerCards<>(CardNote.class, new ResponsiveLayout(ResponsiveLayout.JustifyContent.FIT_CONTENT, new Dimension(-1, -1), 10, 10));
-        containerCards.setLongitud(6);
-
-        search = new InputText("Buscar Folio ...", 6);
+        containerCards = new ContainerCards<>(CardNote.class, new ResponsiveLayout(ResponsiveLayout.JustifyContent.FIT_CONTENT, new Dimension(330, -1), 10, 10));
+        containerCards.setLongitud(1000);
+        search = new InputText("Buscar Folio ...", 10);
         datePicker = new DatePicker();
         inputDate = new JFormattedTextField();
         datePicker.setEditor(inputDate);
         datePicker.setSelectedDate(LocalDate.now());
-        datePicker.setCloseAfterSelected(true);
+        datePicker.setCloseAfterSelected(false);
+        datePicker.setPanelDateOptionLabel(createDefaultPanelDateOptionLabel());
         datePicker.setUsePanelOption(true);
         button_createNote = new ButtonDefault("Crear Nota");
         buttonSearch = new ButtonAccentBase("Buscar");
+    }
+    private PanelDateOptionLabel createDefaultPanelDateOptionLabel() {
+        PanelDateOptionLabel defaultPanelDateOptionLabel = new PanelDateOptionLabel();
+        defaultPanelDateOptionLabel.add("Hoy", PanelDateOptionLabel.LabelCallback.TODAY);
+        defaultPanelDateOptionLabel.add("Ayer", PanelDateOptionLabel.LabelCallback.YESTERDAY);
+        defaultPanelDateOptionLabel.add("Últimos 7 días", PanelDateOptionLabel.LabelCallback.LAST_7_DAYS);
+        defaultPanelDateOptionLabel.add("Últimos 30 días", PanelDateOptionLabel.LabelCallback.LAST_30_DAYS);
+        defaultPanelDateOptionLabel.add("Este mes", PanelDateOptionLabel.LabelCallback.THIS_MONTH);
+        defaultPanelDateOptionLabel.add("Mes pasado", PanelDateOptionLabel.LabelCallback.LAST_MONTH);
+        defaultPanelDateOptionLabel.add("El año pasado", PanelDateOptionLabel.LabelCallback.LAST_YEAR);
+        defaultPanelDateOptionLabel.add("Personalizar", PanelDateOptionLabel.LabelCallback.CUSTOM);
+        return defaultPanelDateOptionLabel;
     }
 
     private void init() {
@@ -84,7 +107,7 @@ public class FormNotes extends Form {
         add(createBody(), "grow,push,gapx 20 20");
     }
 
-     private JComponent createBody() {
+    private JComponent createBody() {
         JPanel panel = new JPanel(new MigLayout("fillx,wrap 2,insets 5", "[]push[]", "[]10[]"));
         panel.putClientProperty(FlatClientProperties.STYLE, ""
                 + "background:null;");

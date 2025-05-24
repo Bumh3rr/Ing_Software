@@ -1,6 +1,8 @@
 package bumh3r.model.New;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,8 +26,10 @@ public class DispositivoN {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String tipo_dispositivo;
-    private String marca;
+    @Enumerated(EnumType.STRING)
+    private TipoDispositivo tipo_dispositivo;
+    @Enumerated(EnumType.STRING)
+    private Marca marca;
     private String modelo;
     private String imei;
     private Integer utils;
@@ -34,4 +38,51 @@ public class DispositivoN {
     @ManyToOne
     @JoinColumn(name = "nota_id")
     private NotaN nota;
+
+
+    public enum TipoDispositivo {
+        CELULAR("Celular"),
+        TABLET("Tablet"),
+        COMPUTADORA("Computadora"),
+        OTRO("Otro");
+
+        private final String nombre;
+
+        TipoDispositivo(String nombre) {
+            this.nombre = nombre;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+    }
+
+    public enum Marca {
+        APPLE("Apple"),
+        SAMSUNG("Samsung"),
+        HUAWEI("Huawei"),
+        XIAOMI("Xiaomi"),
+        MOTOROLA("Motorola"),
+        LG("LG"),
+        SONY("Sony"),
+        ASUS("Asus"),
+        LENOVO("Lenovo"),
+        DELL("Dell"),
+        HP("HP"),
+        ACER("Acer"),
+        TOSHIBA("Toshiba"),
+        MSI("MSI"),
+        RAZER("Razer"),
+        OTRO("Otro");
+
+        private final String nombre;
+
+        Marca(String nombre) {
+            this.nombre = nombre;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+    }
 }

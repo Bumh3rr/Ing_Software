@@ -1,11 +1,14 @@
 package bumh3r.request;
 
+import bumh3r.model.New.EmpleadoN;
+import bumh3r.model.New.ReparacionN;
+
 public record ReparacionRequest(
-        String id,
-        String idNota,
-        String idDispositivo,
-        String idEmpleado,
-        String idTipoReparacion,
-        String idMarca
+        String reparacion,
+        ReparacionN.CategoriaReparacion categoria,
+        String observacion,
+        Float precio,
+        Float abono,
+        EmpleadoN tecnico
 ) {
 }

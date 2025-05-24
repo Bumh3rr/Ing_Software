@@ -1,6 +1,8 @@
 package bumh3r.model.New;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,11 +26,14 @@ public class ReparacionN {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Enumerated(EnumType.STRING)
+    private CategoriaReparacion categoria;
     private String reparacion;
-    private String categoria;
-    private String descripcion;
+    private String observacion;
     private Float precio;
     private Float abono;
+    @Enumerated(EnumType.STRING)
+    private EstadoReparacion estado;
     @ManyToOne
     @JoinColumn(name = "dispositivo_id")
     private DispositivoN dispositivo;
@@ -36,4 +41,40 @@ public class ReparacionN {
     @ManyToOne
     @JoinColumn(name = "empleado_id")
     private EmpleadoN empleado;
+
+    public enum EstadoReparacion {
+        PENDIENTE("Pendiente"),
+        EN_PROCESO("En Proceso"),
+        TERMINADO("Terminado"),
+        CANCELADO("Cancelado");
+        @Getter
+        private final String estado;
+
+        EstadoReparacion(String estado) {
+            this.estado = estado;
+        }
+
+        @Override
+        public String toString() {
+            return this.estado;
+        }
+    }
+
+    public enum CategoriaReparacion {
+        HARDWARE("Hardware"),
+        SOFTWARE("Software"),
+        OTRO("Otro");
+
+        @Getter
+        private final String categoria;
+
+        CategoriaReparacion(String categoria) {
+            this.categoria = categoria;
+        }
+
+        @Override
+        public String toString() {
+            return this.categoria;
+        }
+    }
 }

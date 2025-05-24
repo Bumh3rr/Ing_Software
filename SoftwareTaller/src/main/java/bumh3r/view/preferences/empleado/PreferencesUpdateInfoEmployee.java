@@ -7,6 +7,7 @@ import bumh3r.components.input.InputText;
 import bumh3r.components.input.InputTextCP;
 import bumh3r.components.input.InputTextPhone;
 import bumh3r.dao.TipoEmpleadoDAO;
+import bumh3r.model.New.DireccionN;
 import bumh3r.model.New.EmpleadoN;
 import bumh3r.model.New.TipoEmpleado;
 import bumh3r.model.other.EstadosMx;
@@ -19,6 +20,7 @@ import bumh3r.utils.CheckExpression;
 import bumh3r.utils.CheckInput;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -142,52 +144,40 @@ public class PreferencesUpdateInfoEmployee extends Preferences {
         add(saveButton, "grow 0,gapy 10,al trail");
     }
 
-    public EmpleadoRequest getValue() {
-        Toast.closeAll();
-        if (checkInputs()) return null;
-
-        String firstnameValue = this.firstname.getText().strip();
-        String lastnameValue = this.lastname.getText().strip();
-        String phoneValue = this.phone.getValue().toString();
-        String sexValue = this.sex.getSelectedItem().toString();
-        TipoEmpleado type = ((TipoEmpleado) this.typeEmployee.getSelectedItem());
-        String stateValue = EstadosMx.getInstance().getStatesAbbreviation(this.comboBoxAddress.getStates().getSelectedItem().toString());
-        String municipalityValue = this.comboBoxAddress.getMunicipality().getSelectedItem().toString();
-        String streetValue = this.street.getText().strip();
-        String colonyValue = this.colony.getText().strip();
-        String zipValue = this.zip.getValue().toString();
+    public EmpleadoN getValue() {
+        String firstnameValue = !this.firstname.getText().isEmpty() ? this.firstname.getText().strip() : null;
+        String lastnameValue = !this.lastname.getText().isEmpty() ? this.lastname.getText().strip() : null;
+        String phoneValue = this.phone.getValue() != null ? this.phone.getValue().toString() : null;
+        String sexValue = this.sex.getSelectedItem() != null ? this.sex.getSelectedItem().toString() : null;
+        TipoEmpleado type = this.typeEmployee.getSelectedItem() != null ? ((TipoEmpleado) this.typeEmployee.getSelectedItem()) : null;
+        String stateValue = this.comboBoxAddress.getStates().getSelectedItem() != null ? EstadosMx.getInstance().getStatesAbbreviation(this.comboBoxAddress.getStates().getSelectedItem().toString()) : null;
 
         // Datos opcionales que puedes llegar hacer nulos
-        String rfcValue = (!rfc.getText().isEmpty()) ? rfc.getText().strip() : null;
-        String emailValue = (!email.getText().isEmpty()) ? email.getText().strip() : null;
+        String municipalityValue = this.comboBoxAddress.getMunicipality().getSelectedItem() != null ? this.comboBoxAddress.getMunicipality().getSelectedItem().toString() : null;
+        String streetValue = !this.street.getText().isEmpty() ? this.street.getText().strip() : null;
+        String colonyValue = !this.colony.getText().isEmpty() ? this.colony.getText().strip() : null;
+        String zipValue = this.zip.getValue() != null ? this.zip.getValue().toString() : null;
+        // Datos personales opcionales
+        String rfcValue = (!this.rfc.getText().isEmpty()) ? this.rfc.getText().strip() : null;
+        String emailValue = (!this.email.getText().isEmpty()) ? this.email.getText().strip() : null;
 
-        return new EmpleadoRequest(
-                firstnameValue,
-                lastnameValue,
-                phoneValue,
-                emailValue,
-                sexValue,
-                rfcValue,
-                new DireccionRequest(stateValue, municipalityValue, colonyValue, streetValue, zipValue),
-                type
-        );
-    }
-
-    private boolean checkInputs() {
-        // Datos requeridos
-        if (CheckInput.isInvalidInput(firstname.getText(), CheckExpression::isNameValid, "Nombre", "solo debe contener letras"))
-            return true;
-        if (CheckInput.isInvalidInput(lastname.getText(), CheckExpression::isNameValid, "Apellidos", "solo debe contener letras"))
-            return true;
-        if (CheckInput.isInvalidSelection(this.comboBoxAddress.getStates().getSelectedIndex(), "Estado")) return true;
-        if (CheckInput.isNullInput(phone.getValue(), "Teléfono")) return true;
-        if (CheckInput.isNullInput(sex.getSelectedItem(), "Genero")) return true;
-        if (CheckInput.isNullInput(typeEmployee.getSelectedItem(), "Tipo de Empleado")) return true;
-        if (CheckInput.isNullInput(zip.getValue(), "Código Postal")) return true;
-
-        // Opcionales
-        if (CheckInput.isOptionalInvalidInput(email.getText(), CheckExpression::isValidEmail, "Correo")) return true;
-        if (CheckInput.isOptionalInvalidInput(rfc.getText(), CheckExpression::isValidRFC, "RFC")) return true;
-        return false;
+        DireccionN direccion = DireccionN.builder()
+                .estado(stateValue)
+                .municipio(municipalityValue)
+                .colonia(colonyValue)
+                .calle(streetValue)
+                .codigo_postal(zipValue)
+                .build();
+        EmpleadoN empleado = EmpleadoN.builder()
+                .nombre(firstnameValue)
+                .apellido(lastnameValue)
+                .correo(emailValue)
+                .telefono(phoneValue)
+                .tipoEmpleado(type)
+                .direccion(direccion)
+                .genero(sexValue)
+                .rfc(rfcValue)
+                .build();
+        return empleado;
     }
 }

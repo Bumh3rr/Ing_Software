@@ -11,7 +11,7 @@ public class CheckInput {
      * <b>Mensaje de error</b>: Es requerido el campo {fieldName} y {errorMessage}
      */
     public static boolean isInvalidInput(String input, Predicate<String> validator, String fieldName, String errorMessage) {
-        if (input.isEmpty() || !validator.test(input)) {
+        if (input == null || input.isEmpty() || !validator.test(input)) {
             show( "Es requerido el campo " + fieldName + " y " + errorMessage);
             return true;
         }

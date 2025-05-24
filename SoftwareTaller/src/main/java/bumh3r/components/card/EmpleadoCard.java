@@ -62,7 +62,7 @@ public class EmpleadoCard extends Card {
         JPanel body = new JPanel(new MigLayout("wrap", "[150]", "[][]push[]push"));
         body.putClientProperty(FlatClientProperties.STYLE, ""
                 + "background:null");
-        JLabel title = new JLabel("Técnico");
+        JLabel title = new JLabel(this.empleado.getTipoEmpleado().getNombre());
         title.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:bold +1;");
         description = new JTextPane();

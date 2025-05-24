@@ -8,8 +8,12 @@ import bumh3r.components.input.InputText;
 import bumh3r.components.label.LabelTextArea;
 import bumh3r.fonts.FontPublicaSans;
 import bumh3r.model.*;
+import bumh3r.model.New.DispositivoN;
+import bumh3r.model.New.ReparacionN;
 import bumh3r.request.DispositivoRequest;
+import bumh3r.request.ReparacionRequest;
 import bumh3r.system.panel.Panel;
+import bumh3r.thread.PoolThreads;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.components.FlatCheckBox;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
@@ -26,6 +30,7 @@ public class PanelAddDispositivo extends Panel {
     private InputText inputModelo, inputSerial;
     private FlatCheckBox checkBoxChip, checkBoxSD, checkBoxCargador, checkBoxFunda, checkBoxOther;
     private JButton button_cancel, buttonReparations, button_add;
+    String textEmpty = "<html><b>no hay reparaciones agregadas</b></html>";
 
     public void installEventAddDispositivo(Runnable event) {
         button_add.addActionListener(e -> event.run());
@@ -50,6 +55,14 @@ public class PanelAddDispositivo extends Panel {
         inputObservaciones = new InputArea();
         tipoDispositive = new FlatComboBox<>();
         marca = new FlatComboBox<>();
+        tipoDispositive.addItem("Seleccione un tipo de dispositivo");
+        marca.addItem("Seleccione una marca");
+        for (DispositivoN.TipoDispositivo item : DispositivoN.TipoDispositivo.values()) {
+            tipoDispositive.addItem(item);
+        }
+        for (DispositivoN.Marca item : DispositivoN.Marca.values()) {
+            marca.addItem(item);
+        }
         checkBoxChip = new FlatCheckBox();
         checkBoxSD = new FlatCheckBox();
         checkBoxCargador = new FlatCheckBox();
@@ -60,9 +73,9 @@ public class PanelAddDispositivo extends Panel {
         checkBoxCargador.setText("Cargador");
         checkBoxFunda.setText("Funda");
         checkBoxOther.setText("Otro");
-        precio = new JLabel();
-        abono = new JLabel();
-        sizeReparaciones = new JLabel();
+        precio = new JLabel(textEmpty);
+        abono = new JLabel(textEmpty);
+        sizeReparaciones = new JLabel(textEmpty);
         button_cancel = new ButtonAccentBase("Cancelar", "#ff420a");
         buttonReparations = new ButtonAccentBase("Agregar Reparaciones", "@accentBaseColor").addStyles("arc:26;" + "margin:10,10,10,10;");
         button_add = new ButtonDefault("Agregar");
@@ -125,18 +138,19 @@ public class PanelAddDispositivo extends Panel {
         return label;
     }
 
-    public void setPresupuesto(List<Reparacion_Dispositivo> list) {
-        var sos = "<html><b>no hay reparaciones agregadas</b></html>";
-        precio.setText(!list.isEmpty() ? InputFormattedDecimal.decimalFormat.format(list.stream().mapToDouble(Reparacion_Dispositivo::getPrecio).sum()) : sos);
-        abono.setText(!list.isEmpty() ? InputFormattedDecimal.decimalFormat.format(list.stream().mapToDouble(Reparacion_Dispositivo::getAbono).sum()) : sos);
-        sizeReparaciones.setText(!list.isEmpty() ? String.valueOf(list.size()) : sos);
+    public void setPresupuesto(List<ReparacionRequest> list) {
+        SwingUtilities.invokeLater(() -> {
+            precio.setText(!list.isEmpty() ? InputFormattedDecimal.decimalFormat.format(list.stream().mapToDouble(ReparacionRequest::precio).sum()) : textEmpty);
+            abono.setText(!list.isEmpty() ? InputFormattedDecimal.decimalFormat.format(list.stream().mapToDouble(ReparacionRequest::abono).sum()) : textEmpty);
+            sizeReparaciones.setText(!list.isEmpty() ? String.valueOf(list.size()) : textEmpty);
+        });
     }
 
     public DispositivoRequest getValue() {
-        String tipo = (String) tipoDispositive.getSelectedItem();
-        String marca = (String) this.marca.getSelectedItem();
+        DispositivoN.TipoDispositivo tipo = this.tipoDispositive.getSelectedItem() instanceof DispositivoN.TipoDispositivo ? (DispositivoN.TipoDispositivo) this.tipoDispositive.getSelectedItem() : null;
+        DispositivoN.Marca marca = this.marca.getSelectedItem() instanceof DispositivoN.Marca ? (DispositivoN.Marca) this.marca.getSelectedItem() : null;
         String modelo = inputModelo.getText().isEmpty() ? null : inputModelo.getText().strip();
-        String serial = inputSerial.getText().isEmpty() ? null : inputSerial.getText().strip();
+        String imei = inputSerial.getText().isEmpty() ? null : inputSerial.getText().strip();
         String observaciones = inputObservaciones.getText().isEmpty() ? null : inputObservaciones.getText().strip();
         int utils = 0;
         if (checkBoxChip.isSelected()) utils |= 1;      // Primer bit
@@ -144,7 +158,15 @@ public class PanelAddDispositivo extends Panel {
         if (checkBoxCargador.isSelected()) utils |= 4;      // Tercer bit
         if (checkBoxFunda.isSelected()) utils |= 8;      // Cuarto bit
         if (checkBoxOther.isSelected()) utils |= 16;      // Quinto bit
-        return new DispositivoRequest(tipo, marca, modelo, serial, utils, observaciones);
+
+       return DispositivoRequest.builder()
+                .tipo_dispositivo(tipo)
+                .marca(marca)
+                .modelo(modelo)
+                .imei(imei)
+                .utils(utils)
+                .observaciones(observaciones)
+                .build();
     }
 
     public void cleanValue() {
@@ -154,6 +176,9 @@ public class PanelAddDispositivo extends Panel {
             inputModelo.setText("");
             inputSerial.setText("");
             inputObservaciones.setText("");
+            precio.setText(textEmpty);
+            abono.setText(textEmpty);
+            sizeReparaciones.setText(textEmpty);
             checkBoxChip.setSelected(false);
             checkBoxSD.setSelected(false);
             checkBoxCargador.setSelected(false);

@@ -16,6 +16,9 @@
         <class>bumh3r.model.New.CategoriaN</class>
         <class>bumh3r.model.New.PedidoN</class>
         <class>bumh3r.model.New.DetallesPedidoN</class>
+        <class>bumh3r.model.New.NotaN</class>
+        <class>bumh3r.model.New.DispositivoN</class>
+        <class>bumh3r.model.New.ReparacionN</class>
 
         <properties>
             <!-- Configuración de la conexión a la base de datos -->

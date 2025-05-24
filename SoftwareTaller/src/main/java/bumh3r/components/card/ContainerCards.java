@@ -15,13 +15,13 @@ import net.miginfocom.swing.MigLayout;
 
 @Slf4j
 public class ContainerCards<T> extends JScrollPane {
+    @Getter
     private final Panel panelCards;
     @Getter
     private final JPanel panelPaginacion;
     private final ButtonControl buttonAnterior;
     private final ButtonControl buttonSiguiente;
     private final JLabel labelPagInfo;
-
     private final List<T> list = new ArrayList<>();
     private final Class<? extends Card> cardClass;
     private BiConsumer<T, Runnable> event1;
@@ -113,29 +113,31 @@ public class ContainerCards<T> extends JScrollPane {
     }
 
     public void addItemOne(T item) {
+        list.add(item);
         SwingUtilities.invokeLater(() -> {
-            list.add(item);
             calcularTotalPaginas();
             if (longitud > panelCards.getComponents().length) {
                 createdCard(item);
-            }
-        });
-    }
-
-    public void delete(T usuario) {
-        SwingUtilities.invokeLater(() -> {
-            int i = list.indexOf(usuario);
-            if (i != -1) {
-                list.remove(i);
-                panelCards.remove(panelCards.getComponent(i));
                 panelCards.revalidate();
                 panelCards.repaint();
             }
         });
     }
 
+    public void delete(T item) {
+        int i = list.indexOf(item);
+        if (i != -1) {
+            list.remove(i);
+            SwingUtilities.invokeLater(() -> {
+                panelCards.remove(panelCards.getComponent(i));
+                panelCards.revalidate();
+                panelCards.repaint();
+            });
+        }
+    }
+
     public List<T> getListItems() {
-        return new ArrayList<>(list);
+        return new ArrayList<>(this.list);
     }
 
     public Component[] getComponents() {
@@ -178,8 +180,8 @@ public class ContainerCards<T> extends JScrollPane {
     private void createdCard(T item) {
         try {
             Card card;
-            if (event2!= null)
-              card = cardClass.getDeclaredConstructor(item.getClass(), BiConsumer.class, BiConsumer.class).newInstance(item, event1, event2);
+            if (event2 != null)
+                card = cardClass.getDeclaredConstructor(item.getClass(), BiConsumer.class, BiConsumer.class).newInstance(item, event1, event2);
             else
                 card = cardClass.getDeclaredConstructor(item.getClass(), BiConsumer.class).newInstance(item, event1);
             panelCards.add(card);

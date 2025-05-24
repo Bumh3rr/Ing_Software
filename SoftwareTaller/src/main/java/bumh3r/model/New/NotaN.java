@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,12 +35,12 @@ public class NotaN {
     @Enumerated(EnumType.STRING)
     private EstadoNota estado;
     @CreationTimestamp
-    private String fecha_registro;
+    private LocalDateTime fecha_registro;
     @ManyToOne
     @JoinColumn(name = "empleado_id")
     private EmpleadoN empleado;
     @ManyToOne
-    @JoinColumn(name = " cliente_id")
+    @JoinColumn(name = "cliente_id")
     private ClienteN cliente;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

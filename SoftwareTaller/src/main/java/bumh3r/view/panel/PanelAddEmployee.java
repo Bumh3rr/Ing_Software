@@ -133,24 +133,6 @@ public class PanelAddEmployee extends Panel {
         return empleado;
     }
 
-    private boolean checkInputs() {
-        // Datos requeridos
-        if (CheckInput.isInvalidInput(firstname.getText(), CheckExpression::isNameValid, "Nombre", "solo debe contener letras"))
-            return true;
-        if (CheckInput.isInvalidInput(lastname.getText(), CheckExpression::isNameValid, "Apellidos", "solo debe contener letras"))
-            return true;
-        if (CheckInput.isInvalidSelection(this.comboBoxAddress.getStates().getSelectedIndex(), "Estado")) return true;
-        if (CheckInput.isNullInput(phone.getValue(), "Teléfono")) return true;
-        if (CheckInput.isNullInput(sex.getSelectedItem(), "Genero")) return true;
-        if (CheckInput.isNullInput(typeEmployee.getSelectedItem(), "Tipo de Empleado")) return true;
-        if (CheckInput.isNullInput(zip.getValue(), "Código Postal")) return true;
-
-        // Opcionales
-        if (CheckInput.isOptionalInvalidInput(email.getText(), CheckExpression::isValidEmail, "Correo")) return true;
-        if (CheckInput.isOptionalInvalidInput(rfc.getText(), CheckExpression::isValidRFC, "RFC")) return true;
-        return false;
-    }
-
     private void addItemsStates() {
         PoolThreads.getInstance().execute(() -> {
             try {

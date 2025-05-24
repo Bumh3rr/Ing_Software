@@ -2,25 +2,22 @@
 package bumh3r.components.card;
 
 import bumh3r.components.input.InputFormattedDecimal;
-import bumh3r.model.New.ReparacionN;
-import bumh3r.model.Reparacion_Dispositivo;
+import bumh3r.request.ReparacionRequest;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 import raven.extras.AvatarIcon;
 
 import static bumh3r.archive.PathResources.Img.categorydevice;
-import static bumh3r.archive.PathResources.Img.repair;
 
 public class CardRepair extends Card {
-    private final ReparacionN reparacion;
-    private final BiConsumer<ReparacionN, Consumer<Void>> event;
+    private final ReparacionRequest reparacion;
+    private final BiConsumer<ReparacionRequest, Runnable> event;
 
-    public CardRepair(ReparacionN reparacion, BiConsumer<ReparacionN, Consumer<Void>> event) {
+    public CardRepair(ReparacionRequest reparacion, BiConsumer<ReparacionRequest, Runnable> event) {
         super(reparacion, event);
         this.reparacion = reparacion;
         this.event = event;
@@ -52,7 +49,7 @@ public class CardRepair extends Card {
         JPanel body = new JPanel(new MigLayout("wrap", "[200]", "[][][]push"));
         body.putClientProperty(FlatClientProperties.STYLE, "" +
                 "background:null");
-        JLabel title = new JLabel(reparacion.getCategoria());
+        JLabel title = new JLabel(reparacion.categoria().toString());
         title.putClientProperty(FlatClientProperties.STYLE, "" +
                 "font:bold +1;");
         JTextPane description = new JTextPane();
@@ -64,17 +61,16 @@ public class CardRepair extends Card {
                 "[light]foreground:tint($Label.foreground,30%);" +
                 "[dark]foreground:shade($Label.foreground,30%)");
         description.setText(
-                "Reparación: " + reparacion.getReparacion()
-                        + "\nDescripción: " + (reparacion.getDescripcion() == null || reparacion.getDescripcion().isEmpty() ?
-                        "campo vacío" : reparacion.getDescripcion())
-                        + "\nPrecio: $" + InputFormattedDecimal.decimalFormat.format(reparacion.getPrecio())
-                        + "\nAnticipo: $" + InputFormattedDecimal.decimalFormat.format(reparacion.getAbono())
-                        + "\nTécnico Encargado:\n " + reparacion.getEmpleado().toString());
+                "Reparación: " + reparacion.reparacion()
+                        + "\nDescripción: " + (reparacion.observacion() == null || reparacion.observacion().isEmpty() ?
+                        "campo vacío" : reparacion.observacion())
+                        + "\nPrecio: $" + InputFormattedDecimal.decimalFormat.format(reparacion.precio())
+                        + "\nAnticipo: $" + InputFormattedDecimal.decimalFormat.format(reparacion.abono())
+                        + "\nTécnico Encargado:\n " + reparacion.tecnico().toString());
 
         JButton button = new JButton();
         button.setText("Eliminar");
-        button.addActionListener(e -> event.accept(reparacion, (x) -> {
-        }));
+        button.addActionListener(e -> event.accept(reparacion, null));
         button.setBackground(new Color(255, 51, 102));
         button.setForeground(new Color(255, 255, 255));
 
@@ -85,11 +81,17 @@ public class CardRepair extends Card {
     }
 
     private ImageIcon createdIcon() {
-        String reparacion = this.reparacionDispositivo.getReparacion().getNameBaseIcon();
-        if (reparacion != null) {
-            return new ImageIcon(CardRepair.class.getResource(repair + reparacion + ".png"));
+        switch (reparacion.categoria()) {
+            case SOFTWARE -> {
+                return new ImageIcon(CardRepair.class.getResource(categorydevice + "software.png"));
+            }
+            case HARDWARE -> {
+                return new ImageIcon(CardRepair.class.getResource(categorydevice + "hardware.png"));
+            }
+            default -> {
+                return new ImageIcon(CardRepair.class.getResource(categorydevice + "otros.png"));
+            }
         }
-        return new ImageIcon(CardRepair.class.getResource(categorydevice + "hardware.png"));
     }
 
 }

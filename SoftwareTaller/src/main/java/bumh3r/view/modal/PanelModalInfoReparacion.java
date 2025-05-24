@@ -67,7 +67,6 @@ public class PanelModalInfoReparacion extends Panel {
     }
 
     public PanelModalInfoReparacion setValue(List<Reparacion_Dispositivo> list) {
-        addRepairsPanel(list);
         return this;
     }
 
@@ -97,8 +96,6 @@ public class PanelModalInfoReparacion extends Panel {
 
     private void initListeners() {
         combox_CategoriaReparacion.addActionListener((e) -> fillComboxReparaciones());
-        buttonAddRepair.addActionListener((e) -> addReparacion());
-
         button_helpLimit.addActionListener((x) -> {
             Notify.closeAll();
         });
@@ -197,29 +194,9 @@ public class PanelModalInfoReparacion extends Panel {
         return label;
     }
 
-    private void addReparacion() {
-        Toast.closeAll();
-        if (Promiseld.checkPromiseId(KEY)) return;
-        Promiseld.commit(KEY);
-        EventQueue.invokeLater(() -> {
-            try {
-                Reparacion_Dispositivo reparacionDispositivo = getReparacion();
-                if (isNotNull(reparacionDispositivo)) {
-                    PanelAddDispositivo.listRepair.add(reparacionDispositivo);
-                    panelReparaciones.add(new CardRepair(reparacionDispositivo, createEventCardDelete()));
-                    panelReparaciones.updateUI();
-                }
-            } catch (Exception ex) {
-                Notify.getInstance().showToast(Toast.Type.ERROR, ex.getMessage());
-            } finally {
-                Promiseld.terminate(KEY);
-            }
-        });
-    }
 
     private Reparacion_Dispositivo getReparacion() {
         Toast.closeAll();
-        if (toastIsEmpy()) return null;
         TipoReparacion tipoReparacion = (TipoReparacion) combox_TipoReparacion.getSelectedItem();
         Categorias_Reparacion categoria = (Categorias_Reparacion) combox_CategoriaReparacion.getSelectedItem();
         Reparacion reparacion = (Reparacion) combox_reparacion.getSelectedItem();
@@ -231,56 +208,6 @@ public class PanelModalInfoReparacion extends Panel {
         return new Reparacion_Dispositivo(tipoReparacion, categoria, reparacion, descripcion, precio, abono, empleado, status);
     }
 
-    private Boolean toastIsEmpy() {
-        if (combox_Tecnico.getSelectedItem() == null) {
-            Notify.getInstance().showToast(Toast.Type.WARNING, "Seleccione el técnico");
-            return true;
-        }
-        if (combox_TipoReparacion.getSelectedItem() == null) {
-            Notify.getInstance().showToast(Toast.Type.WARNING, "Seleccione el tipo");
-            return true;
-        }
-        if (combox_CategoriaReparacion.getSelectedItem() == null) {
-            Notify.getInstance().showToast(Toast.Type.WARNING, "Seleccione Una Categoria");
-            return true;
-        }
-        if (combox_reparacion.getSelectedItem() == null) {
-            Notify.getInstance().showToast(Toast.Type.WARNING, "Seleccione Una Reparación");
-            return true;
-        }
-
-        Double precio = inputPrecio.getValue() == null ? 0.0 : Double.parseDouble(inputPrecio.getValue().toString());
-        Double abono = inputAbono.getValue() == null ? 0.0 : Double.parseDouble(inputAbono.getValue().toString());
-
-        if (abono > precio) {
-            Notify.getInstance().showToast(Toast.Type.WARNING, "El anticipo no puede ser mayor al precio");
-            return true;
-        }
-        return false;
-    }
-
-    private void addRepairsPanel(List<Reparacion_Dispositivo> list) {
-        panelReparaciones.removeAll();
-        EventQueue.invokeLater(() -> {
-            for (Reparacion_Dispositivo reparacionDispositivo : list) {
-                panelReparaciones.add(new CardRepairInfo(reparacionDispositivo, createEventCardDelete()));
-            }
-        });
-    }
-
-    private Consumer<Reparacion_Dispositivo> createEventCardDelete() {
-        return e -> {
-            int i = PanelAddDispositivo.listRepair.indexOf(e);
-            if (i != -1) {
-                PanelAddDispositivo.listRepair.remove(i);
-                EventQueue.invokeLater(() -> {
-                    panelReparaciones.remove(i);
-                    panelReparaciones.revalidate();
-                    panelReparaciones.updateUI();
-                });
-            }
-        };
-    }
 
     public class CardRepairInfo extends JPanel {
         private final Reparacion_Dispositivo reparacionDispositivo;

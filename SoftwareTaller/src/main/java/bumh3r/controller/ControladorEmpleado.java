@@ -148,8 +148,8 @@ public class ControladorEmpleado extends Controller {
     private ActionListener eventUpdateEmployee = (x) -> {
         Toast.closeAll();
         PreferencesUpdateInfoEmployee panel = (PreferencesUpdateInfoEmployee) PreferencesInstance.getInstance().getInstancePreferences(PreferencesUpdateInfoEmployee.class);
-        EmpleadoRequest value = panel.getValue();
-        if (value == null || Toast.checkPromiseId(KEY)) return;
+        EmpleadoN value = panel.getValue();
+        if (Toast.checkPromiseId(KEY) || validarDatosEmpleado(value)) return;
         Notify.showPromise("Actualizando ...",
                 new ToastPromise(KEY) {
                     @Override

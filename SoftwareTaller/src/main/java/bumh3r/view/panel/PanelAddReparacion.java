@@ -8,23 +8,34 @@ import bumh3r.components.input.InputText;
 import bumh3r.components.label.LabelPublicaSans;
 import bumh3r.components.resposive.ResponsiveLayout;
 import bumh3r.fonts.FontPublicaSans;
-import bumh3r.model.*;
+import bumh3r.model.New.EmpleadoN;
 import bumh3r.model.New.ReparacionN;
 import bumh3r.request.ReparacionRequest;
 import bumh3r.system.panel.Panel;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
 import java.awt.Dimension;
+import java.util.List;
+import java.util.function.BiConsumer;
 import javax.swing.*;
+import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
 public class PanelAddReparacion extends Panel {
-    private ContainerCards<ReparacionN> containerCards;
+    private ContainerCards<ReparacionRequest> containerCards;
     private ButtonDefault buttonAddRepair;
+    @Getter
     private FlatComboBox<Object> categoria, tecnico;
-    private InputText descripcion,reparacion;
-    private InputFormattedDecimal inputPrecio;
-    private InputFormattedDecimal inputAbono;
+    private InputText descripcion, reparacion;
+    private InputFormattedDecimal inputPrecio, inputAbono;
+
+    public void installEventAddRepair(Runnable event) {
+        buttonAddRepair.addActionListener(e -> event.run());
+    }
+
+    public void installEventDeleteCardRepair(BiConsumer<ReparacionRequest, Runnable> event) {
+        containerCards.installDependent1(event);
+    }
 
     public PanelAddReparacion() {
         initComponents();
@@ -33,11 +44,15 @@ public class PanelAddReparacion extends Panel {
 
     private void initComponents() {
         containerCards = new ContainerCards<>(CardRepair.class, new ResponsiveLayout(ResponsiveLayout.JustifyContent.CENTER, new Dimension(350, -1), 10, 10));
+        containerCards.setLongitud(1000);
         buttonAddRepair = new ButtonDefault("Agregar Reparación");
         categoria = new FlatComboBox<>();
-        categoria.setMaximumRowCount(6);
+        categoria.addItem("Seleccione una categoría");
+        for (ReparacionN.CategoriaReparacion item : ReparacionN.CategoriaReparacion.values()) {
+            categoria.addItem(item);
+        }
+
         tecnico = new FlatComboBox<>();
-        tecnico.setMaximumRowCount(6);
         descripcion = new InputText(100);
         reparacion = new InputText(50);
         inputAbono = new InputFormattedDecimal(50000.00f);
@@ -68,7 +83,6 @@ public class PanelAddReparacion extends Panel {
         panel.add(getLabel("Anticipo:"), "grow 0");
         panel.add(inputAbono);
         panel.add(buttonAddRepair, "span,w 250!,gapy 5,al center");
-
         panel.updateUI();
         return panel;
     }
@@ -79,14 +93,48 @@ public class PanelAddReparacion extends Panel {
         return label;
     }
 
-    private ReparacionRequest getReparacion() {
-        String categoria = (String) this.categoria.getSelectedItem();
+    public ReparacionRequest getValue() {
+        ReparacionN.CategoriaReparacion categoria = this.categoria.getSelectedItem() instanceof ReparacionN.CategoriaReparacion ? (ReparacionN.CategoriaReparacion) this.categoria.getSelectedItem() : null;
         String reparacion = !this.reparacion.getText().isEmpty() ? this.reparacion.getText().strip() : null;
         String descripcion = !this.descripcion.getText().isEmpty() ? this.descripcion.getText().strip() : null;
         Float precio = inputPrecio.getValue() == null ? 0.0f : Float.parseFloat(inputPrecio.getValue().toString());
         Float abono = inputAbono.getValue() == null ? 0.0f : Float.parseFloat(inputAbono.getValue().toString());
-        Empleado empleado = tecnico.getSelectedItem() instanceof Empleado ? (Empleado) tecnico.getSelectedItem() : null;
-        return new ReparacionRequest(tipoReparacion, categoria, reparacion, descripcion, precio, abono, empleado, status);
+        EmpleadoN empleado = tecnico.getSelectedItem() instanceof EmpleadoN ? (EmpleadoN) tecnico.getSelectedItem() : null;
+        return new ReparacionRequest(reparacion, categoria, descripcion, precio, abono, empleado);
     }
 
+    public List<ReparacionRequest> getRepairs() {
+        return containerCards.getListItems();
+    }
+
+    public void addCardOne(ReparacionRequest reparacion) {
+        containerCards.addItemOne(reparacion);
+    }
+
+    public void deleteCardOne(ReparacionRequest reparacion) {
+        containerCards.delete(reparacion);
+    }
+
+    public void setTechnicianModel(List<EmpleadoN> list) {
+        tecnico.removeAllItems();
+        tecnico.addItem("Seleccione un técnico");
+        for (EmpleadoN empleado : list) {
+            tecnico.addItem(empleado);
+        }
+    }
+
+    public void cleanValue() {
+        SwingUtilities.invokeLater(() -> {
+            categoria.setSelectedIndex(0);
+            reparacion.setText("");
+            descripcion.setText("");
+            inputPrecio.setValue(null);
+            inputAbono.setValue(null);
+            tecnico.setSelectedIndex(0);
+        });
+    }
+
+    public void cleanCards() {
+        SwingUtilities.invokeLater(containerCards::cleanCards);
+    }
 }

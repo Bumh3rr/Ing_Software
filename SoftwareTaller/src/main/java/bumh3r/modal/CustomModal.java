@@ -1,9 +1,11 @@
 package bumh3r.modal;
 
 import bumh3r.components.MyScrollPane;
+import bumh3r.view.modal.ModalPreferences;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Graphics;
 import java.util.function.Consumer;
 import javax.swing.*;
@@ -15,6 +17,7 @@ import net.miginfocom.swing.MigLayout;
 import raven.modal.ModalDialog;
 import raven.modal.Toast;
 import raven.modal.component.Modal;
+import raven.modal.component.ModalContainer;
 
 @Builder
 @AllArgsConstructor
@@ -51,6 +54,15 @@ public class CustomModal extends Modal {
             panel.add(createdButtonClose());
         }
         return panel;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Container container = SwingUtilities.getAncestorOfClass(ModalContainer.class, CustomModal.this);
+        if (container != null) {
+            container.revalidate();
+        }
     }
 
     protected Component createTitle() {

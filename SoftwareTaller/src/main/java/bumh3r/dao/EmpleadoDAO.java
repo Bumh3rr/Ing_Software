@@ -27,83 +27,54 @@ public class EmpleadoDAO {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
-            e.printStackTrace();
             throw e;
         } finally {
             em.close();
         }
     }
 
-    public Optional<EmpleadoN> findById(Long id){
+    public Optional<EmpleadoN> findById(Long id) {
         EntityManager em = JPAUtil.getEntityManager();
-        try {
-            em.getTransaction().begin();
-            EmpleadoN empleado = em.find(EmpleadoN.class, id);
-            em.getTransaction().commit();
-            return Optional.ofNullable(empleado);
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            throw e;
-        } finally {
-            em.close();
-        }
+        return Optional.ofNullable(em.find(EmpleadoN.class, id));
     }
 
-    public List<EmpleadoN> findAll() throws Exception{
-        EntityManager em = JPAUtil.getEntityManager();
-        try {
-            em.getTransaction().begin();
-            List<EmpleadoN> empleados = em.createQuery("SELECT e FROM EmpleadoN e", EmpleadoN.class).getResultList();
-            em.getTransaction().commit();
-            return empleados;
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            throw e;
-        } finally {
-            em.close();
-        }
+    public List<EmpleadoN> findAll() throws Exception {
+        return JPAUtil.getEntityManager()
+                .createQuery("SELECT e FROM EmpleadoN e", EmpleadoN.class)
+                .getResultList();
     }
 
-    // Obtener los empleados que no están relacionados con algun usuario registrado
-    public List<EmpleadoN> findAllNoUser() throws Exception{
-        EntityManager em = JPAUtil.getEntityManager();
-        try {
-            em.getTransaction().begin();
-            List<EmpleadoN> empleados = em.createQuery("SELECT e FROM EmpleadoN e LEFT JOIN Usuario u ON e.id = u.empleado.id WHERE u.empleado.id IS NULL", EmpleadoN.class).getResultList();
-            em.getTransaction().commit();
-            return empleados;
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            throw e;
-        } finally {
-            em.close();
-        }
+    public List<EmpleadoN> findAllTechnician() {
+        return JPAUtil.getEntityManager()
+                .createQuery("SELECT e FROM EmpleadoN e WHERE e.tipoEmpleado.id = 2", EmpleadoN.class)
+                .getResultList();
     }
 
-    public EmpleadoN update(Long id, EmpleadoRequest value){
+    public List<EmpleadoN> findAllNoUser() throws Exception {
+        return JPAUtil.getEntityManager()
+                .createQuery("SELECT e FROM EmpleadoN e LEFT JOIN Usuario u ON e.id = u.empleado.id WHERE u.empleado.id IS NULL", EmpleadoN.class)
+                .getResultList();
+
+    }
+
+    public EmpleadoN update(Long id, EmpleadoN value) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
             EmpleadoN empleado = em.find(EmpleadoN.class, id);
             if (empleado == null) throw new IllegalArgumentException("Empleado no encontrado");
-            empleado.setNombre(value.nombre());
-            empleado.setApellido(value.apellido());
-            empleado.setTelefono(value.telefono());
-            empleado.setCorreo(value.correo());
-            empleado.setGenero(value.genero());
-            empleado.setRfc(value.rfc());
-            empleado.getDireccion().setCalle( value.direccion().calle());
-            empleado.getDireccion().setColonia(value.direccion().colonia());
-            empleado.getDireccion().setCodigo_postal(value.direccion().codigo_postal());
-            empleado.getDireccion().setEstado(value.direccion().estado());
-            empleado.getDireccion().setMunicipio(value.direccion().municipio());
-            empleado.setTipoEmpleado(value.tipoEmpleado());
+            empleado.setNombre(value.getNombre());
+            empleado.setApellido(value.getApellido());
+            empleado.setTelefono(value.getTelefono());
+            empleado.setCorreo(value.getCorreo());
+            empleado.setGenero(value.getGenero());
+            empleado.setRfc(value.getRfc());
+            empleado.getDireccion().setCalle(value.getDireccion().getCalle());
+            empleado.getDireccion().setColonia(value.getDireccion().getColonia());
+            empleado.getDireccion().setCodigo_postal(value.getDireccion().getCodigo_postal());
+            empleado.getDireccion().setEstado(value.getDireccion().getEstado());
+            empleado.getDireccion().setMunicipio(value.getDireccion().getMunicipio());
+            empleado.setTipoEmpleado(value.getTipoEmpleado());
             em.merge(empleado);
             em.getTransaction().commit();
             return empleado;
@@ -117,7 +88,7 @@ public class EmpleadoDAO {
         }
     }
 
-    public void update(EmpleadoN empleado) throws Exception{
+    public void update(EmpleadoN empleado) throws Exception {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
