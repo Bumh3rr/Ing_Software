@@ -1,18 +1,16 @@
 package bumh3r.view.panel;
 
-import bumh3r.components.Table;
+import bumh3r.components.table.Table;
 import bumh3r.components.button.ButtonAccentBase;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.form.DescriptionForm;
 import bumh3r.components.input.InputText;
-import bumh3r.modal.CustomModal;
-import bumh3r.model.MetodoPago;
+import bumh3r.components.modal.CustomModal;
+import bumh3r.model.MetodoPagoModelCon;
 import bumh3r.model.Nota;
-import bumh3r.model.Refaccion;
-import bumh3r.model.Reparacion_Dispositivo;
+import bumh3r.model.Reparacion;
 import bumh3r.system.panel.Panel;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
-import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -21,16 +19,16 @@ import javax.swing.JSeparator;
 import net.miginfocom.swing.MigLayout;
 import raven.modal.ModalDialog;
 
-import static bumh3r.archive.PathResources.Icon.modal;
+import static bumh3r.utils.PathResources.Icon.modal;
 
 public class PanelRegisterSale extends Panel {
     public static final String ID = PanelRegisterSale.class.getName();
     private DescriptionForm description;
     private Nota nota;
-    private Table<Reparacion_Dispositivo> reparacionTable;
-    private Table<Refaccion> refaccionTable;
+    private Table<Reparacion> reparacionTable;
+    private Table<Reparacion> refaccionTable;
     private JButton buttonSelectReparation, buttonSelectRepair, buttonGenerateSale;
-    private FlatComboBox<MetodoPago> comboBoxMethodPago;
+    private FlatComboBox<MetodoPagoModelCon> comboBoxMethodPago;
     private InputText inputDescuento,inputMonto;
 
     public PanelRegisterSale(Nota nota) {
@@ -54,22 +52,22 @@ public class PanelRegisterSale extends Panel {
         refaccionTable.setNameAccion("Remover");
 
         comboBoxMethodPago = new FlatComboBox<>();
-        MetodoPago.ListMetodosPago.addItemsMetodoPago(comboBoxMethodPago);
+        MetodoPagoModelCon.ListMetodosPago.addItemsMetodoPago(comboBoxMethodPago);
 
         inputDescuento = new InputText("Introduce el descuento", 100);
         inputMonto = new InputText("Introduce el monto", 100);
         buttonSelectReparation.addActionListener(e -> {
-            ModalDialog.pushModal(
-                    CustomModal.builder()
-                            .component(new PanelSelectReparacion(this.nota.getDispositivos().get(0).getListReparaciones()))
-                            .title("Seleccionar Reparaciónes")
-                            .icon(modal + "ic_select.svg")
-                            .buttonClose(false)
-                            .rollback(()-> ModalDialog.popModel(ID))
-                            .ID(ID)
-                            .build(),
-                    ID
-            );
+//            ModalDialog.pushModal(
+//                    CustomModal.builder()
+//                            .component(new PanelSelectReparacion(this.nota.getDispositivos().get(0).getListReparaciones()))
+//                            .title("Seleccionar Reparaciónes")
+//                            .icon(modal + "ic_select.svg")
+//                            .buttonClose(false)
+//                            .rollback(()-> ModalDialog.popModel(ID))
+//                            .ID(ID)
+//                            .build(),
+//                    ID
+//            );
         });
 
 

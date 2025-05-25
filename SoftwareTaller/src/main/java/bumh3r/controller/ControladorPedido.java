@@ -1,17 +1,17 @@
 package bumh3r.controller;
 
-import bumh3r.dao.PedidoDao;
-import bumh3r.dao.ProveedorDao;
-import bumh3r.dao.RefaccionDao;
-import bumh3r.model.New.DetallesPedidoN;
-import bumh3r.model.New.PedidoN;
-import bumh3r.model.New.ProveedorN;
-import bumh3r.model.New.RefaccionN;
+import bumh3r.repository.PedidoDao;
+import bumh3r.repository.ProveedorDao;
+import bumh3r.repository.RefaccionDao;
+import bumh3r.model.DetallesPedido;
+import bumh3r.model.Pedido;
+import bumh3r.model.Proveedor;
+import bumh3r.model.Refaccion;
 import bumh3r.notifications.Notify;
 import bumh3r.request.DetallesPedidosRequest;
 import bumh3r.request.PedidoRequest;
 import bumh3r.system.panel.PanelsInstances;
-import bumh3r.thread.PoolThreads;
+import bumh3r.utils.thread.PoolThreads;
 import bumh3r.utils.CheckInput;
 import bumh3r.view.form.FormPedidos;
 import bumh3r.view.panel.PanelAddPedido;
@@ -51,7 +51,7 @@ public class ControladorPedido extends Controller {
             public void execute(PromiseCallback callback) {
                 try {
                     callback.update("Obteniendo los pedidos  ...");
-                    List<PedidoN> list = pedidoDao.findAll();
+                    List<Pedido> list = pedidoDao.findAll();
                     if (list.isEmpty()) {
                         callback.done(Toast.Type.WARNING, "No hay pedidos registrados");
                         return;
@@ -96,7 +96,7 @@ public class ControladorPedido extends Controller {
 
     private boolean validarDatosDetallePedido(DetallesPedidosRequest detalle) {
         if (CheckInput.isNullInput(detalle.cantidad(), "Unidades")) return true;
-        if (CheckInput.isNullInput(detalle.refaccionN(), "Refacción")) return true;
+        if (CheckInput.isNullInput(detalle.refaccion(), "Refacción")) return true;
         return false;
     }
 
@@ -106,7 +106,7 @@ public class ControladorPedido extends Controller {
             public void execute(PromiseCallback callback) {
                 try {
                     callback.update("Registrando el Pedido ...");
-                    PedidoN newPedido = PedidoN.builder().proveedor(value.proveedor()).observaciones(value.observaciones()).fecha_pedido(LocalDateTime.now()).estado(PedidoN.EstadoPedido.PENDIENTE).build();
+                    Pedido newPedido = Pedido.builder().proveedor(value.proveedor()).observaciones(value.observaciones()).fecha_pedido(LocalDateTime.now()).estado(Pedido.EstadoPedido.PENDIENTE).build();
                     newPedido = pedidoDao.save(newPedido, value.detalles());
                     view.addOneTable(newPedido);
                     panelAddPedido.cleanValue(); // <- Limpiar los campos
@@ -121,7 +121,7 @@ public class ControladorPedido extends Controller {
 
     private void obtenerListProveedor() {
         PoolThreads.getInstance().execute(() -> {
-            List<ProveedorN> list = Collections.emptyList();
+            List<Proveedor> list = Collections.emptyList();
             try {
                 list = proveedorDao.findAll();
             } catch (Exception e) {
@@ -133,7 +133,7 @@ public class ControladorPedido extends Controller {
 
     private void obtenerListRefacciones() {
         PoolThreads.getInstance().execute(() -> {
-            List<RefaccionN> list = Collections.emptyList();
+            List<Refaccion> list = Collections.emptyList();
             try {
                 list = refaccionDao.findAll();
             } catch (Exception e) {
@@ -143,23 +143,23 @@ public class ControladorPedido extends Controller {
         });
     }
 
-    public Function<PedidoN, Void> mostrarDetallesPedido = (pedido) -> {
+    public Function<Pedido, Void> mostrarDetallesPedido = (pedido) -> {
         PanelDetailsPedido panelClienteNotes = new PanelDetailsPedido();
         panelClienteNotes.setPedido(pedido);
         PoolThreads.getInstance().execute(() -> {
-            List<DetallesPedidoN> detallesPedido = getDetallesPedido(pedido.getId());
+            List<DetallesPedido> detallesPedido = getDetallesPedido(pedido.getId());
             SwingUtilities.invokeLater(() -> panelClienteNotes.setDetails(detallesPedido));
         });
         panelClienteNotes.installEventUpdate(() -> {
-            PedidoN.EstadoPedido estado = (PedidoN.EstadoPedido) panelClienteNotes.getStatus().getSelectedItem();
+            Pedido.EstadoPedido estado = (Pedido.EstadoPedido) panelClienteNotes.getStatus().getSelectedItem();
             actualizarEstadoPedido(estado, pedido);
         });
         showPanel(panelClienteNotes, "Detalles del Pedido", "ic_inventario.svg", ID, null, false);
         return null;
     };
 
-    public List<DetallesPedidoN> getDetallesPedido(Long idPedido) {
-        List<DetallesPedidoN> detalles = Collections.emptyList();
+    public List<DetallesPedido> getDetallesPedido(Long idPedido) {
+        List<DetallesPedido> detalles = Collections.emptyList();
         try {
             detalles = pedidoDao.findAllDetalles(idPedido);
         } catch (Exception e) {
@@ -168,7 +168,7 @@ public class ControladorPedido extends Controller {
         return detalles;
     }
 
-    public void actualizarEstadoPedido(PedidoN.EstadoPedido estado, PedidoN pedido) {
+    public void actualizarEstadoPedido(Pedido.EstadoPedido estado, Pedido pedido) {
         Notify.showPromise("Actualizando el estado del Pedido ...", new ToastPromise(KEY) {
             @Override
             public void execute(PromiseCallback callback) {

@@ -11,7 +11,7 @@ import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 import raven.extras.AvatarIcon;
 
-import static bumh3r.archive.PathResources.Img.categorydevice;
+import static bumh3r.utils.PathResources.Img.categorydevice;
 
 public class CardRepair extends Card {
     private final ReparacionRequest reparacion;

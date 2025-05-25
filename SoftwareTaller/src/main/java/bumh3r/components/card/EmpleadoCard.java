@@ -1,12 +1,11 @@
 package bumh3r.components.card;
 
-import bumh3r.archive.PathResources;
-import bumh3r.components.PanelStatus;
+import bumh3r.utils.PathResources;
+import bumh3r.components.custom.PanelStatus;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.model.Empleado;
-import bumh3r.model.New.EmpleadoN;
 import bumh3r.model.other.Genero;
-import bumh3r.thread.PoolThreads;
+import bumh3r.utils.thread.PoolThreads;
 import bumh3r.utils.CreatedAvatar;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Cursor;
@@ -20,8 +19,8 @@ import net.miginfocom.swing.MigLayout;
 
 public class EmpleadoCard extends Card {
 
-    private final EmpleadoN empleado;
-    private final BiConsumer<EmpleadoN, Runnable> event;
+    private final Empleado empleado;
+    private final BiConsumer<Empleado, Runnable> event;
     private JLabel icon;
     @Getter
     private Long id;
@@ -29,7 +28,7 @@ public class EmpleadoCard extends Card {
     private JButton button;
     private JTextPane description;
 
-    public EmpleadoCard(EmpleadoN empleado, BiConsumer<EmpleadoN, Runnable> event1) {
+    public EmpleadoCard(Empleado empleado, BiConsumer<Empleado, Runnable> event1) {
         super(empleado, event1);
         this.empleado = empleado;
         this.event = event1;
@@ -86,7 +85,7 @@ public class EmpleadoCard extends Card {
     }
 
     public void setInfo() {
-        status.setValue(empleado.getIsActivo(), empleado.getIsActivo() ? Empleado.Status.Activo.name() : Empleado.Status.Inactivo.name());
+        status.setValue(empleado.getIsActivo(), empleado.getIsActivo() ? "Activo" : "Inactivo");
         description.setText(
                 "ID: " + empleado.getId()
                         + "\nNombre: " + empleado.getNombre() + ""

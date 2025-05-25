@@ -175,7 +175,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>bumh3r.main.Main</mainClass>
+                            <mainClass>bumh3r.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

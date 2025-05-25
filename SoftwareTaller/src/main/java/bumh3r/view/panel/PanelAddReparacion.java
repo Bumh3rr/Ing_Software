@@ -7,9 +7,9 @@ import bumh3r.components.input.InputFormattedDecimal;
 import bumh3r.components.input.InputText;
 import bumh3r.components.label.LabelPublicaSans;
 import bumh3r.components.resposive.ResponsiveLayout;
-import bumh3r.fonts.FontPublicaSans;
-import bumh3r.model.New.EmpleadoN;
-import bumh3r.model.New.ReparacionN;
+import bumh3r.utils.fonts.FontPublicaSans;
+import bumh3r.model.Empleado;
+import bumh3r.model.Reparacion;
 import bumh3r.request.ReparacionRequest;
 import bumh3r.system.panel.Panel;
 import com.formdev.flatlaf.FlatClientProperties;
@@ -48,7 +48,7 @@ public class PanelAddReparacion extends Panel {
         buttonAddRepair = new ButtonDefault("Agregar Reparación");
         categoria = new FlatComboBox<>();
         categoria.addItem("Seleccione una categoría");
-        for (ReparacionN.CategoriaReparacion item : ReparacionN.CategoriaReparacion.values()) {
+        for (Reparacion.CategoriaReparacion item : Reparacion.CategoriaReparacion.values()) {
             categoria.addItem(item);
         }
 
@@ -94,12 +94,12 @@ public class PanelAddReparacion extends Panel {
     }
 
     public ReparacionRequest getValue() {
-        ReparacionN.CategoriaReparacion categoria = this.categoria.getSelectedItem() instanceof ReparacionN.CategoriaReparacion ? (ReparacionN.CategoriaReparacion) this.categoria.getSelectedItem() : null;
+        Reparacion.CategoriaReparacion categoria = this.categoria.getSelectedItem() instanceof Reparacion.CategoriaReparacion ? (Reparacion.CategoriaReparacion) this.categoria.getSelectedItem() : null;
         String reparacion = !this.reparacion.getText().isEmpty() ? this.reparacion.getText().strip() : null;
         String descripcion = !this.descripcion.getText().isEmpty() ? this.descripcion.getText().strip() : null;
         Float precio = inputPrecio.getValue() == null ? 0.0f : Float.parseFloat(inputPrecio.getValue().toString());
         Float abono = inputAbono.getValue() == null ? 0.0f : Float.parseFloat(inputAbono.getValue().toString());
-        EmpleadoN empleado = tecnico.getSelectedItem() instanceof EmpleadoN ? (EmpleadoN) tecnico.getSelectedItem() : null;
+        Empleado empleado = tecnico.getSelectedItem() instanceof Empleado ? (Empleado) tecnico.getSelectedItem() : null;
         return new ReparacionRequest(reparacion, categoria, descripcion, precio, abono, empleado);
     }
 
@@ -115,10 +115,10 @@ public class PanelAddReparacion extends Panel {
         containerCards.delete(reparacion);
     }
 
-    public void setTechnicianModel(List<EmpleadoN> list) {
+    public void setTechnicianModel(List<Empleado> list) {
         tecnico.removeAllItems();
         tecnico.addItem("Seleccione un técnico");
-        for (EmpleadoN empleado : list) {
+        for (Empleado empleado : list) {
             tecnico.addItem(empleado);
         }
     }

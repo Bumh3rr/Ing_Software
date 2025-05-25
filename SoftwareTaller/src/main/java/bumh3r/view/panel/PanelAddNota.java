@@ -8,15 +8,15 @@ import bumh3r.components.input.InputFormattedDecimal;
 import bumh3r.components.label.LabelPublicaSans;
 import bumh3r.components.label.LabelTextArea;
 import bumh3r.components.resposive.ResponsiveLayout;
-import bumh3r.fonts.FontPublicaSans;
-import bumh3r.model.New.ClienteN;
-import bumh3r.model.New.EmpleadoN;
+import bumh3r.utils.fonts.FontPublicaSans;
+import bumh3r.model.Cliente;
+import bumh3r.model.Empleado;
 import bumh3r.model.other.DateFull;
 import bumh3r.request.DispositivoRequest;
 import bumh3r.request.NotaRequest;
 import bumh3r.request.ReparacionRequest;
 import bumh3r.system.panel.Panel;
-import bumh3r.thread.PoolThreads;
+import bumh3r.utils.thread.PoolThreads;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
 import java.awt.Dimension;
@@ -122,14 +122,13 @@ public class PanelAddNota extends Panel {
     }
 
     public NotaRequest getValue() {
-        EmpleadoN empleado = employee.getSelectedItem() instanceof EmpleadoN ? (EmpleadoN) employee.getSelectedItem() : null;
-        ClienteN cliente = customer.getSelectedItem() instanceof ClienteN ? (ClienteN) customer.getSelectedItem() : null;
+        Empleado empleado = employee.getSelectedItem() instanceof Empleado ? (Empleado) employee.getSelectedItem() : null;
+        Cliente cliente = customer.getSelectedItem() instanceof Cliente ? (Cliente) customer.getSelectedItem() : null;
         List<DispositivoRequest> list = containerCards.getListItems();
-        log.info("List: {}", list);
         return new NotaRequest(empleado, cliente, list);
     }
 
-    public void setEmployeeModel(List<EmpleadoN> list) {
+    public void setEmployeeModel(List<Empleado> list) {
         SwingUtilities.invokeLater(() -> {
             this.employee.removeAllItems();
             this.employee.addItem("Seleccione una Empleado");
@@ -137,7 +136,7 @@ public class PanelAddNota extends Panel {
         });
     }
 
-    public void setCustomerModel(ClienteN cliente) {
+    public void setCustomerModel(Cliente cliente) {
         SwingUtilities.invokeLater(() -> {
             this.customer.removeAllItems();
             this.customer.addItem(cliente);

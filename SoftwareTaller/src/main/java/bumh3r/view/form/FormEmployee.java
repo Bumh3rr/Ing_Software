@@ -5,9 +5,9 @@ import bumh3r.components.card.EmpleadoCard;
 import bumh3r.components.card.ContainerCards;
 import bumh3r.components.resposive.ResponsiveLayout;
 import bumh3r.controller.ControladorEmpleado;
-import bumh3r.model.New.EmpleadoN;
+import bumh3r.model.Empleado;
 import bumh3r.system.form.Form;
-import bumh3r.thread.PoolThreads;
+import bumh3r.utils.thread.PoolThreads;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Dimension;
 import java.util.List;
@@ -16,7 +16,7 @@ import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 
 public class FormEmployee extends Form {
-    private ContainerCards<EmpleadoN> containerCards;
+    private ContainerCards<Empleado> containerCards;
     private ButtonDefault buttonAddEmployee;
     private ControladorEmpleado controller;
 
@@ -69,9 +69,9 @@ public class FormEmployee extends Form {
         return panel;
     }
 
-    public Consumer<EmpleadoN> eventAddUsuario = (employee) -> containerCards.addItemOne(employee);
+    public Consumer<Empleado> eventAddUsuario = (employee) -> containerCards.addItemOne(employee);
 
-    public Consumer<List<EmpleadoN>> eventAddUsuarioCard = (list) -> containerCards.addItemsAll(list);
+    public Consumer<List<Empleado>> eventAddUsuarioCard = (list) -> containerCards.addItemsAll(list);
 
     public void eventCleanUser() {
         containerCards.cleanCards();

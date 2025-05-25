@@ -1,7 +1,7 @@
 package bumh3r.request;
 
-import bumh3r.model.New.CategoriaN;
-import bumh3r.model.New.ProveedorN;
+import bumh3r.model.Categoria;
+import bumh3r.model.Proveedor;
 
 public record RefaccionRequest(
         String nombre,
@@ -9,7 +9,7 @@ public record RefaccionRequest(
         Integer stock,
         Float precio_venta,
         Float precio_compra,
-        ProveedorN proveedor,
-        CategoriaN categoria
+        Proveedor proveedor,
+        Categoria categoria
 ) {
 }

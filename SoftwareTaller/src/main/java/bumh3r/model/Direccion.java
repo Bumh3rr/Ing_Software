@@ -1,28 +1,24 @@
 package bumh3r.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
-@ToString
-@Builder
+@Entity
+@Table(name = "direccion")
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Data
 public class Direccion {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String state;
-    private String city;
-    private String municipality;
-    private String colony;
-    private String street;
-    private String zip;
-    private String references_domicile;
-
-    @JsonCreator
-    public Direccion() {
-    }
+    private String estado;
+    private String municipio;
+    private String colonia;
+    private String calle;
+    private String codigo_postal;
 }

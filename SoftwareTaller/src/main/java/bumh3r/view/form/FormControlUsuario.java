@@ -7,7 +7,7 @@ import bumh3r.components.resposive.ResponsiveLayout;
 import bumh3r.controller.ControladorUsuarios;
 import bumh3r.model.Usuario;
 import bumh3r.system.form.Form;
-import bumh3r.thread.PoolThreads;
+import bumh3r.utils.thread.PoolThreads;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Dimension;
 import java.util.List;

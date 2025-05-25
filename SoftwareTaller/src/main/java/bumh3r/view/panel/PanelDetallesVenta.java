@@ -1,35 +1,31 @@
 package bumh3r.view.panel;
 
-import bumh3r.components.Table;
-import bumh3r.components.TableSimple;
+import bumh3r.components.table.TableSimple;
 import bumh3r.components.button.ButtonAccentBase;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.input.InputText;
 import bumh3r.components.label.LabelForDescription;
-import bumh3r.modal.Config;
-import bumh3r.modal.CustomModal;
+import bumh3r.components.modal.CustomModal;
 import bumh3r.model.Pago;
 import bumh3r.model.Refaccion;
-import bumh3r.model.Reparacion_Dispositivo;
+import bumh3r.model.Reparacion;
 import bumh3r.system.panel.Panel;
 import bumh3r.utils.LimitTextDocument;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.components.FlatTextArea;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.SwingUtilities;
 import net.miginfocom.swing.MigLayout;
 import raven.modal.ModalDialog;
 
-import static bumh3r.archive.PathResources.Icon.modal;
+import static bumh3r.utils.PathResources.Icon.modal;
 
 public class PanelDetallesVenta extends Panel {
     public static final String ID = PanelDetallesVenta.class.getName();
     private LabelForDescription description;
-    private TableSimple<Reparacion_Dispositivo> reparacionTable;
+    private TableSimple<Reparacion> reparacionTable;
     private TableSimple<Refaccion> refaccionTable;
     private TableSimple<Pago> pagoTable;
     private JButton button_guardarCambios, button_cancelarVenta,button_agregarPago;

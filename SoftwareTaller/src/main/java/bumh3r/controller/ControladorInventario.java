@@ -1,15 +1,15 @@
 package bumh3r.controller;
 
-import bumh3r.dao.CategoriaDao;
-import bumh3r.dao.ProveedorDao;
-import bumh3r.dao.RefaccionDao;
-import bumh3r.model.New.CategoriaN;
-import bumh3r.model.New.ProveedorN;
-import bumh3r.model.New.RefaccionN;
+import bumh3r.repository.CategoriaDao;
+import bumh3r.repository.ProveedorDao;
+import bumh3r.repository.RefaccionDao;
+import bumh3r.model.Categoria;
+import bumh3r.model.Proveedor;
+import bumh3r.model.Refaccion;
 import bumh3r.notifications.Notify;
 import bumh3r.request.RefaccionRequest;
 import bumh3r.system.panel.PanelsInstances;
-import bumh3r.thread.PoolThreads;
+import bumh3r.utils.thread.PoolThreads;
 import bumh3r.utils.CheckExpression;
 import bumh3r.utils.CheckInput;
 import bumh3r.view.form.FormInventario;
@@ -49,7 +49,7 @@ public class ControladorInventario extends Controller {
                     public void execute(PromiseCallback callback) {
                         try {
                             callback.update("Obteniendo las Refacciones  ...");
-                            List<RefaccionN> list = refaccionDao.findAll();
+                            List<Refaccion> list = refaccionDao.findAll();
                             if (list.isEmpty()) {
                                 callback.done(Toast.Type.WARNING, "No hay Refacciones registradas");
                                 return;
@@ -66,7 +66,7 @@ public class ControladorInventario extends Controller {
 
     private void obtenerListProveedor() {
         PoolThreads.getInstance().execute(() -> {
-            List<ProveedorN> list = Collections.emptyList();
+            List<Proveedor> list = Collections.emptyList();
             try {
                 list = proveedorDao.findAll();
             } catch (Exception e) {
@@ -79,7 +79,7 @@ public class ControladorInventario extends Controller {
 
     private void obtenerListCategoria() {
         PoolThreads.getInstance().execute(() -> {
-            List<CategoriaN> list = Collections.emptyList();
+            List<Categoria> list = Collections.emptyList();
             try {
                 list = categoriaDao.findAll();
             } catch (Exception e) {
@@ -113,7 +113,7 @@ public class ControladorInventario extends Controller {
                     public void execute(PromiseCallback callback) {
                         try {
                             callback.update("Registrando Refacción ...");
-                            RefaccionN proveedor = RefaccionN.builder()
+                            Refaccion proveedor = Refaccion.builder()
                                     .nombre(value.nombre())
                                     .descripcion(value.descripcion())
                                     .stock(value.stock())
@@ -137,7 +137,7 @@ public class ControladorInventario extends Controller {
     }
 
     public void buscarRefaccionPorNombre() {
-        List<RefaccionN> list;
+        List<Refaccion> list;
         String nombre;
         try {
             nombre = view.getSearch().getText().trim().toLowerCase();

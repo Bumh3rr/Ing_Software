@@ -1,7 +1,7 @@
 package bumh3r.system.preferences;
 
 import bumh3r.components.label.LabelPublicaSans;
-import bumh3r.fonts.FontPublicaSans;
+import bumh3r.utils.fonts.FontPublicaSans;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.event.ActionListener;
 import javax.swing.*;

@@ -1,12 +1,12 @@
 package bumh3r.view.form;
 
-import bumh3r.components.Table;
+import bumh3r.components.table.Table;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.controller.ControladorPedido;
-import bumh3r.model.New.PedidoN;
+import bumh3r.model.Pedido;
 import bumh3r.model.other.DateFull;
 import bumh3r.system.form.Form;
-import bumh3r.thread.PoolThreads;
+import bumh3r.utils.thread.PoolThreads;
 import java.util.List;
 import java.util.function.Function;
 import javax.swing.*;
@@ -16,9 +16,9 @@ import net.miginfocom.swing.MigLayout;
 public class FormPedidos extends Form {
     private ButtonDefault buttonAddProducto;
     @Getter
-    private Table<PedidoN> table;
+    private Table<Pedido> table;
     private ControladorPedido controladorPedido;
-    private final Function<PedidoN, Object[]> dataMapper = usuarioMapper -> new Object[]{
+    private final Function<Pedido, Object[]> dataMapper = usuarioMapper -> new Object[]{
             usuarioMapper.getId(),
             usuarioMapper.getProveedor().getNombre(),
             DateFull.getDateFull(usuarioMapper.getFecha_pedido()),
@@ -71,11 +71,11 @@ public class FormPedidos extends Form {
         return panel;
     }
 
-    public void addOneTable(PedidoN pedido) {
+    public void addOneTable(Pedido pedido) {
         PoolThreads.getInstance().execute(() -> table.addOne(pedido));
     }
 
-    public void addAllTable(List<PedidoN> pedidos) {
+    public void addAllTable(List<Pedido> pedidos) {
         PoolThreads.getInstance().execute(() -> table.addAll(pedidos));
     }
 

@@ -1,11 +1,11 @@
 package bumh3r.view.panel;
 
-import bumh3r.archive.PathResources;
+import bumh3r.utils.PathResources;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.input.InputText;
 import bumh3r.components.input.InputTextPhone;
 import bumh3r.components.label.LabelPublicaSans;
-import bumh3r.fonts.FontPublicaSans;
+import bumh3r.utils.fonts.FontPublicaSans;
 import bumh3r.request.ProveedorRequest;
 import bumh3r.system.panel.Panel;
 import com.formdev.flatlaf.FlatClientProperties;

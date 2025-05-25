@@ -1,7 +1,6 @@
 package bumh3r.request;
 
-import bumh3r.model.New.TipoEmpleado;
-import java.time.LocalDateTime;
+import bumh3r.model.TipoEmpleado;
 
 public record EmpleadoRequest(
         String nombre,

@@ -4,12 +4,10 @@ import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.input.InputFormattedDecimal;
 import bumh3r.components.input.InputFormatterNumber;
 import bumh3r.components.input.InputText;
-import bumh3r.components.input.InputTextCP;
-import bumh3r.components.input.InputTextPhone;
 import bumh3r.components.label.LabelPublicaSans;
-import bumh3r.fonts.FontPublicaSans;
-import bumh3r.model.New.CategoriaN;
-import bumh3r.model.New.ProveedorN;
+import bumh3r.utils.fonts.FontPublicaSans;
+import bumh3r.model.Categoria;
+import bumh3r.model.Proveedor;
 import bumh3r.request.RefaccionRequest;
 import bumh3r.system.panel.Panel;
 import com.formdev.flatlaf.FlatClientProperties;
@@ -18,7 +16,6 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
@@ -97,8 +94,8 @@ public class PanelAddRefaccion extends Panel {
         Integer stock = this.stock.getValue() != null ? Integer.valueOf(this.stock.getValue().toString()) : null;
         Float precio_venta = this.precio_venta.getValue() != null ? Float.valueOf(this.precio_venta.getValue().toString()) : 0.0f;
         Float precio_compra = this.precio_compra.getValue() != null ? Float.valueOf(this.precio_compra.getValue().toString()) : 0.0f;
-        CategoriaN categoria = this.category.getSelectedItem() instanceof CategoriaN ? (CategoriaN) this.category.getSelectedItem() : null;
-        ProveedorN proveedorValue = this.proveedor.getSelectedItem() instanceof ProveedorN ? (ProveedorN) this.proveedor.getSelectedItem() : null;
+        Categoria categoria = this.category.getSelectedItem() instanceof Categoria ? (Categoria) this.category.getSelectedItem() : null;
+        Proveedor proveedorValue = this.proveedor.getSelectedItem() instanceof Proveedor ? (Proveedor) this.proveedor.getSelectedItem() : null;
         return new RefaccionRequest(nombreValue, descripcionValue, stock, precio_venta, precio_compra, proveedorValue, categoria);
     }
 
@@ -114,7 +111,7 @@ public class PanelAddRefaccion extends Panel {
         });
     }
 
-    public void setCategoryModel(List<CategoriaN> list) {
+    public void setCategoryModel(List<Categoria> list) {
         SwingUtilities.invokeLater(() -> {
             this.category.removeAllItems();
             this.category.addItem("Seleccione una categoría");
@@ -122,7 +119,7 @@ public class PanelAddRefaccion extends Panel {
         });
     }
 
-    public void setProveedorModel(List<ProveedorN> list) {
+    public void setProveedorModel(List<Proveedor> list) {
         SwingUtilities.invokeLater(() -> {
             this.proveedor.removeAllItems();
             this.proveedor.addItem("Seleccione un Proveedor");

@@ -1,44 +1,41 @@
 package bumh3r.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.time.LocalDate;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
-@Getter
-@Setter
-@Builder
+@Entity
+@Table(name = "empleado")
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Builder
+@Getter
+@Setter
 public class Empleado {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String firstname;
-    private String lastname;
+    private String nombre;
+    private String apellido;
+    private String telefono;
+    private String correo;
+    private String genero;
     private String rfc;
-    private String phone;
-    private String sex;
-    private String email;
-    private String state;
-    private String municipality;
-    private String colony;
-    private String street;
-    private String zip;
-    private LocalDate date_register;
-    private LocalDate date_low;
-    private String status_activo;
-    private TypeEmpleado type_employee;
+    @CreationTimestamp
+    private LocalDateTime fecha_registro;
+    @CreationTimestamp
+    private LocalDateTime fecha_baja;
+    private Boolean isActivo;
+    @OneToOne
+    @JoinColumn(name = "direccion_id")
+    private Direccion direccion;
+    @ManyToOne
+    @JoinColumn(name = "tipo_empleado_id")
+    private TipoEmpleado tipoEmpleado;
 
     @Override
     public String toString() {
-        return String.format("%s %s", firstname, lastname);
+        return String.format("ID: %d | %s %s",id,nombre,apellido);
     }
-
-    public static enum Status {
-        Activo, Inactivo
-    }
-
 }

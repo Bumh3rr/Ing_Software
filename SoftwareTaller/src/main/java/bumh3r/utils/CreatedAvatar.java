@@ -1,6 +1,5 @@
 package bumh3r.utils;
 
-import bumh3r.archive.PathResources;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;

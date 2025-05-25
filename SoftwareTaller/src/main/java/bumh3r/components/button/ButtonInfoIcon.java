@@ -1,6 +1,6 @@
 package bumh3r.components.button;
 
-import bumh3r.archive.PathResources;
+import bumh3r.utils.PathResources;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Cursor;

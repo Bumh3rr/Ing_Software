@@ -1,14 +1,13 @@
 package bumh3r.view.preferences.empleado;
 
-import bumh3r.archive.PathResources;
+import bumh3r.utils.PathResources;
 import bumh3r.components.button.ButtonRefreshIcon;
 import bumh3r.components.input.InputText;
-import bumh3r.fonts.FontPublicaSans;
+import bumh3r.utils.fonts.FontPublicaSans;
 import bumh3r.model.Empleado;
-import bumh3r.model.New.EmpleadoN;
 import bumh3r.model.other.Genero;
 import bumh3r.system.preferences.Preferences;
-import bumh3r.thread.PoolThreads;
+import bumh3r.utils.thread.PoolThreads;
 import bumh3r.utils.CreatedAvatar;
 import java.awt.event.ActionListener;
 import javax.swing.JLabel;
@@ -47,17 +46,17 @@ public class PreferencesGeneralEmpleado<T> extends Preferences {
     }
 
     private void setValue() {
-        EmpleadoN identifier = (EmpleadoN) getIdentifier();
+        Empleado identifier = (Empleado) getIdentifier();
         if (identifier != null) {
             setValue(identifier);
         }
     }
 
-    public void setValue(EmpleadoN empleado) {
+    public void setValue(Empleado empleado) {
         SwingUtilities.invokeLater(() -> {
             id.setText(empleado.getId().toString());
             type_employee.setText(empleado.getTipoEmpleado().getNombre());
-            status.setText(empleado.getIsActivo() ? Empleado.Status.Activo.name() : Empleado.Status.Inactivo.name());
+            status.setText(empleado.getIsActivo() ? "Activo" : "Inactivo");
             firstname.setText(empleado.getNombre());
             lastname.setText(empleado.getApellido());
             sex.setText(empleado.getGenero());

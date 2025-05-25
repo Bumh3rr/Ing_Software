@@ -1,12 +1,12 @@
 package bumh3r.view.form;
 
-import bumh3r.components.TableSimple;
+import bumh3r.components.table.TableSimple;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.controller.ControladorProveedor;
-import bumh3r.model.New.ProveedorN;
+import bumh3r.model.Proveedor;
 import bumh3r.model.other.DateFull;
 import bumh3r.system.form.Form;
-import bumh3r.thread.PoolThreads;
+import bumh3r.utils.thread.PoolThreads;
 import java.util.List;
 import java.util.function.Function;
 import javax.swing.JComponent;
@@ -18,8 +18,8 @@ import net.miginfocom.swing.MigLayout;
 public class FormProveedor extends Form {
     private ButtonDefault buttonAddProveedor;
     @Getter
-    private TableSimple<ProveedorN> table;
-    private final Function<ProveedorN, Object[]> dataMapper = usuarioMapper -> new Object[]{
+    private TableSimple<Proveedor> table;
+    private final Function<Proveedor, Object[]> dataMapper = usuarioMapper -> new Object[]{
             usuarioMapper.getId(),
             usuarioMapper.getNombre(),
             usuarioMapper.getTelefono(),
@@ -71,11 +71,11 @@ public class FormProveedor extends Form {
         return panel;
     }
 
-    public void addAllTable(List<ProveedorN> list) {
+    public void addAllTable(List<Proveedor> list) {
         SwingUtilities.invokeLater(() -> table.addAll(list, dataMapper));
     }
 
-    public void addOneTable(ProveedorN proveedor) {
+    public void addOneTable(Proveedor proveedor) {
         SwingUtilities.invokeLater(() -> table.addOne(proveedor, dataMapper));
     }
 }

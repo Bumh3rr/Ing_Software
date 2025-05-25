@@ -1,53 +1,31 @@
 package bumh3r.view.panel;
 
-import bumh3r.components.ContainerCards;
-import bumh3r.components.button.ButtonDefault;
+import bumh3r.components.card.CardCustomerNotes;
+import bumh3r.components.card.ContainerCards;
 import bumh3r.components.input.InputText;
 import bumh3r.components.resposive.ResponsiveLayout;
-import bumh3r.modal.CustomModal;
 import bumh3r.model.Cliente;
-import bumh3r.model.New.ClienteN;
 import bumh3r.model.Nota;
-import bumh3r.model.other.DateFull;
 import bumh3r.system.panel.Panel;
-import bumh3r.system.panel.PanelsInstances;
-import bumh3r.view.form.FormCliente;
-import bumh3r.view.modal.PanelModalInfoNote;
-import com.formdev.flatlaf.FlatClientProperties;
-import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.Consumer;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextPane;
-import javax.swing.SwingUtilities;
+import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
-import raven.modal.ModalDialog;
-import static bumh3r.archive.PathResources.Icon.modal;
 
+@Slf4j
 public class PanelClienteNotes extends Panel {
-    private ContainerCards containerCards;
-    private JPanel panelNotes;
+    private ContainerCards<Nota> containerCards;
     private InputText id, name, phone1, phone2, address;
-    private ClienteN cliente;
+    private Cliente cliente;
 
-    public PanelClienteNotes(ClienteN cliente) {
+    public PanelClienteNotes(Cliente cliente) {
         this.cliente = cliente;
+        log.info("Notas: {}", cliente.getNotas());
         initComponents();
         init();
     }
 
     private void initComponents() {
-        panelNotes = new JPanel(new ResponsiveLayout(ResponsiveLayout.JustifyContent.FIT_CONTENT, new Dimension(-1, -1), 10, 10));
-        panelNotes.putClientProperty(FlatClientProperties.STYLE, ""
-                + "[light]background:darken(@background,3%);"
-                + "[dark]background:lighten(@background,3%)");
-        panelNotes.putClientProperty(FlatClientProperties.STYLE, ""
-                + "border:10,10,10,10;");
-        containerCards = new ContainerCards(panelNotes);
+        containerCards = new ContainerCards<>(CardCustomerNotes.class, new ResponsiveLayout(ResponsiveLayout.JustifyContent.FIT_CONTENT, new Dimension(-1, -1), 10, 10));
         id = getInstance();
         name = getInstance();
         phone1 = getInstance();
@@ -58,7 +36,7 @@ public class PanelClienteNotes extends Panel {
         phone1.setText(cliente.getTelefono_movil());
         phone2.setText(cliente.getTelefono_fijo());
         address.setText(cliente.getDireccion());
-//        refreshPanelNotes(cliente.getNotas());
+        addNoteAll();
     }
 
     private InputText getInstance() {
@@ -94,80 +72,8 @@ public class PanelClienteNotes extends Panel {
         add(containerCards, "span,grow,push");
     }
 
-    public void refreshPanelNotes(List<Nota> list) {
-        SwingUtilities.invokeLater(() -> {
-            panelNotes.removeAll();
-            list.forEach((note) -> {
-                panelNotes.add(new CardInfoNote(note, eventViewPreferences));
-                panelNotes.add(new CardInfoNote(note, eventViewPreferences));
-                panelNotes.add(new CardInfoNote(note, eventViewPreferences));
-            });
-            panelNotes.updateUI();
-            EventQueue.invokeLater(() -> containerCards.getVerticalScrollBar().setValue(0));
-            updateUI();
-        });
-    }
-
-    private Consumer<Nota> eventViewPreferences = e -> {
-        ModalDialog.pushModal(
-                CustomModal.builder()
-                        .component(new PanelModalInfoNote())
-                        .icon(modal + "ic_note.svg")
-                        .buttonClose(false)
-                        .title("Nota")
-                        .rollback(()->ModalDialog.popModel(FormCliente.ID))
-                        .ID(FormCliente.ID)
-                        .build(),
-                FormCliente.ID
-        );
-    };
-
-    private class CardInfoNote extends JPanel {
-        private Nota nota;
-        private Consumer<Nota> eventView;
-
-        public CardInfoNote(Nota nota, Consumer<Nota> eventView) {
-            this.nota = nota;
-            this.eventView = eventView;
-            init();
-        }
-
-        private void init() {
-            setLayout(new MigLayout("fill,insets 15", "fill", "fill"));
-            putClientProperty(FlatClientProperties.STYLE, ""
-                    + "arc:30;"
-                    + "[dark]background:lighten($Panel.background,3%);"
-            );
-            add(createBody(), "grow 0,al lead");
-            updateUI();
-        }
-
-
-        private JPanel createBody() {
-            JPanel body = new JPanel(new MigLayout("wrap, insets 0", "[150]", "[][]push[]push"));
-            body.putClientProperty(FlatClientProperties.STYLE, ""
-                    + "background:null");
-            JLabel title = new JLabel(this.nota.getFolio());
-            title.putClientProperty(FlatClientProperties.STYLE, "font:bold +1;");
-            JTextPane description = new JTextPane();
-            description.setEditable(false);
-            description.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
-            description.putClientProperty(FlatClientProperties.STYLE, ""
-                    + "border:0,0,0,0;"
-                    + "background:null;"
-                    + "[dark]foreground:shade($Label.foreground,30%)"
-            );
-            description.setText(
-                    "Fecha registro: " + DateFull.getDateFull(nota.getFecha_nota())
-                            + "\nEstatus: " + nota.getStatus().getValue()
-                            + "\nRecibido: " + nota.getRecido_por().getFirstname() + " " + nota.getRecido_por().getLastname()
-                            + "\nDispositivos: " + nota.getDispositivos().size()
-            );
-
-            body.add(title);
-            body.add(description);
-            return body;
-        }
+    private void addNoteAll(){
+        containerCards.addItemsAll(cliente.getNotas());
     }
 
 }

@@ -1,10 +1,10 @@
 package bumh3r.view.panel;
 
-import bumh3r.components.Table;
+import bumh3r.components.table.Table;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.input.InputText;
 import bumh3r.components.label.LabelForDescription;
-import bumh3r.model.New.ClienteN;
+import bumh3r.model.Cliente;
 import bumh3r.model.other.DateFull;
 import bumh3r.system.panel.Panel;
 import java.util.List;
@@ -14,7 +14,7 @@ import javax.swing.SwingUtilities;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
-import static bumh3r.archive.PathResources.Icon.modal;
+import static bumh3r.utils.PathResources.Icon.modal;
 
 public class PanelSearchCliente extends Panel {
     private LabelForDescription description;
@@ -22,8 +22,8 @@ public class PanelSearchCliente extends Panel {
     private InputText input;
     private ButtonDefault buttonSearch;
     @Getter
-    private Table<ClienteN> table;
-    private final Function<ClienteN, Object[]> dataMapper = usuarioMapper -> new Object[]{
+    private Table<Cliente> table;
+    private final Function<Cliente, Object[]> dataMapper = usuarioMapper -> new Object[]{
             usuarioMapper.getId(),
             usuarioMapper.getNombre(),
             usuarioMapper.getTelefono_movil(),
@@ -37,7 +37,7 @@ public class PanelSearchCliente extends Panel {
         input.addActionListener(e -> event.run());
     }
 
-    public void installEventSelect(Function<ClienteN, Void> event) {
+    public void installEventSelect(Function<Cliente, Void> event) {
         table.setRowClickListener(event);
     }
 
@@ -69,7 +69,7 @@ public class PanelSearchCliente extends Panel {
         });
     }
 
-    public Consumer<ClienteN> addOneCard = (cliente) -> table.addOne(cliente);
-    public Consumer<List<ClienteN>> addAllCard = (list) -> table.addAll(list);
+    public Consumer<Cliente> addOneCard = (cliente) -> table.addOne(cliente);
+    public Consumer<List<Cliente>> addAllCard = (list) -> table.addAll(list);
 
 }

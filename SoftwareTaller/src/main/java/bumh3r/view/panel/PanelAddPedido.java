@@ -1,17 +1,17 @@
 package bumh3r.view.panel;
 
-import bumh3r.components.Table;
+import bumh3r.components.table.Table;
 import bumh3r.components.button.ButtonAccentBase;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.input.InputArea;
 import bumh3r.components.input.InputFormatterNumber;
 import bumh3r.components.label.LabelForDescription;
-import bumh3r.model.New.ProveedorN;
-import bumh3r.model.New.RefaccionN;
+import bumh3r.model.Proveedor;
+import bumh3r.model.Refaccion;
 import bumh3r.request.DetallesPedidosRequest;
 import bumh3r.request.PedidoRequest;
 import bumh3r.system.panel.Panel;
-import bumh3r.thread.PoolThreads;
+import bumh3r.utils.thread.PoolThreads;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
 import java.util.List;
 import java.util.function.Function;
@@ -32,7 +32,7 @@ public class PanelAddPedido extends Panel {
     private Table<DetallesPedidosRequest> table;
     private final Function<DetallesPedidosRequest, Object[]> dataMapper = usuarioMapper -> new Object[]{
             usuarioMapper.cantidad(),
-            usuarioMapper.refaccionN()
+            usuarioMapper.refaccion()
     };
 
     public void installEventAddDetalle(Runnable runnable) {
@@ -90,14 +90,14 @@ public class PanelAddPedido extends Panel {
 
     public PedidoRequest getValue() {
         String descriptionValue = !this.descriptionArea.getText().isEmpty() ? this.descriptionArea.getText().strip() : null;
-        ProveedorN proveedorValue = this.proveedor.getSelectedItem() instanceof ProveedorN ? (ProveedorN) this.proveedor.getSelectedItem() : null;
+        Proveedor proveedorValue = this.proveedor.getSelectedItem() instanceof Proveedor ? (Proveedor) this.proveedor.getSelectedItem() : null;
         List<DetallesPedidosRequest> detalles = table.getDataList();
         return new PedidoRequest(descriptionValue, proveedorValue, detalles);
     }
 
     public DetallesPedidosRequest getValueDetail() {
         Integer unidadesValue = this.unidades.getValue() != null ? Integer.valueOf(this.unidades.getValue().toString()) : null;
-        RefaccionN refaccionValue = this.refaccion.getSelectedItem() instanceof RefaccionN ? (RefaccionN) this.refaccion.getSelectedItem() : null;
+        Refaccion refaccionValue = this.refaccion.getSelectedItem() instanceof Refaccion ? (Refaccion) this.refaccion.getSelectedItem() : null;
         return new DetallesPedidosRequest(unidadesValue, refaccionValue);
     }
 
@@ -122,7 +122,7 @@ public class PanelAddPedido extends Panel {
         PoolThreads.getInstance().execute(() -> table.addOne(cliente));
     }
 
-    public void setProveedorModel(List<ProveedorN> list) {
+    public void setProveedorModel(List<Proveedor> list) {
         SwingUtilities.invokeLater(() -> {
             this.proveedor.removeAllItems();
             this.proveedor.addItem("Seleccione un Proveedor");
@@ -130,7 +130,7 @@ public class PanelAddPedido extends Panel {
         });
     }
 
-    public void setRefaccionModel(List<RefaccionN> list) {
+    public void setRefaccionModel(List<Refaccion> list) {
         SwingUtilities.invokeLater(() -> {
             this.refaccion.removeAllItems();
             this.refaccion.addItem("Seleccione la refacción a pedir");

@@ -3,7 +3,7 @@ package bumh3r.view.panel;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.input.InputText;
 import bumh3r.components.label.LabelForDescription;
-import bumh3r.model.MetodoPago;
+import bumh3r.model.MetodoPagoModelCon;
 import bumh3r.system.panel.Panel;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
 import javax.swing.JComponent;
@@ -15,7 +15,7 @@ public class PanelAddPago extends Panel {
     public static final String ID = PanelAddPago.class.getName();
     private LabelForDescription description;
     private InputText monto_recibido;
-    private FlatComboBox<MetodoPago> metodo_pago;
+    private FlatComboBox<MetodoPagoModelCon> metodo_pago;
     private ButtonDefault agregarPago;
 
     public PanelAddPago() {
@@ -28,7 +28,7 @@ public class PanelAddPago extends Panel {
         monto_recibido = new InputText("Ingrese el monto recibido");
         agregarPago = new ButtonDefault("Agregar Pago");
         metodo_pago = new FlatComboBox<>();
-        MetodoPago.ListMetodosPago.addItemsMetodoPago(metodo_pago);
+        MetodoPagoModelCon.ListMetodosPago.addItemsMetodoPago(metodo_pago);
     }
 
     private void init() {

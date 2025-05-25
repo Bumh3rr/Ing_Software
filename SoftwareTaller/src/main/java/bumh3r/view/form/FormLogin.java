@@ -3,26 +3,19 @@ package bumh3r.view.form;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.input.InputPassword;
 import bumh3r.components.input.InputText;
-import bumh3r.components.swingButton.SwitchButton;
 import bumh3r.controller.LoginController;
-import bumh3r.interfaces.CallBack;
-import bumh3r.model.other.Theme;
 import bumh3r.notifications.Notify;
 import bumh3r.request.UsuarioLogin;
 import bumh3r.system.form.Form;
 import bumh3r.view.modal.ModalToas;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import java.awt.Cursor;
-import java.awt.FlowLayout;
-import java.io.IOException;
-import java.util.function.Consumer;
 import javax.swing.*;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 import raven.modal.ModalDialog;
 import raven.modal.Toast;
-import static bumh3r.archive.PathResources.Icon.modal;
+import static bumh3r.utils.PathResources.Icon.modal;
 
 public class FormLogin extends Form {
 
@@ -118,25 +111,6 @@ public class FormLogin extends Form {
         add(panel);
         updateUI();
     }
-
-    public CallBack.Fail eventFail = (message) -> {
-        SwingUtilities.invokeLater(() -> {
-            ModalDialog.showModal(SwingUtilities.windowForComponent(this),
-                    new ModalToas(ModalToas.Type.ERROR, "Se ha producido un error :(", message, (controller, action) -> {
-                        if (action == ModalToas.ACCEPT_OPTION || action == ModalToas.CLOSE_OPTION) {
-                            controller.close();
-                        }
-                    }));
-        });
-    };
-
-    private CallBack.Success eventSuccess = (message) -> loginButton.setEnabled(true);
-
-    public void setDataUsuarioLogin(UsuarioLogin usuarioLogin) {
-        userField.setText(usuarioLogin.username());
-        rememberBox.setSelected(usuarioLogin.remember());
-    }
-
     public void cleanFields() {
         userField.setText("");
         passwordField.setText("");

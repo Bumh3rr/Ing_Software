@@ -1,13 +1,11 @@
 package bumh3r.view.panel;
 
-import bumh3r.components.Table;
-import bumh3r.components.TableSimple;
+import bumh3r.components.table.TableSimple;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.input.InputArea;
 import bumh3r.components.label.LabelForDescription;
 import bumh3r.components.label.LabelTextArea;
-import bumh3r.model.New.DetallesPedidoN;
-import bumh3r.model.New.PedidoN;
+import bumh3r.model.DetallesPedido;
 import bumh3r.model.Pedido;
 import bumh3r.model.other.DateFull;
 import bumh3r.system.panel.Panel;
@@ -21,12 +19,12 @@ import net.miginfocom.swing.MigLayout;
 public class PanelDetailsPedido extends Panel {
     private LabelForDescription description;
     private InputArea descripcionText;
-    private TableSimple<DetallesPedidoN> table;
+    private TableSimple<DetallesPedido> table;
     private LabelTextArea fecha, proveedor;
     @Getter
-    private FlatComboBox<PedidoN.EstadoPedido> status;
+    private FlatComboBox<Pedido.EstadoPedido> status;
     private ButtonDefault update;
-    private final Function<DetallesPedidoN, Object[]> dataMapper = usuarioMapper -> new Object[]{
+    private final Function<DetallesPedido, Object[]> dataMapper = usuarioMapper -> new Object[]{
             usuarioMapper.getId(),
             usuarioMapper.getRefaccion().getNombre(),
             usuarioMapper.getCantidad()
@@ -37,14 +35,14 @@ public class PanelDetailsPedido extends Panel {
         init();
     }
 
-    public void setPedido(PedidoN pedido) {
+    public void setPedido(Pedido pedido) {
         fecha.setText(DateFull.getDateFull(pedido.getFecha_pedido()));
         proveedor.setText(String.format(" ID: %d | %s", pedido.getProveedor().getId(), pedido.getProveedor().getNombre()));
         status.setSelectedItem(pedido.getEstado());
         descripcionText.setText(pedido.getObservaciones());
     }
 
-    public void setDetails(List<DetallesPedidoN> detalles) {
+    public void setDetails(List<DetallesPedido> detalles) {
         table.addAll(detalles, dataMapper);
     }
 
@@ -62,7 +60,7 @@ public class PanelDetailsPedido extends Panel {
         descripcionText = new InputArea();
         descripcionText.setEnabled(false);
         status = new FlatComboBox<>();
-        status.setModel(new DefaultComboBoxModel<>(PedidoN.EstadoPedido.values()));
+        status.setModel(new DefaultComboBoxModel<>(Pedido.EstadoPedido.values()));
     }
 
     private void init() {

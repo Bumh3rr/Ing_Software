@@ -1,6 +1,6 @@
 package bumh3r.view.modal;
 
-import bumh3r.fonts.FontPublicaSans;
+import bumh3r.utils.fonts.FontPublicaSans;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.extras.components.FlatTextPane;
@@ -19,7 +19,7 @@ import raven.modal.component.Modal;
 import raven.modal.component.ModalBorderAction;
 import raven.modal.listener.ModalCallback;
 import raven.modal.listener.ModalController;
-import static bumh3r.archive.PathResources.Icon.modal;
+import static bumh3r.utils.PathResources.Icon.modal;
 
 
 public class ModalToas extends Modal implements ModalBorderAction {

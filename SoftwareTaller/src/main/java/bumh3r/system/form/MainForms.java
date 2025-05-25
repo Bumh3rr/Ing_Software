@@ -1,6 +1,6 @@
 package bumh3r.system.form;
 
-import bumh3r.components.RefreshLine;
+import bumh3r.components.custom.RefreshLine;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.BorderLayout;

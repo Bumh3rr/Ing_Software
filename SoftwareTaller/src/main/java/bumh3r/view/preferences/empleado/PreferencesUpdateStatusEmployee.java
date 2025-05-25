@@ -2,7 +2,7 @@ package bumh3r.view.preferences.empleado;
 
 import bumh3r.components.button.ButtonAccentBase;
 import bumh3r.components.label.LabelForDescription;
-import bumh3r.model.New.EmpleadoN;
+import bumh3r.model.Empleado;
 import bumh3r.system.preferences.Preferences;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.EventQueue;
@@ -37,7 +37,7 @@ public class PreferencesUpdateStatusEmployee extends Preferences {
     }
 
     private void setData() {
-        EmpleadoN empleado = (EmpleadoN) getIdentifier();
+        Empleado empleado = (Empleado) getIdentifier();
         setStatus(empleado);
     }
 
@@ -61,7 +61,7 @@ public class PreferencesUpdateStatusEmployee extends Preferences {
         add(buttonChange, "growx,gapy 160 5,gapx 5 5");
     }
 
-    public void setStatus(EmpleadoN empleado) {
+    public void setStatus(Empleado empleado) {
         EventQueue.invokeLater(() -> {
             boolean isActive = empleado.getIsActivo();
 

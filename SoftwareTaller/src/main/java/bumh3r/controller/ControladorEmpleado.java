@@ -1,10 +1,9 @@
 package bumh3r.controller;
 
-import bumh3r.archive.PathResources;
-import bumh3r.dao.EmpleadoDAO;
-import bumh3r.model.New.EmpleadoN;
+import bumh3r.utils.PathResources;
+import bumh3r.repository.EmpleadoDAO;
+import bumh3r.model.Empleado;
 import bumh3r.notifications.Notify;
-import bumh3r.request.EmpleadoRequest;
 import bumh3r.system.panel.PanelsInstances;
 import bumh3r.system.preferences.Preferences;
 import bumh3r.system.preferences.PreferencesInstance;
@@ -47,7 +46,7 @@ public class ControladorEmpleado extends Controller {
                     public void execute(PromiseCallback callback) {
                         try {
                             callback.update("Guardando ...");
-                            List<EmpleadoN> list = empleadoDAO.findAll();
+                            List<Empleado> list = empleadoDAO.findAll();
                             if (list.isEmpty()) {
                                 callback.done(Toast.Type.WARNING, "No hay empleados registrados");
                                 view.eventCleanUser();
@@ -73,19 +72,19 @@ public class ControladorEmpleado extends Controller {
     }
 
     private void registrarNuevoEmpleado() {
-        EmpleadoN value = panelAddEmployee.getValue();
+        Empleado value = panelAddEmployee.getValue();
         if (value == null || validarDatosEmpleado(value) || Toast.checkPromiseId(KEY)) return;
         agregarEmpleado(value);
     }
 
-    private void agregarEmpleado(EmpleadoN value) {
+    private void agregarEmpleado(Empleado value) {
         Notify.showPromise("Agregando Empleado ...",
                 new ToastPromise(KEY) {
                     @Override
                     public void execute(PromiseCallback callback) {
                         try {
                             callback.update("Agregando Empleado ...");
-                            EmpleadoN empleado = empleadoDAO.save(value);
+                            Empleado empleado = empleadoDAO.save(value);
                             view.eventAddUsuario.accept(empleado);
                             panelAddEmployee.cleanValue();
                             if (ModalDialog.isIdExist(ID)) ModalDialog.closeModal(ID);
@@ -98,7 +97,7 @@ public class ControladorEmpleado extends Controller {
                 });
     }
 
-    public boolean validarDatosEmpleado(EmpleadoN value) {
+    public boolean validarDatosEmpleado(Empleado value) {
         // Datos requeridos
         Toast.closeAll();
         if (CheckInput.isInvalidInput(value.getNombre(), CheckExpression::isNameValid, "Nombre", "solo debe contener letras"))
@@ -124,7 +123,7 @@ public class ControladorEmpleado extends Controller {
     private ActionListener obtenerEmpleado = (x) -> {
         Toast.closeAll();
         PreferencesGeneralEmpleado panel = (PreferencesGeneralEmpleado) PreferencesInstance.getInstance().getInstancePreferences(PreferencesGeneralEmpleado.class);
-        EmpleadoN value = (EmpleadoN) panel.getIdentifier();
+        Empleado value = (Empleado) panel.getIdentifier();
         if (value == null || Toast.checkPromiseId(KEY)) return;
         Notify.showPromise("Obteniendo ...",
                 new ToastPromise(KEY) {
@@ -132,7 +131,7 @@ public class ControladorEmpleado extends Controller {
                     public void execute(PromiseCallback callback) {
                         try {
                             callback.update("Obteniendo Empleado ...");
-                            EmpleadoN empleado = empleadoDAO.findById(value.getId())
+                            Empleado empleado = empleadoDAO.findById(value.getId())
                                     .orElseThrow(() -> new RuntimeException("El empleado no existe"));
                             setInfoEmployee(empleado, value);
                             panel.setValue(empleado);
@@ -148,7 +147,7 @@ public class ControladorEmpleado extends Controller {
     private ActionListener eventUpdateEmployee = (x) -> {
         Toast.closeAll();
         PreferencesUpdateInfoEmployee panel = (PreferencesUpdateInfoEmployee) PreferencesInstance.getInstance().getInstancePreferences(PreferencesUpdateInfoEmployee.class);
-        EmpleadoN value = panel.getValue();
+        Empleado value = panel.getValue();
         if (Toast.checkPromiseId(KEY) || validarDatosEmpleado(value)) return;
         Notify.showPromise("Actualizando ...",
                 new ToastPromise(KEY) {
@@ -156,8 +155,8 @@ public class ControladorEmpleado extends Controller {
                     public void execute(PromiseCallback callback) {
                         try {
                             callback.update("Actualizando Empleado ...");
-                            EmpleadoN empleadoOrigin = (EmpleadoN) panel.getIdentifier();
-                            EmpleadoN empleado = empleadoDAO.update(empleadoOrigin.getId(), value);
+                            Empleado empleadoOrigin = (Empleado) panel.getIdentifier();
+                            Empleado empleado = empleadoDAO.update(empleadoOrigin.getId(), value);
                             setInfoEmployee(empleado, empleadoOrigin);
                             callback.done(Toast.Type.SUCCESS, "El empleado fue actualizado correctamente");
                         } catch (Exception ex) {
@@ -172,14 +171,14 @@ public class ControladorEmpleado extends Controller {
         Toast.closeAll();
         if (Toast.checkPromiseId(KEY)) return;
         PreferencesUpdateStatusEmployee panel = (PreferencesUpdateStatusEmployee) PreferencesInstance.getInstance().getInstancePreferences(PreferencesUpdateStatusEmployee.class);
-        EmpleadoN empleadoOrigin = (EmpleadoN) panel.getIdentifier();
+        Empleado empleadoOrigin = (Empleado) panel.getIdentifier();
         Notify.showPromise("Actualizando ...",
                 new ToastPromise(KEY) {
                     @Override
                     public void execute(PromiseCallback callback) {
                         try {
                             callback.update("Actualizando Empleado ...");
-                            EmpleadoN empleadoSearch = empleadoDAO.findById(empleadoOrigin.getId()).orElseThrow(() -> new RuntimeException("El empleado no existe"));
+                            Empleado empleadoSearch = empleadoDAO.findById(empleadoOrigin.getId()).orElseThrow(() -> new RuntimeException("El empleado no existe"));
 
                             boolean isActive = !empleadoOrigin.getIsActivo();
                             empleadoSearch.setIsActivo(isActive);
@@ -197,20 +196,20 @@ public class ControladorEmpleado extends Controller {
     };
 
 
-    public BiConsumer<EmpleadoN, Runnable> eventShowPreferences = (empleado, refresh) -> {
+    public BiConsumer<Empleado, Runnable> eventShowPreferences = (empleado, refresh) -> {
         LinkedHashMap<Class<? extends Preferences>, ModalPreferences.ModalUtils> mapActions = new LinkedHashMap<>();
         mapActions.put(PreferencesGeneralEmpleado.class, new ModalPreferences.ModalUtils(new ModalPreferences.ButtonPreferences("General"), obtenerEmpleado));
         mapActions.put(PreferencesUpdateInfoEmployee.class, new ModalPreferences.ModalUtils(new ModalPreferences.ButtonPreferences("Actualizar Información"), eventUpdateEmployee));
         mapActions.put(PreferencesUpdateStatusEmployee.class, new ModalPreferences.ModalUtils(new ModalPreferences.ButtonPreferences("Actualizar Estado", "#ffaa00", PathResources.Icon.home + "ic_status.svg"), eventChangeStatusEmployee));
 
-        showPanel(new ModalPreferences<EmpleadoN>(mapActions, ID)
+        showPanel(new ModalPreferences<Empleado>(mapActions, ID)
                         .initial(empleado, PreferencesGeneralEmpleado.class)
                         .installEventShowInfo(() -> {})
                         .installEventClose(refresh),
                 null, null, ID, null, false);
     };
 
-    public void setInfoEmployee(EmpleadoN getEmpleado, EmpleadoN empleadoOrigin) {
+    public void setInfoEmployee(Empleado getEmpleado, Empleado empleadoOrigin) {
         empleadoOrigin.setTipoEmpleado(getEmpleado.getTipoEmpleado());
         empleadoOrigin.setNombre(getEmpleado.getNombre());
         empleadoOrigin.setApellido(getEmpleado.getApellido());

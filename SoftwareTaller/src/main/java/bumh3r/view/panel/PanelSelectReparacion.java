@@ -1,24 +1,24 @@
 package bumh3r.view.panel;
 
-import bumh3r.components.Table;
+import bumh3r.components.table.Table;
 import bumh3r.components.label.LabelForDescription;
-import bumh3r.model.Reparacion_Dispositivo;
+import bumh3r.model.Reparacion;
 import bumh3r.system.panel.Panel;
-import bumh3r.thread.PoolThreads;
+import bumh3r.utils.thread.PoolThreads;
 import java.util.List;
 import java.util.function.Function;
 import net.miginfocom.swing.MigLayout;
 
 public class PanelSelectReparacion extends Panel {
     private LabelForDescription description;
-    private Table<Reparacion_Dispositivo> table;
-    private List<Reparacion_Dispositivo> reparacionDispositivos;
+    private Table<Reparacion> table;
+    private List<Reparacion> reparacionDispositivos;
 
     @Override
     public void panelInit() {
     }
 
-    public PanelSelectReparacion(List<Reparacion_Dispositivo> reparacionDispositivos) {
+    public PanelSelectReparacion(List<Reparacion> reparacionDispositivos) {
         this.reparacionDispositivos = reparacionDispositivos;
         initComponents();
         init();
@@ -37,18 +37,18 @@ public class PanelSelectReparacion extends Panel {
         add(table, "h 300!,growx,gapy 5 0");
     }
 
-    public void showData(List<Reparacion_Dispositivo> reparacionDispositivos) {
-        PoolThreads.getInstance().execute(() -> {
-            Function<Reparacion_Dispositivo, Object[]> reparacion = repair -> new Object[]{
-                    repair.getTipoReparacion().getNombre(),
-                    repair.getCategoria().getName(),
-                    repair.getReparacion().getName(),
-                    String.format("$%.2f", repair.getPrecio()),
-                    String.format("$%.2f", repair.getAbono()),
-                    repair.getStatus().getValue()
-            };
-            table.addAll(reparacionDispositivos);
-        });
+    public void showData(List<Reparacion> reparacionDispositivos) {
+//        PoolThreads.getInstance().execute(() -> {
+//            Function<Reparacion_Dispositivo, Object[]> reparacion = repair -> new Object[]{
+//                    repair.getTipoReparacion().getNombre(),
+//                    repair.getCategoria().getName(),
+//                    repair.getReparacion().getName(),
+//                    String.format("$%.2f", repair.getPrecio()),
+//                    String.format("$%.2f", repair.getAbono()),
+//                    repair.getStatus().getValue()
+//            };
+//            table.addAll(reparacionDispositivos);
+//        });
     }
 
 

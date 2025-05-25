@@ -1,6 +1,6 @@
 package bumh3r.request;
 
-import bumh3r.model.New.DispositivoN;
+import bumh3r.model.Dispositivo;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DispositivoRequest{
-    private DispositivoN.TipoDispositivo tipo_dispositivo;
-    private DispositivoN.Marca marca;
+    private Dispositivo.TipoDispositivo tipo_dispositivo;
+    private Dispositivo.Marca marca;
     private String modelo;
     private String imei;
     private Integer utils;

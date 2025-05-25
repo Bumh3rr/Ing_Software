@@ -12,7 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import net.miginfocom.swing.MigLayout;
 
-import static bumh3r.archive.PathResources.Icon.modal;
+import static bumh3r.utils.PathResources.Icon.modal;
 
 public class CardDevice extends Card {
     private DispositivoRequest dispositivo;

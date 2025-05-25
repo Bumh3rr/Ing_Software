@@ -1,7 +1,7 @@
 package bumh3r.system.panel;
 
 import bumh3r.components.label.LabelPublicaSans;
-import bumh3r.fonts.FontPublicaSans;
+import bumh3r.utils.fonts.FontPublicaSans;
 import bumh3r.system.form.Form;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLaf;

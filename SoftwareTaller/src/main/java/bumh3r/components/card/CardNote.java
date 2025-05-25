@@ -1,30 +1,26 @@
 package bumh3r.components.card;
 
-import bumh3r.archive.PathResources;
+import bumh3r.utils.PathResources;
 import bumh3r.components.button.ButtonDefault;
-import bumh3r.components.label.LabelTextArea;
-import bumh3r.model.New.EmpleadoN;
-import bumh3r.model.New.NotaN;
 import bumh3r.model.Nota;
 import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.components.FlatLabel;
+import com.formdev.flatlaf.extras.components.FlatTextArea;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextPane;
 import net.miginfocom.swing.MigLayout;
 import raven.extras.AvatarIcon;
 
 public class CardNote extends Card {
     private ButtonDefault view;
     private JLabel status;
-    private final NotaN nota;
-    private final BiConsumer<NotaN, Runnable> event;
+    private final Nota nota;
+    private final BiConsumer<Nota, Runnable> event;
+    private FlatTextArea description;
 
-    public CardNote(NotaN nota, BiConsumer<NotaN, Runnable> event) {
+    public CardNote(Nota nota, BiConsumer<Nota, Runnable> event) {
         super(nota, event);
         this.nota = nota;
         this.event = event;
@@ -33,15 +29,10 @@ public class CardNote extends Card {
     }
 
     private void initComponents() {
-        String color = this.nota.getEstado().getBackgroundStatus();
-        status = new JLabel(this.nota.getEstado().getValue());
-        status.putClientProperty(FlatClientProperties.STYLE,
-                "arc:26;"
-                        + "border: 6,13,6,13,shade(" + color + ",3%);"
-                        + "foreground:shade(" + color + ",3%);"
-                        + "background:fade(" + color + ",8%);");
+        status = new JLabel();
+        setValue();
         view = new ButtonDefault("Visualizar");
-        view.addActionListener(e -> event.accept(nota,()->{}));
+        view.addActionListener(e -> event.accept(nota,this::setValue));
     }
 
     private void init() {
@@ -73,7 +64,7 @@ public class CardNote extends Card {
                 + "background:null");
         JLabel title = new JLabel("Folio: " + nota.getFolio());
         title.putClientProperty(FlatClientProperties.STYLE, "font:bold +1;");
-        JTextPane description = new JTextPane();
+        description = new FlatTextArea();
         description.setEditable(false);
         description.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         description.putClientProperty(FlatClientProperties.STYLE, ""
@@ -86,10 +77,20 @@ public class CardNote extends Card {
                         + "\nCliente: " + nota.getCliente().getNombre()
                         + "\nDispositivos: " + nota.getDispositivos().size()
         );
-
         body.add(title);
         body.add(description);
         body.add(status,"gapy 5");
         return body;
     }
+
+    public void setValue(){
+        status.setText(nota.getEstado().getValue());
+        String color = this.nota.getEstado().getBackgroundStatus();
+        status.putClientProperty(FlatClientProperties.STYLE,
+                "arc:26;"
+                        + "border: 6,13,6,13,shade(" + color + ",3%);"
+                        + "foreground:shade(" + color + ",3%);"
+                        + "background:fade(" + color + ",8%);");
+    }
+
 }

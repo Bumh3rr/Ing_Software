@@ -1,6 +1,6 @@
 package bumh3r.components.input;
 
-import bumh3r.fonts.FontPublicaSans;
+import bumh3r.utils.fonts.FontPublicaSans;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.extras.components.FlatFormattedTextField;
@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.UIManager;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
-import static bumh3r.archive.PathResources.Icon.modal;
+import static bumh3r.utils.PathResources.Icon.modal;
 
 
 public class InputTextPhone extends FlatFormattedTextField {

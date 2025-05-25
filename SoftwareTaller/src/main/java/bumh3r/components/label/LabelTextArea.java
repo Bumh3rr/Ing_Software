@@ -1,6 +1,6 @@
 package bumh3r.components.label;
 
-import bumh3r.fonts.FontPublicaSans;
+import bumh3r.utils.fonts.FontPublicaSans;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Cursor;
 import java.awt.Toolkit;

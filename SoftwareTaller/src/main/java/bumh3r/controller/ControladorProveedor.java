@@ -1,7 +1,7 @@
 package bumh3r.controller;
 
-import bumh3r.dao.ProveedorDao;
-import bumh3r.model.New.ProveedorN;
+import bumh3r.repository.ProveedorDao;
+import bumh3r.model.Proveedor;
 import bumh3r.notifications.Notify;
 import bumh3r.request.ProveedorRequest;
 import bumh3r.system.panel.PanelsInstances;
@@ -38,7 +38,7 @@ public class ControladorProveedor extends Controller {
                     public void execute(PromiseCallback callback) {
                         try {
                             callback.update("Obteniendo los Proveedores  ...");
-                            List<ProveedorN> list = proveedorDao.findAll();
+                            List<Proveedor> list = proveedorDao.findAll();
                             if (list.isEmpty()) {
                                 callback.done(Toast.Type.WARNING, "No hay Proveedores registrados");
                                 return;
@@ -74,7 +74,7 @@ public class ControladorProveedor extends Controller {
                     public void execute(PromiseCallback callback) {
                         try {
                             callback.update("Registrando Proveedor  ...");
-                            ProveedorN proveedor = ProveedorN.builder()
+                            Proveedor proveedor = Proveedor.builder()
                                     .nombre(value.nombre())
                                     .telefono(value.telefono())
                                     .correo(value.correo())

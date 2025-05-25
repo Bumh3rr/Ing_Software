@@ -1,12 +1,13 @@
 package bumh3r.components.card;
 
-import bumh3r.archive.PathResources;
-import bumh3r.components.button.ButtonDefault;
 import bumh3r.model.Nota;
+import bumh3r.utils.PathResources;
+import bumh3r.components.button.ButtonDefault;
 import bumh3r.model.other.DateFull;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -14,30 +15,32 @@ import javax.swing.JTextPane;
 import net.miginfocom.swing.MigLayout;
 import raven.extras.AvatarIcon;
 
-public class CardNoteSale extends JPanel {
+public class CardNoteSale extends Card {
     private Nota nota;
-    private Consumer<Nota> onClick;
+    private BiConsumer<Nota, Runnable> event;
     private JLabel status;
     private ButtonDefault view;
 
-    public CardNoteSale(Nota nota, Consumer<Nota> onClick) {
+    public CardNoteSale(Nota nota, BiConsumer<Nota, Runnable> event) {
+        super(nota, event);
         this.nota = nota;
-        this.onClick = onClick;
+        this.event = event;
         initComponents();
         init();
     }
 
     private void initComponents() {
-        String color = this.nota.getStatus().getBackgroundStatus();
-        status = new JLabel(this.nota.getStatus().getValue());
+        String color = this.nota.getEstado().getBackgroundStatus();
+        status = new JLabel(this.nota.getEstado().getValue());
         status.putClientProperty(FlatClientProperties.STYLE,
                 "arc:26;"
                         + "border: 6,13,6,13,shade(" + color + ",3%);"
                         + "foreground:shade(" + color + ",3%);"
                         + "background:fade(" + color + ",8%);");
         view = new ButtonDefault("Seleccionar");
-        view.addActionListener(e -> onClick.accept(nota));
-        if (this.nota.getStatus() == Nota.StatusNota.CANCELADO){
+        view.addActionListener(e -> event.accept(nota, () -> {
+        }));
+        if (this.nota.getEstado() == Nota.EstadoNota.CANCELADO) {
             view.setEnabled(false);
             view.putClientProperty(FlatClientProperties.STYLE, "background:shade($Panel.background,10%);");
         }
@@ -82,21 +85,20 @@ public class CardNoteSale extends JPanel {
                 + "[light]foreground:tint($Label.foreground,30%);"
                 + "[dark]foreground:shade($Label.foreground,30%)");
         description.setText(
-                                    "<b>Cliente</b>"
-                        + "<br>Nombre: " + nota.getCliente().getName()
-                        + "<br>Teléfono Móvil: " + nota.getCliente().getPhone1()
-                        + "<br>Teléfono Fijo: " + nota.getCliente().getPhone2() +
+                "<b>Cliente</b>"
+                        + "<br>Nombre: " + nota.getCliente().getNombre()
+                        + "<br>Teléfono Móvil: " + nota.getCliente().getTelefono_movil()
+                        + "<br>Teléfono Fijo: " + nota.getCliente().getTelefono_fijo() +
 
-                                    "<br><br><b>Nota</b>"
-                        + "<br>Recibió: " + nota.getRecido_por()
-                        + "<br>Fecha Creada: " + DateFull.getDateOnly(nota.getFecha_nota())
+                        "<br><br><b>Nota</b>"
+                        + "<br>Recibió: " + nota.getEmpleado().getNombre() + " " + nota.getEmpleado().getApellido()
+                        + "<br>Fecha Creada: " + DateFull.getDateOnly(nota.getFecha_registro())
                         + "<br>Dispositivos: " + nota.getDispositivos().size()
                         + "<br>Reparaciones: " + nota.getDispositivos().size() * 2
         );
-
         body.add(title);
         body.add(description);
-        body.add(status,"gapy 5");
+        body.add(status, "gapy 5");
         return body;
     }
 

@@ -1,17 +1,11 @@
 package bumh3r.system.panel;
 
-import bumh3r.modal.Config;
-import bumh3r.modal.CustomModal;
 //import bumh3r.view.panel.*;
-import bumh3r.view.panel.*;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
-import raven.modal.ModalDialog;
-
-import static bumh3r.archive.PathResources.Icon.modal;
 
 public class PanelsInstances {
 

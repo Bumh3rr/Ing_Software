@@ -1,29 +1,48 @@
 package bumh3r.model;
 
-import java.time.LocalDate;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
-@AllArgsConstructor
 @Builder
 @Getter
-@ToString
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "refaccion")
 public class Refaccion {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
     private String descripcion;
-    private String categoria;
     private int stock;
-    private double precioVenta;
-    private double precioCompra;
-    private LocalDate fecha_registro;
+    private double precio_venta;
+    private double precio_compra;
+    @CreationTimestamp
+    private LocalDateTime fecha_registro;
+    @ManyToOne
+    @JoinColumn(name = "proveedor_id")
     private Proveedor proveedor;
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
 
-    public String[] toArray() {
-        return new String[]{id.toString(), nombre, descripcion, categoria, String.valueOf(stock), String.valueOf(precioVenta), String.valueOf(precioCompra), fecha_registro.toString(), proveedor.getNombre()};
+    @Override
+    public String toString() {
+        return String.format("%d | %s", id, nombre);
     }
 }

@@ -1,52 +1,80 @@
 package bumh3r.model;
 
-import java.util.HashMap;
-import java.util.List;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Entity
+@Table(name = "reparacion")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter
+@Setter
 public class Reparacion {
-    //Cambio de Display, Centro de Carga, Bateria
-    private int id;
-    private String name;
-    private String nameBaseIcon;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Enumerated(EnumType.STRING)
+    private CategoriaReparacion categoria;
+    private String reparacion;
+    private String observacion;
+    private Float precio;
+    private Float abono;
+    @Enumerated(EnumType.STRING)
+    private EstadoReparacion estado;
+    @ManyToOne
+    @JoinColumn(name = "dispositivo_id")
+    private Dispositivo dispositivo;
 
-    //Constructor
-    public Reparacion(int id, String reparacion, String nameBaseIcon) {
-        this.id = id;
-        this.name = reparacion;
-        this.nameBaseIcon = nameBaseIcon;
-    }
+    @ManyToOne
+    @JoinColumn(name = "empleado_id")
+    private Empleado empleado;
 
-    @Override
-    public String toString() {
-        return this.name;
-    }
+    public enum EstadoReparacion {
+        PENDIENTE("Pendiente"),
+        EN_PROCESO("En Proceso"),
+        TERMINADO("Terminado"),
+        CANCELADO("Cancelado");
+        @Getter
+        private final String estado;
 
-    public static class ListReparaciones {
-        private static ListReparaciones instance;
-        private HashMap<Categorias_Reparacion, List<Reparacion>> mapReparaciones;
-
-        public static ListReparaciones getInstance() {
-            if (instance == null) {
-                instance = new ListReparaciones();
-            }
-            return instance;
+        EstadoReparacion(String estado) {
+            this.estado = estado;
         }
 
-        public ListReparaciones() {
-            mapReparaciones = new HashMap<>();
+        @Override
+        public String toString() {
+            return this.estado;
+        }
+    }
+
+    public enum CategoriaReparacion {
+        HARDWARE("Hardware"),
+        SOFTWARE("Software"),
+        OTRO("Otro");
+
+        @Getter
+        private final String nombre;
+
+        CategoriaReparacion(String nombre) {
+            this.nombre = nombre;
         }
 
-        public List<Reparacion> getList(Categorias_Reparacion tipo) throws Exception {
-            if (mapReparaciones.containsKey(tipo)) {
-                return mapReparaciones.get(tipo);
-            }
-//            List<Reparacion> list = RequestReparacion.getListReparaciones(tipo.getId());
-//            mapReparaciones.put(tipo, list);
-//            return list;
-            return null;
+        @Override
+        public String toString() {
+            return this.nombre;
         }
     }
 }
-

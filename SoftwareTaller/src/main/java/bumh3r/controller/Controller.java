@@ -1,7 +1,7 @@
 package bumh3r.controller;
 
-import bumh3r.modal.Config;
-import bumh3r.modal.CustomModal;
+import bumh3r.components.modal.Config;
+import bumh3r.components.modal.CustomModal;
 import bumh3r.system.form.FormsManager;
 import bumh3r.view.modal.ModalToas;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import raven.modal.ModalDialog;
 import raven.modal.component.Modal;
-import static bumh3r.archive.PathResources.Icon.modal;
+import static bumh3r.utils.PathResources.Icon.modal;
 
 public class Controller {
     public final String ID = Controller.class.getName();

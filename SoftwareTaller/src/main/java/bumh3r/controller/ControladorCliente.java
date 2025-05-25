@@ -1,8 +1,7 @@
 package bumh3r.controller;
 
-import bumh3r.dao.ClienteDao;
-import bumh3r.model.New.ClienteN;
-import bumh3r.model.New.EmpleadoN;
+import bumh3r.repository.ClienteDao;
+import bumh3r.model.Cliente;
 import bumh3r.notifications.Notify;
 import bumh3r.request.ClienteRequest;
 import bumh3r.system.panel.PanelsInstances;
@@ -42,7 +41,7 @@ public class ControladorCliente extends Controller {
                     public void execute(PromiseCallback callback) {
                         try {
                             callback.update("Obteniendo los Clientes  ...");
-                            List<ClienteN> list = clienteDao.findAll();
+                            List<Cliente> list = clienteDao.findAll();
                             if (list.isEmpty()) {
                                 callback.done(Toast.Type.WARNING, "No hay clientes registrados");
                                 return;
@@ -77,7 +76,7 @@ public class ControladorCliente extends Controller {
             public void execute(PromiseCallback callback) {
                 try {
                     callback.update("Registrando el Cliente ...");
-                    ClienteN newCustomer = ClienteN.builder()
+                    Cliente newCustomer = Cliente.builder()
                             .nombre(value.nombre())
                             .telefono_movil(value.telefono_movil())
                             .telefono_fijo(value.telefono_fijo())
@@ -97,7 +96,7 @@ public class ControladorCliente extends Controller {
         });
     }
 
-    public Function<ClienteN, Void> mostrarNotasCliente = (cliente) -> {
+    public Function<Cliente, Void> mostrarNotasCliente = (cliente) -> {
         PanelClienteNotes panelClienteNotes = new PanelClienteNotes(cliente);
         panelClienteNotes.panelCheckUI();
         showPanel(panelClienteNotes, "Notas del Cliente", "ic_note.svg", ID, null, false);
@@ -105,7 +104,7 @@ public class ControladorCliente extends Controller {
     };
 
     public void buscarClientePorNombre() {
-        List<ClienteN> list;
+        List<Cliente> list;
         String nombre;
         try {
             nombre = view.getSearch().getText().trim().toLowerCase();

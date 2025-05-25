@@ -1,12 +1,12 @@
 package bumh3r.request;
 
-import bumh3r.model.New.ClienteN;
-import bumh3r.model.New.EmpleadoN;
+import bumh3r.model.Cliente;
+import bumh3r.model.Empleado;
 import java.util.List;
 
 public record NotaRequest(
-        EmpleadoN empleado,
-        ClienteN cliente,
+        Empleado empleado,
+        Cliente cliente,
         List<DispositivoRequest> dispositivos
 ) {
 }

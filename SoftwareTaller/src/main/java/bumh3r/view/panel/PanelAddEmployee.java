@@ -1,24 +1,20 @@
 package bumh3r.view.panel;
 
-import bumh3r.archive.PathResources;
+import bumh3r.utils.PathResources;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.comboBox.ComboBoxAddress;
 import bumh3r.components.comboBox.ComboBoxGenero;
 import bumh3r.components.input.InputText;
 import bumh3r.components.input.InputTextCP;
 import bumh3r.components.input.InputTextPhone;
-import bumh3r.components.label.LabelForDescription;
-import bumh3r.dao.TipoEmpleadoDAO;
-import bumh3r.model.New.DireccionN;
-import bumh3r.model.New.EmpleadoN;
-import bumh3r.model.New.TipoEmpleado;
-import bumh3r.model.TypeEmpleado;
+import bumh3r.repository.TipoEmpleadoDAO;
+import bumh3r.model.Direccion;
+import bumh3r.model.Empleado;
+import bumh3r.model.TipoEmpleado;
 import bumh3r.model.other.EstadosMx;
 import bumh3r.notifications.Notify;
 import bumh3r.system.panel.Panel;
-import bumh3r.thread.PoolThreads;
-import bumh3r.utils.CheckExpression;
-import bumh3r.utils.CheckInput;
+import bumh3r.utils.thread.PoolThreads;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -94,7 +90,7 @@ public class PanelAddEmployee extends Panel {
         add(buttonAdd, "grow 0,gapy 10,al trail");
     }
 
-    public EmpleadoN getValue() {
+    public Empleado getValue() {
         String firstnameValue = !this.firstname.getText().isEmpty() ? this.firstname.getText().strip() : null;
         String lastnameValue = !this.lastname.getText().isEmpty() ? this.lastname.getText().strip() : null;
         String phoneValue = this.phone.getValue() != null ? this.phone.getValue().toString() : null;
@@ -111,14 +107,14 @@ public class PanelAddEmployee extends Panel {
         String rfcValue = (!this.rfc.getText().isEmpty()) ? this.rfc.getText().strip() : null;
         String emailValue = (!this.email.getText().isEmpty()) ? this.email.getText().strip() : null;
 
-        DireccionN direccion = DireccionN.builder()
+        Direccion direccion = Direccion.builder()
                 .estado(stateValue)
                 .municipio(municipalityValue)
                 .colonia(colonyValue)
                 .calle(streetValue)
                 .codigo_postal(zipValue)
                 .build();
-        EmpleadoN empleado = EmpleadoN.builder()
+        Empleado empleado = Empleado.builder()
                 .nombre(firstnameValue)
                 .apellido(lastnameValue)
                 .correo(emailValue)

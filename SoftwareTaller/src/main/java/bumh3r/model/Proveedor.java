@@ -1,34 +1,38 @@
 package bumh3r.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Builder
-@ToString
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "proveedor")
 public class Proveedor {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
-    private String telefono;
     private String correo;
+    private String telefono;
     private String direccion;
-    private String fechaRegistro;
+    @CreationTimestamp
+    private LocalDateTime fecha_registro;
 
-    public Proveedor(Long id, String nombre, String telefono, String correo, String direccion, String fechaRegistro) {
-        this.id = id;
-        this.nombre = nombre;
-        this.telefono = telefono;
-        this.correo = correo;
-        this.direccion = direccion;
-        this.fechaRegistro = fechaRegistro;
-    }
-
-    public String[] toArray() {
-        return new String[]{id.toString(), nombre, telefono, correo, direccion, fechaRegistro};
+    @Override
+    public String toString() {
+        return String.format("%d | %s", id, nombre);
     }
 }

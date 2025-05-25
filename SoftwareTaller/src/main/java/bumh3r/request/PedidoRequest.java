@@ -1,11 +1,11 @@
 package bumh3r.request;
 
-import bumh3r.model.New.ProveedorN;
+import bumh3r.model.Proveedor;
 import java.util.List;
 
 public record PedidoRequest(
         String observaciones,
-        ProveedorN proveedor,
+        Proveedor proveedor,
         List<DetallesPedidosRequest> detalles
 ) {
 }

@@ -1,21 +1,21 @@
 package bumh3r.view.form;
 
-import bumh3r.components.Table;
+import bumh3r.components.table.Table;
 import bumh3r.components.button.ButtonAccentBase;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.input.InputText;
 import bumh3r.controller.ControladorCliente;
-import bumh3r.model.New.ClienteN;
+import bumh3r.model.Cliente;
 import bumh3r.model.other.DateFull;
 import bumh3r.system.form.Form;
-import bumh3r.thread.PoolThreads;
+import bumh3r.utils.thread.PoolThreads;
 import java.util.List;
 import java.util.function.Function;
 import javax.swing.*;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
-import static bumh3r.archive.PathResources.Icon.modal;
+import static bumh3r.utils.PathResources.Icon.modal;
 
 public class FormCliente extends Form {
     public static final String ID = FormCliente.class.getName();
@@ -23,9 +23,9 @@ public class FormCliente extends Form {
     private ButtonAccentBase buttonSearch;
     @Getter
     private InputText search;
-    private Table<ClienteN> table;
+    private Table<Cliente> table;
     private ControladorCliente controladorCliente;
-    private final Function<ClienteN, Object[]> dataMapper = usuarioMapper -> new Object[]{
+    private final Function<Cliente, Object[]> dataMapper = usuarioMapper -> new Object[]{
             usuarioMapper.getId(),
             usuarioMapper.getNombre(),
             usuarioMapper.getTelefono_movil(),
@@ -88,11 +88,11 @@ public class FormCliente extends Form {
         return panel;
     }
 
-    public void addAllTable(List<ClienteN> clientes) {
+    public void addAllTable(List<Cliente> clientes) {
         PoolThreads.getInstance().execute(() -> table.addAll(clientes));
     }
 
-    public void addOneTable(ClienteN cliente) {
+    public void addOneTable(Cliente cliente) {
         PoolThreads.getInstance().execute(() -> table.addOne(cliente));
     }
 }

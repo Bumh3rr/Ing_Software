@@ -1,7 +1,7 @@
 package bumh3r.components.input;
 
 import bumh3r.components.PopupSystemClipboard;
-import bumh3r.fonts.FontPublicaSans;
+import bumh3r.utils.fonts.FontPublicaSans;
 import bumh3r.utils.LimitTextDocument;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;

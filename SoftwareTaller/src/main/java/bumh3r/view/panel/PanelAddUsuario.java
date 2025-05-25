@@ -1,19 +1,16 @@
 package bumh3r.view.panel;
 
-import bumh3r.archive.PathResources;
+import bumh3r.utils.PathResources;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.input.InputText;
 import bumh3r.components.label.LabelPublicaSans;
-import bumh3r.fonts.FontPublicaSans;
-import bumh3r.model.New.EmpleadoN;
+import bumh3r.utils.fonts.FontPublicaSans;
+import bumh3r.model.Empleado;
 import bumh3r.request.UsuarioRegisterRequest;
 import bumh3r.system.panel.Panel;
-import bumh3r.thread.PoolThreads;
-import bumh3r.utils.CheckExpression;
 import bumh3r.utils.CheckInput;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
-import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JTextArea;
@@ -26,7 +23,7 @@ public class PanelAddUsuario extends Panel {
     private JTextArea description;
     private InputText usuario, password, confirmPassword;
     @Getter
-    private FlatComboBox<EmpleadoN> comboBoxEmpleados;
+    private FlatComboBox<Empleado> comboBoxEmpleados;
     private ButtonDefault buttonAdd;
 
     public PanelAddUsuario() {
@@ -81,7 +78,7 @@ public class PanelAddUsuario extends Panel {
                 usuario.getText(),
                 password.getText(),
                 confirmPassword.getText(),
-                (EmpleadoN) comboBoxEmpleados.getSelectedItem(),
+                (Empleado) comboBoxEmpleados.getSelectedItem(),
                 false
         );
     }

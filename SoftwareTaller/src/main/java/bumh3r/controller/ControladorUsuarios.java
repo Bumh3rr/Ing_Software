@@ -1,13 +1,13 @@
 package bumh3r.controller;
 
-import bumh3r.dao.EmpleadoDAO;
-import bumh3r.dao.UsuarioDao;
-import bumh3r.model.New.EmpleadoN;
+import bumh3r.repository.EmpleadoDAO;
+import bumh3r.repository.UsuarioDao;
+import bumh3r.model.Empleado;
 import bumh3r.model.Usuario;
 import bumh3r.notifications.Notify;
 import bumh3r.request.UsuarioRegisterRequest;
 import bumh3r.system.panel.PanelsInstances;
-import bumh3r.thread.PoolThreads;
+import bumh3r.utils.thread.PoolThreads;
 import bumh3r.utils.CheckExpression;
 import bumh3r.utils.CheckInput;
 import bumh3r.view.form.FormControlUsuario;
@@ -101,13 +101,13 @@ public class ControladorUsuarios extends Controller {
     private void actualizarListEmpleados() {
         PoolThreads.getInstance().execute(() -> {
             try {
-                List<EmpleadoN> empleados = empleadoDAO.findAllNoUser();
+                List<Empleado> empleados = empleadoDAO.findAllNoUser();
                 EventQueue.invokeLater(() -> {
                     if (empleados == null || empleados.isEmpty()) {
                         panelAddUsuario.getComboBoxEmpleados().removeAllItems();
                         Notify.getInstance().showToast(Toast.Type.WARNING, "No hay empleados disponibles");
                     } else {
-                        panelAddUsuario.getComboBoxEmpleados().setModel(new DefaultComboBoxModel<>(empleados.toArray(new EmpleadoN[0])));
+                        panelAddUsuario.getComboBoxEmpleados().setModel(new DefaultComboBoxModel<>(empleados.toArray(new Empleado[0])));
                     }
                 });
             } catch (Exception e) {

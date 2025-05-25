@@ -7,19 +7,22 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <class>bumh3r.model.Usuario</class>
-        <class>bumh3r.model.New.DireccionN</class>
-        <class>bumh3r.model.New.EmpleadoN</class>
-        <class>bumh3r.model.New.TipoEmpleado</class>
-        <class>bumh3r.model.New.ClienteN</class>
-        <class>bumh3r.model.New.ProveedorN</class>
-        <class>bumh3r.model.New.RefaccionN</class>
-        <class>bumh3r.model.New.CategoriaN</class>
-        <class>bumh3r.model.New.PedidoN</class>
-        <class>bumh3r.model.New.DetallesPedidoN</class>
-        <class>bumh3r.model.New.NotaN</class>
-        <class>bumh3r.model.New.DispositivoN</class>
-        <class>bumh3r.model.New.ReparacionN</class>
-
+        <class>bumh3r.model.Direccion</class>
+        <class>bumh3r.model.Empleado</class>
+        <class>bumh3r.model.TipoEmpleado</class>
+        <class>bumh3r.model.Cliente</class>
+        <class>bumh3r.model.Proveedor</class>
+        <class>bumh3r.model.Refaccion</class>
+        <class>bumh3r.model.Categoria</class>
+        <class>bumh3r.model.Pedido</class>
+        <class>bumh3r.model.DetallesPedido</class>
+        <class>bumh3r.model.Nota</class>
+        <class>bumh3r.model.Dispositivo</class>
+        <class>bumh3r.model.Reparacion</class>
+        <class>bumh3r.model.Venta</class>
+        <class>bumh3r.model.DetalleVenta</class>
+        <class>bumh3r.model.Pago</class>
+        <class>bumh3r.model.MetodoPago</class>
         <properties>
             <!-- Configuración de la conexión a la base de datos -->
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>

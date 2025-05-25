@@ -1,6 +1,6 @@
 package bumh3r.components.label;
 
-import bumh3r.fonts.FontPublicaSans;
+import bumh3r.utils.fonts.FontPublicaSans;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.components.FlatLabel;
 import javax.swing.BorderFactory;

@@ -6,14 +6,11 @@ import bumh3r.components.input.InputArea;
 import bumh3r.components.input.InputFormattedDecimal;
 import bumh3r.components.input.InputText;
 import bumh3r.components.label.LabelTextArea;
-import bumh3r.fonts.FontPublicaSans;
-import bumh3r.model.*;
-import bumh3r.model.New.DispositivoN;
-import bumh3r.model.New.ReparacionN;
+import bumh3r.utils.fonts.FontPublicaSans;
+import bumh3r.model.Dispositivo;
 import bumh3r.request.DispositivoRequest;
 import bumh3r.request.ReparacionRequest;
 import bumh3r.system.panel.Panel;
-import bumh3r.thread.PoolThreads;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.components.FlatCheckBox;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
@@ -21,7 +18,7 @@ import java.util.List;
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 
-import static bumh3r.archive.PathResources.Icon.modal;
+import static bumh3r.utils.PathResources.Icon.modal;
 
 public class PanelAddDispositivo extends Panel {
     private JLabel precio, abono, sizeReparaciones;
@@ -57,10 +54,10 @@ public class PanelAddDispositivo extends Panel {
         marca = new FlatComboBox<>();
         tipoDispositive.addItem("Seleccione un tipo de dispositivo");
         marca.addItem("Seleccione una marca");
-        for (DispositivoN.TipoDispositivo item : DispositivoN.TipoDispositivo.values()) {
+        for (Dispositivo.TipoDispositivo item : Dispositivo.TipoDispositivo.values()) {
             tipoDispositive.addItem(item);
         }
-        for (DispositivoN.Marca item : DispositivoN.Marca.values()) {
+        for (Dispositivo.Marca item : Dispositivo.Marca.values()) {
             marca.addItem(item);
         }
         checkBoxChip = new FlatCheckBox();
@@ -147,8 +144,8 @@ public class PanelAddDispositivo extends Panel {
     }
 
     public DispositivoRequest getValue() {
-        DispositivoN.TipoDispositivo tipo = this.tipoDispositive.getSelectedItem() instanceof DispositivoN.TipoDispositivo ? (DispositivoN.TipoDispositivo) this.tipoDispositive.getSelectedItem() : null;
-        DispositivoN.Marca marca = this.marca.getSelectedItem() instanceof DispositivoN.Marca ? (DispositivoN.Marca) this.marca.getSelectedItem() : null;
+        Dispositivo.TipoDispositivo tipo = this.tipoDispositive.getSelectedItem() instanceof Dispositivo.TipoDispositivo ? (Dispositivo.TipoDispositivo) this.tipoDispositive.getSelectedItem() : null;
+        Dispositivo.Marca marca = this.marca.getSelectedItem() instanceof Dispositivo.Marca ? (Dispositivo.Marca) this.marca.getSelectedItem() : null;
         String modelo = inputModelo.getText().isEmpty() ? null : inputModelo.getText().strip();
         String imei = inputSerial.getText().isEmpty() ? null : inputSerial.getText().strip();
         String observaciones = inputObservaciones.getText().isEmpty() ? null : inputObservaciones.getText().strip();

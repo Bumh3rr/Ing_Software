@@ -1,10 +1,9 @@
 package bumh3r.controller;
 
-import bumh3r.drawer.MyDrawerTallerBuilder;
+import bumh3r.components.drawer.MyDrawerTallerBuilder;
 import bumh3r.system.form.FormsManager;
 import bumh3r.view.form.FormHistorialVentas;
 import bumh3r.view.form.FormLogin;
-import bumh3r.view.form.FormRegistroVenta;
 import java.awt.event.ActionListener;
 import raven.modal.Drawer;
 

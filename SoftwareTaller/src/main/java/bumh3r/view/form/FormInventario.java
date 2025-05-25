@@ -1,47 +1,30 @@
 package bumh3r.view.form;
 
-import bumh3r.components.TableSimple;
+import bumh3r.components.table.TableSimple;
 import bumh3r.components.button.ButtonAccentBase;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.input.InputText;
 import bumh3r.controller.ControladorInventario;
-import bumh3r.model.New.ClienteN;
-import bumh3r.model.New.ProveedorN;
-import bumh3r.model.New.RefaccionN;
-import bumh3r.model.Proveedor;
 import bumh3r.model.Refaccion;
 import bumh3r.model.other.DateFull;
 import bumh3r.system.form.Form;
-import bumh3r.system.panel.PanelsInstances;
-import bumh3r.thread.PoolThreads;
-import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.components.FlatScrollPane;
-import com.formdev.flatlaf.extras.components.FlatTable;
-import java.time.LocalDate;
-import java.util.ArrayList;
+import bumh3r.utils.thread.PoolThreads;
 import java.util.List;
 import java.util.function.Function;
-import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
-import static bumh3r.archive.PathResources.Icon.modal;
+import static bumh3r.utils.PathResources.Icon.modal;
 
 public class FormInventario extends Form {
     private ButtonDefault buttonAddProducto;
-    private TableSimple<RefaccionN> table;
+    private TableSimple<Refaccion> table;
     private ButtonAccentBase buttonSearch;
     @Getter
     private InputText search;
-    private final Function<RefaccionN, Object[]> dataMapper = usuarioMapper -> new Object[]{
+    private final Function<Refaccion, Object[]> dataMapper = usuarioMapper -> new Object[]{
             usuarioMapper.getId(),
             usuarioMapper.getNombre(),
             usuarioMapper.getDescripcion(),
@@ -106,11 +89,11 @@ public class FormInventario extends Form {
         return panel;
     }
 
-    public void addAllTable(List<RefaccionN> refacciones) {
+    public void addAllTable(List<Refaccion> refacciones) {
         PoolThreads.getInstance().execute(() -> table.addAll(refacciones, dataMapper));
     }
 
-    public void addOneTable(RefaccionN refaccion) {
+    public void addOneTable(Refaccion refaccion) {
         PoolThreads.getInstance().execute(() -> table.addOne(refaccion, dataMapper));
     }
 }

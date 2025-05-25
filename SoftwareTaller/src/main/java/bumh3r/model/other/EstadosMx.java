@@ -1,6 +1,6 @@
 package bumh3r.model.other;
 
-import bumh3r.archive.PathResources;
+import bumh3r.utils.PathResources;
 import bumh3r.notifications.Notify;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
 import java.io.InputStream;

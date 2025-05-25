@@ -5,7 +5,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Cursor;
 import javax.swing.JButton;
 import javax.swing.UIManager;
-import static bumh3r.archive.PathResources.Icon.drawer;
+import static bumh3r.utils.PathResources.Icon.drawer;
 
 
 public class ButtonAction extends JButton {

@@ -7,13 +7,9 @@ import bumh3r.components.card.ContainerCards;
 import bumh3r.components.input.InputText;
 import bumh3r.components.resposive.ResponsiveLayout;
 import bumh3r.controller.ControladorNota;
-import bumh3r.modal.Config;
-import bumh3r.model.*;
-import bumh3r.model.New.NotaN;
+import bumh3r.model.Nota;
 import bumh3r.system.form.Form;
-import bumh3r.thread.PoolThreads;
-import bumh3r.view.modal.PanelModalInfoDevice;
-import bumh3r.view.modal.PanelModalInfoNote;
+import bumh3r.utils.thread.PoolThreads;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.Dimension;
 import java.time.LocalDate;
@@ -25,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.miginfocom.swing.MigLayout;
 import raven.datetime.DatePicker;
 import raven.datetime.PanelDateOptionLabel;
-import raven.modal.ModalDialog;
 
 @Slf4j
 public class FormNotes extends Form {
@@ -36,7 +31,7 @@ public class FormNotes extends Form {
     private DatePicker datePicker;
     private ButtonDefault button_createNote;
     private ButtonAccentBase buttonSearch;
-    private ContainerCards<NotaN> containerCards;
+    private ContainerCards<Nota> containerCards;
     private ControladorNota controladorNota;
 
     @Override
@@ -46,7 +41,7 @@ public class FormNotes extends Form {
 
     @Override
     public void formInit() {
-        containerCards.installDependent1(controladorNota.eventViewDetailsNote);
+        containerCards.installDependent1(controladorNota.mostrarPantallaVisualizarNota());
         PoolThreads.getInstance().execute(getEventFormInit());
     }
 
@@ -78,8 +73,8 @@ public class FormNotes extends Form {
         containerCards = new ContainerCards<>(CardNote.class, new ResponsiveLayout(ResponsiveLayout.JustifyContent.FIT_CONTENT, new Dimension(330, -1), 10, 10));
         containerCards.setLongitud(1000);
         search = new InputText("Buscar Folio ...", 10);
-        datePicker = new DatePicker();
         inputDate = new JFormattedTextField();
+        datePicker = new DatePicker();
         datePicker.setEditor(inputDate);
         datePicker.setSelectedDate(LocalDate.now());
         datePicker.setCloseAfterSelected(false);
@@ -88,6 +83,7 @@ public class FormNotes extends Form {
         button_createNote = new ButtonDefault("Crear Nota");
         buttonSearch = new ButtonAccentBase("Buscar");
     }
+
     private PanelDateOptionLabel createDefaultPanelDateOptionLabel() {
         PanelDateOptionLabel defaultPanelDateOptionLabel = new PanelDateOptionLabel();
         defaultPanelDateOptionLabel.add("Hoy", PanelDateOptionLabel.LabelCallback.TODAY);
@@ -109,8 +105,7 @@ public class FormNotes extends Form {
 
     private JComponent createBody() {
         JPanel panel = new JPanel(new MigLayout("fillx,wrap 2,insets 5", "[]push[]", "[]10[]"));
-        panel.putClientProperty(FlatClientProperties.STYLE, ""
-                + "background:null;");
+        panel.putClientProperty(FlatClientProperties.STYLE, "background:null;");
         panel.add(search, "w 180!,al lead,split 2");
         panel.add(buttonSearch, "growx 0");
         panel.add(button_createNote, "w 100!,split 2");
@@ -119,9 +114,9 @@ public class FormNotes extends Form {
         return panel;
     }
 
-    public Consumer<NotaN> addOneCard = (nota) -> containerCards.addItemOne(nota);
+    public Consumer<Nota> addOneCard = (nota) -> containerCards.addItemOne(nota);
 
-    public Consumer<List<NotaN>> addAllCards = (list) -> containerCards.addItemsAll(list);
+    public Consumer<List<Nota>> addAllCards = (list) -> containerCards.addItemsAll(list);
 
     public void cleanCards() {
         containerCards.cleanCards();
