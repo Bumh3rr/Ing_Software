@@ -27,11 +27,10 @@ public class Main extends JFrame {
         GlassPanePopup.install(this);
         PoolThreads.getInstance().execute(() -> FormsManager.getInstance().initFrame(this));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(new Dimension(1240, 750));
+        setSize(new Dimension(1000, 750));
         setLocationRelativeTo(null);
 
         System.setProperty("flatlaf.animation", "true");
-
         ModalDialog.getDefaultOption()
                 .setOpacity(0.4f)
                 .getBorderOption()

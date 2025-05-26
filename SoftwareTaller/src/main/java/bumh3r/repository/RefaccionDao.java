@@ -3,6 +3,7 @@ package bumh3r.repository;
 import bumh3r.model.Refaccion;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import lombok.Cleanup;
 
 public class RefaccionDao {
     public Refaccion save(Refaccion refaccion) {
@@ -26,13 +27,17 @@ public class RefaccionDao {
     }
 
     public List<Refaccion> findAll() throws Exception {
-        return JPAUtil.getEntityManager()
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return entityManager
                 .createQuery("SELECT r FROM Refaccion r", Refaccion.class)
                 .getResultList();
     }
 
     public List<Refaccion> findByName(String nombre)throws Exception {
-        return JPAUtil.getEntityManager()
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return entityManager
                 .createQuery("SELECT r FROM Refaccion r WHERE r.nombre LIKE :nombre", Refaccion.class)
                 .setParameter("nombre", "%" + nombre + "%")
                 .getResultList();

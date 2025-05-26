@@ -2,6 +2,7 @@ package bumh3r.repository;
 
 import bumh3r.model.Direccion;
 import jakarta.persistence.EntityManager;
+import lombok.Cleanup;
 
 public class DireccionDao {
     // CREATE - Guardar un producto
@@ -15,7 +16,6 @@ public class DireccionDao {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
-            e.printStackTrace();
             throw e;
         } finally {
             em.close();
@@ -23,14 +23,9 @@ public class DireccionDao {
     }
 
     public Direccion buscarPorId(Long id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        Direccion direccion = null;
-        try {
-            direccion = em.find(Direccion.class, id);
-        } finally {
-            em.close();
-        }
-        return direccion;
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return entityManager.find(Direccion.class, id);
     }
 
 }

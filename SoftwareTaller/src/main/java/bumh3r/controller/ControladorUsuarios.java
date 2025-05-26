@@ -74,7 +74,7 @@ public class ControladorUsuarios extends Controller {
                 registrarUsuario(value);
             });
         }
-        if (panelAddUsuario.getComboBoxEmpleados().getSelectedItem() == null) actualizarListEmpleados();
+        actualizarListEmpleados();
         showPanel(panelAddUsuario, "Agregar nuevo Usuario", "ic_add-user.svg", ID, null, false);
     }
 
@@ -86,7 +86,6 @@ public class ControladorUsuarios extends Controller {
                     callback.update("Registrando el usuario ...");
                     Usuario newUser = Usuario.builder().username(value.username()).password(value.password()).empleado(value.empleado()).fecha_registro(LocalDateTime.now()).isAdmin(false).build();
                     newUser = usuarioDao.save(newUser);
-                    actualizarListEmpleados(); // <- Actualizar la lista de empleados
                     panelAddUsuario.cleanValue(); // <- Limpiar los campos
                     view.eventAddUsuario.accept(newUser); // <- Agregar el empleado ala lista
                     ModalDialog.closeModal(ID); // <- Cerrar la pantallaAgregarUsuario

@@ -28,16 +28,18 @@ public class ClienteDao {
         }
     }
 
-
     public List<Cliente> findAll() throws Exception {
-        return JPAUtil.getEntityManager()
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return entityManager
                 .createQuery("SELECT e FROM Cliente e", Cliente.class)
                 .getResultList();
     }
 
-
     public List<Cliente> findByName(String nombre) throws Exception {
-        return JPAUtil.getEntityManager()
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return entityManager
                 .createQuery("SELECT e FROM Cliente e WHERE e.nombre LIKE :nombre", Cliente.class)
                 .setParameter("nombre", "%" + nombre + "%")
                 .getResultList();

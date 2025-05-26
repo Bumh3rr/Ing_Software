@@ -94,12 +94,11 @@ public class CardNoteSale extends Card {
                         + "<br>Recibió: " + nota.getEmpleado().getNombre() + " " + nota.getEmpleado().getApellido()
                         + "<br>Fecha Creada: " + DateFull.getDateOnly(nota.getFecha_registro())
                         + "<br>Dispositivos: " + nota.getDispositivos().size()
-                        + "<br>Reparaciones: " + nota.getDispositivos().size() * 2
+                        + "<br>Reparaciones: " + nota.getDispositivos().stream().mapToInt(dispositivo -> dispositivo.getReparaciones().size()).sum()
         );
         body.add(title);
         body.add(description);
         body.add(status, "gapy 5");
         return body;
     }
-
 }

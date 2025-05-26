@@ -4,17 +4,23 @@ import bumh3r.components.button.ButtonDefault;
 import bumh3r.system.form.Form;
 import com.formdev.flatlaf.FlatClientProperties;
 import javax.swing.*;
-import java.awt.*;
 import net.miginfocom.swing.MigLayout;
+import raven.modal.Drawer;
 
 public class FormInicio extends Form {
-
     private JPanel statsPanel;
     private ButtonDefault buttonNotes;
 
     public FormInicio() {
         initComponents();
         init();
+        buttonNotes.addActionListener((x) -> {
+            if (Drawer.isOpen()) {
+                Drawer.showDrawer();
+            } else {
+                Drawer.toggleMenuOpenMode();
+            }
+        });
     }
 
     private void initComponents() {
@@ -22,7 +28,6 @@ public class FormInicio extends Form {
         statsPanel.putClientProperty(FlatClientProperties.STYLE, ""
                 + "[light]background:darken(@background,2%);"
                 + "[dark]background:lighten(@background,2%)");
-
         buttonNotes = new ButtonDefault("Ver Menu");
     }
 
@@ -30,7 +35,6 @@ public class FormInicio extends Form {
         setLayout(new MigLayout("wrap,fillx,insets 0 n 0 n", "[fill]"));
         add(createHeader("Inicio", "Bienvenido al software de gestión de celulares", 1));
         add(buttonNotes, "grow,gapy 10");
-
     }
 
 }

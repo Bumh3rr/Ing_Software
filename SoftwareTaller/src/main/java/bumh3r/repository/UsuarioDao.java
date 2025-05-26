@@ -17,8 +17,7 @@ public class UsuarioDao {
 
             @Cleanup
             EntityManager emNew = JPAUtil.getEntityManager();
-            Usuario usuarioRefresh = emNew.find(Usuario.class, usuario.getId());
-            return usuarioRefresh;
+            return emNew.find(Usuario.class, usuario.getId());
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
@@ -30,21 +29,11 @@ public class UsuarioDao {
     }
 
     public List<Usuario> getList() {
-        EntityManager em = JPAUtil.getEntityManager();
-        try {
-            em.getTransaction().begin();
-            List<Usuario> usuarios = em.createQuery("SELECT u FROM Usuario u WHERE u.isAdmin = false", Usuario.class).getResultList();
-            em.getTransaction().commit();
-            return usuarios;
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            e.printStackTrace();
-            throw e;
-        } finally {
-            em.close();
-        }
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return entityManager
+                .createQuery("SELECT u FROM Usuario u WHERE u.isAdmin = false", Usuario.class)
+                .getResultList();
     }
 
 

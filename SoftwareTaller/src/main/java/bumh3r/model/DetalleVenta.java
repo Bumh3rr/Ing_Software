@@ -24,10 +24,6 @@ public class DetalleVenta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer cantidad;
-    private Float precioUnitario;
-    private Float precioVenta;
-    private Float precioTotal;
 
     @ManyToOne
     @JoinColumn(name = "venta_id")

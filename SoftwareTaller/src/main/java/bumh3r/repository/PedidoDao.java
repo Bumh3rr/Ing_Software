@@ -5,6 +5,7 @@ import bumh3r.model.Pedido;
 import bumh3r.request.DetallesPedidosRequest;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import lombok.Cleanup;
 
 public class PedidoDao {
 
@@ -36,13 +37,17 @@ public class PedidoDao {
     }
 
     public List<Pedido> findAll() {
-        return JPAUtil.getEntityManager()
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return entityManager
                 .createQuery("SELECT p FROM Pedido p", Pedido.class)
                 .getResultList();
     }
 
     public List<DetallesPedido> findAllDetalles(Long id) {
-        return JPAUtil.getEntityManager()
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return entityManager
                 .createQuery("SELECT d FROM DetallesPedido d WHERE d.pedido.id = :id", DetallesPedido.class)
                 .setParameter("id", id)
                 .getResultList();

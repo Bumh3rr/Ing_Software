@@ -7,19 +7,16 @@ import bumh3r.controller.LoginController;
 import bumh3r.notifications.Notify;
 import bumh3r.request.UsuarioLogin;
 import bumh3r.system.form.Form;
-import bumh3r.view.modal.ModalToas;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import javax.swing.*;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
-import raven.modal.ModalDialog;
 import raven.modal.Toast;
+
 import static bumh3r.utils.PathResources.Icon.modal;
 
 public class FormLogin extends Form {
-
-    public final String KEY = getClass().getName();
     private InputText userField;
     private JPasswordField passwordField;
     @Getter
@@ -45,14 +42,9 @@ public class FormLogin extends Form {
         passwordField = new InputPassword("Ingresa tu Contraseña", 45).setIcon(modal + "password.svg");
 
         rememberBox = new JCheckBox("Recordar");
-        lbTitle = new JLabel("Inicio de Sesión") {
-            @Override
-            public void updateUI() {
-                putClientProperty(FlatClientProperties.STYLE, ""
-                        + "font:bold +15");
-                super.updateUI();
-            }
-        };
+        lbTitle = new JLabel("Inicio de Sesión");
+        lbTitle.putClientProperty(FlatClientProperties.STYLE, ""
+                + "font:bold +15");
         description = new JLabel("Por favor inicia sesión para acceder a tu cuenta") {
             @Override
             public void updateUI() {
@@ -100,17 +92,18 @@ public class FormLogin extends Form {
 
         JPanel panel = new JPanel(new MigLayout("wrap,fillx,ins 35 45 35 45", "[fill]", "fill"));
         panel.putClientProperty(FlatClientProperties.STYLE, "arc:36;");
-        panel.add(lbTitle,"grow 0, al center");
+        panel.add(lbTitle, "grow 0, al center");
         panel.add(description);
         panel.add(new JLabel("Usuario"), "gapy 10 5");
         panel.add(userField);
         panel.add(new JLabel("Contraseña"), "gapy 10 5");
         panel.add(passwordField);
         panel.add(rememberBox);
-        panel.add(loginButton,"gapy 0 15");
+        panel.add(loginButton, "gapy 0 15");
         add(panel);
         updateUI();
     }
+
     public void cleanFields() {
         userField.setText("");
         passwordField.setText("");

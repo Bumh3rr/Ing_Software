@@ -1,6 +1,7 @@
 package bumh3r.system.form;
 
 import bumh3r.system.panel.PanelsInstances;
+import bumh3r.system.preferences.PreferencesInstance;
 import bumh3r.utils.UndoRedo;
 import bumh3r.view.form.FormLogin;
 import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
@@ -22,6 +23,17 @@ public class FormsManager {
             instance = new FormsManager();
         }
         return instance;
+    }
+
+    public static void closeSession() {
+        FORMS.clear();
+        mainForm = null;
+        PreferencesInstance.closeSession();
+        AllFormsMain.closeSession();
+        AllFormsMain.closeSession();
+        Drawer.setSelectedItemClass(null);
+        Drawer.setVisible(false);
+        init();
     }
 
     public void initFrame(JFrame application) {

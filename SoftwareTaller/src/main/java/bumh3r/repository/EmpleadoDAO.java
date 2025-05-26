@@ -33,25 +33,40 @@ public class EmpleadoDAO {
     }
 
     public Optional<Empleado> findById(Long id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        return Optional.ofNullable(em.find(Empleado.class, id));
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return Optional.ofNullable(entityManager.find(Empleado.class, id));
     }
 
     public List<Empleado> findAll() throws Exception {
-        return JPAUtil.getEntityManager()
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return entityManager
                 .createQuery("SELECT e FROM Empleado e", Empleado.class)
                 .getResultList();
     }
 
+    public List<Empleado> findAllActive() {
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return entityManager
+                .createQuery("SELECT e FROM Empleado e WHERE  e.isActivo = true", Empleado.class)
+                .getResultList();
+    }
+
     public List<Empleado> findAllTechnician() {
-        return JPAUtil.getEntityManager()
-                .createQuery("SELECT e FROM Empleado e WHERE e.tipoEmpleado.id = 2", Empleado.class)
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return entityManager
+                .createQuery("SELECT e FROM Empleado e WHERE e.tipoEmpleado.id = 2 AND e.isActivo = true", Empleado.class)
                 .getResultList();
     }
 
     public List<Empleado> findAllNoUser() throws Exception {
-        return JPAUtil.getEntityManager()
-                .createQuery("SELECT e FROM Empleado e LEFT JOIN Usuario u ON e.id = u.empleado.id WHERE u.empleado.id IS NULL", Empleado.class)
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return entityManager
+                .createQuery("SELECT e FROM Empleado e LEFT JOIN Usuario u ON e.id = u.empleado.id WHERE u.empleado.id IS NULL AND e.isActivo = true", Empleado.class)
                 .getResultList();
 
     }
@@ -102,4 +117,5 @@ public class EmpleadoDAO {
             em.close();
         }
     }
+
 }

@@ -3,8 +3,11 @@ package bumh3r.system.form;
 import bumh3r.components.custom.RefreshLine;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.formdev.flatlaf.util.SystemInfo;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Graphics;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
@@ -19,6 +22,7 @@ public class MainForms extends JPanel {
     private JButton buttonUndo;
     private JButton buttonRedo;
     private JButton buttonRefresh;
+    private JPanel panelControl;
 
     private final String basePathIcon = "icon/svg/drawer/";
 
@@ -33,8 +37,20 @@ public class MainForms extends JPanel {
         add(createMain());
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (!SystemInfo.isMacOS) return;
+        if (Drawer.isOpen()){
+            panelControl.setBorder(BorderFactory.createEmptyBorder(0,60,0,0));
+        }else{
+            panelControl.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+        }
+    }
+
     private JPanel createHeader() {
-        JPanel panel = new JPanel(new MigLayout("insets 3", "[]push[]push", "[fill]"));
+        String insets = (SystemInfo.isWindows) ? "insets 0 3 3 3" : "insets 3";
+        panelControl = new JPanel(new MigLayout(insets, "[]push[]push", "[fill]"));
 
         JToolBar toolBar = new JToolBar();
         toolBar.putClientProperty(FlatClientProperties.STYLE,"background:null;");
@@ -58,8 +74,8 @@ public class MainForms extends JPanel {
         toolBar.add(buttonUndo);
         toolBar.add(buttonRedo);
         toolBar.add(buttonRefresh);
-        panel.add(toolBar);
-        return panel;
+        panelControl.add(toolBar);
+        return panelControl;
     }
 
     private JPanel createRefreshLine() {

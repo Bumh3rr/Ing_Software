@@ -21,7 +21,7 @@ public class EmpleadoCard extends Card {
 
     private final Empleado empleado;
     private final BiConsumer<Empleado, Runnable> event;
-    private JLabel icon;
+    private JLabel icon,typeEmployee;
     @Getter
     private Long id;
     private PanelStatus status;
@@ -61,8 +61,8 @@ public class EmpleadoCard extends Card {
         JPanel body = new JPanel(new MigLayout("wrap", "[150]", "[][]push[]push"));
         body.putClientProperty(FlatClientProperties.STYLE, ""
                 + "background:null");
-        JLabel title = new JLabel(this.empleado.getTipoEmpleado().getNombre());
-        title.putClientProperty(FlatClientProperties.STYLE, ""
+        typeEmployee = new JLabel();
+        typeEmployee.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:bold +1;");
         description = new JTextPane();
         description.setEditable(false);
@@ -76,7 +76,7 @@ public class EmpleadoCard extends Card {
         button.addActionListener(e -> event.accept(empleado, this::refresh));
         status = new PanelStatus();
         setInfo();
-        body.add(title);
+        body.add(typeEmployee);
         body.add(description);
         body.add(status);
 
@@ -85,6 +85,7 @@ public class EmpleadoCard extends Card {
     }
 
     public void setInfo() {
+        typeEmployee.setText(empleado.getTipoEmpleado().getNombre());
         status.setValue(empleado.getIsActivo(), empleado.getIsActivo() ? "Activo" : "Inactivo");
         description.setText(
                 "ID: " + empleado.getId()
@@ -92,6 +93,7 @@ public class EmpleadoCard extends Card {
                         + "\nApellidos: " + empleado.getApellido()
                         + "\nTeléfono: " + empleado.getTelefono()
         );
+
     }
 
     public void setImageI() {

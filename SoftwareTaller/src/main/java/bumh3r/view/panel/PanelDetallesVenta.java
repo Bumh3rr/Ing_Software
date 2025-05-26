@@ -1,26 +1,27 @@
 package bumh3r.view.panel;
 
+import bumh3r.components.input.InputArea;
 import bumh3r.components.table.TableSimple;
 import bumh3r.components.button.ButtonAccentBase;
 import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.input.InputText;
 import bumh3r.components.label.LabelForDescription;
-import bumh3r.components.modal.CustomModal;
+import bumh3r.model.DetalleVenta;
 import bumh3r.model.Pago;
 import bumh3r.model.Refaccion;
 import bumh3r.model.Reparacion;
+import bumh3r.model.Venta;
+import bumh3r.model.other.DateFull;
 import bumh3r.system.panel.Panel;
-import bumh3r.utils.LimitTextDocument;
-import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.extras.components.FlatTextArea;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import net.miginfocom.swing.MigLayout;
-import raven.modal.ModalDialog;
-
-import static bumh3r.utils.PathResources.Icon.modal;
 
 public class PanelDetallesVenta extends Panel {
     public static final String ID = PanelDetallesVenta.class.getName();
@@ -28,9 +29,37 @@ public class PanelDetallesVenta extends Panel {
     private TableSimple<Reparacion> reparacionTable;
     private TableSimple<Refaccion> refaccionTable;
     private TableSimple<Pago> pagoTable;
-    private JButton button_guardarCambios, button_cancelarVenta,button_agregarPago;
+    private JButton button_cancelarVenta, button_agregarPago;
     private InputText id, nombre, telefono_movil, telefono_fijo;
-    private FlatTextArea inputObservaciones;
+    private InputArea direccion;
+    private Function<Reparacion, Object[]> objReparacion = reparacion -> new Object[]{
+            reparacion.getCategoria().getNombre(),
+            reparacion.getReparacion(),
+            String.format("%s %s", reparacion.getEmpleado().getNombre(), reparacion.getEmpleado().getApellido()),
+            String.format("$%.2f", reparacion.getPrecio()),
+            String.format("$%.2f", reparacion.getAbono())
+    };
+
+    private Function<Refaccion, Object[]> objRefaccion = refaccion -> new Object[]{
+            refaccion.getCategoria().getNombre(),
+            refaccion.getNombre(),
+            String.format("$%.2f", refaccion.getPrecio_venta()),
+            refaccion.getProveedor().toString()
+    };
+
+    private Function<Pago, Object[]> objPago = pago -> new Object[]{
+            pago.getMetodoPago().getNombre(),
+            String.format("$%.2f", pago.getMonto()),
+            DateFull.getDateOnly(pago.getFecha()),
+    };
+
+    public void installEventShowPanelAddPago(Runnable runnable) {
+        button_agregarPago.addActionListener(e -> runnable.run());
+    }
+
+    public void installEventCancelarVenta(Runnable runnable) {
+        button_cancelarVenta.addActionListener(e -> runnable.run());
+    }
 
     public PanelDetallesVenta() {
         initComponents();
@@ -39,42 +68,21 @@ public class PanelDetallesVenta extends Panel {
 
     private void initComponents() {
         description = new LabelForDescription("En este apartado podrás seleccionar las reparaciones, agregar refacciones y registrar el pago para completar la venta.");
-        button_guardarCambios = new ButtonDefault("Guardar Cambios");
         button_cancelarVenta = new ButtonAccentBase("Cancelar Venta", "#ff4013");
-        button_agregarPago = new ButtonAccentBase("Agregar Pago","#ffb71b");
-        reparacionTable = new TableSimple<>(new String[]{"Tipo Reparación", "Reparación", "Precio", "Abono"});
-        refaccionTable = new TableSimple<>(new String[]{"Nombre", "Unidades", "Precio Unidad", "SubTotal"});
+        button_agregarPago = new ButtonAccentBase("Agregar Pago", "#ffb71b");
+        reparacionTable = new TableSimple<>(new String[]{"Categoría", "Reparación", "Técnico Encargado", "Precio", "Abono"});
+        reparacionTable.installParentScroll(this);
+        refaccionTable = new TableSimple<>(new String[]{"Categoría", "Nombre", "Precio", "Proveedor"});
+        refaccionTable.installParentScroll(this);
         pagoTable = new TableSimple<>(new String[]{"Método de Pago", "Monto", "Fecha"});
+        pagoTable.installParentScroll(this);
 
         id = getInstance();
         nombre = getInstance();
         telefono_movil = getInstance();
         telefono_fijo = getInstance();
-
-        inputObservaciones = new FlatTextArea();
-        inputObservaciones.setDocument(new LimitTextDocument(250));
-        inputObservaciones.setLineWrap(true);
-        inputObservaciones.setWrapStyleWord(true);
-        inputObservaciones.setEnabled(false);
-
-        id.setText("123456");
-        nombre.setText("example");
-        telefono_movil.setText("123-456-7890");
-        telefono_fijo.setText("123-456-7890");
-        inputObservaciones.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod");
-        button_agregarPago.addActionListener((x)->{
-            ModalDialog.pushModal(
-                    CustomModal.builder()
-                            .component(new PanelAddPago())
-                            .title("Agregar Pago")
-                            .buttonClose(false)
-                            .icon(modal + "ic_pay.svg")
-                            .rollback(()-> ModalDialog.popModel(ID))
-                            .ID(ID)
-                            .build(),
-                    ID
-            );
-        });
+        direccion = new InputArea();
+        direccion.setEnabled(false);
     }
 
     private InputText getInstance() {
@@ -97,22 +105,17 @@ public class PanelDetallesVenta extends Panel {
         add(createdSubTitle("Cliente", 15f), "grow 0,al center");
         add(extracted(), "gapx 70 70");
         add(new JSeparator(), "gapx 20 20");
-
         add(createdSubTitle("Reparaciones", 15f), "grow 0,al center");
         add(reparacionTable, "h 150!");
         add(new JSeparator(), "gapx 20 20");
-
         add(createdSubTitle("Refacciones", 15f), "grow 0,al center");
         add(refaccionTable, "h 150!");
         add(new JSeparator(), "gapx 20 20");
-
         add(createdSubTitle("Pagos", 15f), "grow 0,al center");
         add(button_agregarPago, "grow 0,al trail");
         add(pagoTable, "h 150!");
         add(new JSeparator(), "gapx 20 20");
-
-        add(button_cancelarVenta, "grow 0,al lead,split 2");
-        add(button_guardarCambios, "grow 0,al trail");
+        add(button_cancelarVenta, "span,grow 0,al trail");
     }
 
     private JComponent extracted() {
@@ -125,23 +128,40 @@ public class PanelDetallesVenta extends Panel {
         panel.add(createdGramaticalP("Teléfono Fijo"));
         panel.add(telefono_movil, "grow");
         panel.add(telefono_fijo, "grow");
-
         panel.add(createdGramaticalP("Dirección"), "span,grow 0");
-        panel.add(createInputObservaciones(), "span,grow");
+        panel.add(direccion.createdInput(), "span,grow");
         return panel;
     }
 
-    private JComponent createInputObservaciones() {
-        JPanel panel = new JPanel(new MigLayout("fill,insets 1"));
-        panel.putClientProperty(FlatClientProperties.STYLE, ""
-                + "arc:10;"
-                + "[light]background:darken(@background,4%);"
-                + "[dark]background:lighten(@background,4%);");
-        inputObservaciones.putClientProperty(FlatClientProperties.STYLE, ""
-                + "[light]background:darken(@background,4%);"
-                + "[dark]background:lighten(@background,4%);");
-        panel.add(inputObservaciones, "grow,push");
-        return panel;
+    public void setData(Venta venta) {
+        id.setText(String.valueOf(venta.getId()));
+        nombre.setText(venta.getNota().getCliente().getNombre());
+        telefono_movil.setText(venta.getNota().getCliente().getTelefono_movil());
+        telefono_fijo.setText(venta.getNota().getCliente().getTelefono_fijo());
+        direccion.setText(venta.getNota().getCliente().getDireccion());
+
+        List<Reparacion> reparaciones = new ArrayList<>();
+        for (DetalleVenta detalle : venta.getDetalles()) {
+            if (detalle.getReparacion() != null) {
+                reparaciones.add(detalle.getReparacion());
+                break;
+            }
+        }
+
+        List<Refaccion> refacciones = new ArrayList<>();
+        for (DetalleVenta detalle : venta.getDetalles()) {
+            if (detalle.getRefaccion() != null) {
+                refacciones.add(detalle.getRefaccion());
+                break;
+            }
+        }
+        if (!refacciones.isEmpty())
+            refaccionTable.addAll(refacciones, objRefaccion);
+
+        if (!reparaciones.isEmpty())
+            reparacionTable.addAll(reparaciones, objReparacion);
+
+        pagoTable.addAll(venta.getPagos(), objPago);
     }
 
 }

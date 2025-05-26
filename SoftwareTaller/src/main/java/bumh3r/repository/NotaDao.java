@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
+import lombok.Cleanup;
 
 public class NotaDao {
     public List<Nota> findAll() {
@@ -87,8 +88,9 @@ public class NotaDao {
     public List<Nota> findByDate(LocalDate fecha) {
         LocalDateTime start = fecha.atStartOfDay();
         LocalDateTime end = fecha.plusDays(1).atStartOfDay();
-        return JPAUtil.getEntityManager()
-                .createQuery("SELECT e FROM Nota e WHERE e.fecha_registro >= :start AND e.fecha_registro < :end", Nota.class)
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return entityManager.createQuery("SELECT e FROM Nota e WHERE e.fecha_registro >= :start AND e.fecha_registro < :end", Nota.class)
                 .setParameter("start", start)
                 .setParameter("end", end)
                 .getResultList();

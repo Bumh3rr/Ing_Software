@@ -29,9 +29,9 @@ public class Refaccion {
     private Long id;
     private String nombre;
     private String descripcion;
-    private int stock;
-    private double precio_venta;
-    private double precio_compra;
+    private Integer stock;
+    private Float precio_venta;
+    private Float precio_compra;
     @CreationTimestamp
     private LocalDateTime fecha_registro;
     @ManyToOne

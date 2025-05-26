@@ -49,4 +49,8 @@ public class InputFormattedDecimal extends FlatFormattedTextField {
         return decimalFormatter;
     }
 
+    public void setLimit(Float limit) {
+        setFormatterFactory(new DefaultFormatterFactory(createNumberFormatter(limit)));
+    }
+
 }

@@ -15,6 +15,7 @@ import bumh3r.notifications.Notify;
 import bumh3r.system.preferences.Preferences;
 import bumh3r.utils.thread.PoolThreads;
 import com.formdev.flatlaf.extras.components.FlatComboBox;
+import java.awt.EventQueue;
 import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -33,7 +34,7 @@ public class PreferencesUpdateInfoEmployee extends Preferences {
     private FlatComboBox<TipoEmpleado> typeEmployee;
 
     public PreferencesUpdateInfoEmployee(Object id, String key, ActionListener... events) {
-        super(id, key,events);
+        super(id, key, events);
         initComponents();
         init();
     }
@@ -66,13 +67,15 @@ public class PreferencesUpdateInfoEmployee extends Preferences {
             email.setText(empleado.getCorreo());
             phone.setValue(empleado.getTelefono());
             sex.getModel().setSelectedItem(empleado.getGenero());
+            EventQueue.invokeLater(() -> typeEmployee.getModel().setSelectedItem(empleado.getTipoEmpleado()));
             rfc.setText(empleado.getRfc());
-            comboBoxAddress.getStates().getModel().setSelectedItem(EstadosMx.getInstance().getStateName(empleado.getDireccion().getEstado()));
-            comboBoxAddress.getMunicipality().getModel().setSelectedItem(empleado.getDireccion().getMunicipio());
+            if (empleado.getDireccion().getEstado() != null) {
+                comboBoxAddress.getStates().getModel().setSelectedItem(EstadosMx.getInstance().getStateName(empleado.getDireccion().getEstado()));
+                comboBoxAddress.getMunicipality().getModel().setSelectedItem(empleado.getDireccion().getMunicipio());
+            }
             colony.setText(empleado.getDireccion().getColonia());
             street.setText(empleado.getDireccion().getCalle());
             zip.setValue(empleado.getDireccion().getCodigo_postal());
-            typeEmployee.getModel().setSelectedItem(empleado.getTipoEmpleado());
         });
     }
 

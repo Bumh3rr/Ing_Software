@@ -155,7 +155,7 @@ public class Table<T> extends JPanel {
         System.arraycopy(rowData, 0, rowWithButton, 0, rowData.length);
         // Set "View" as button text
         rowWithButton[rowData.length] = nameAccion;
-        model.addRow(rowWithButton);
+        SwingUtilities.invokeLater(()->model.addRow(rowWithButton));
         dataList.add(item);
     }
 
@@ -169,7 +169,7 @@ public class Table<T> extends JPanel {
             System.arraycopy(rowData, 0, rowWithButton, 0, rowData.length);
             // Set "View" as button text
             rowWithButton[rowData.length] = nameAccion;
-            model.addRow(rowWithButton);
+            SwingUtilities.invokeLater(()->model.addRow(rowWithButton));
         }
     }
 

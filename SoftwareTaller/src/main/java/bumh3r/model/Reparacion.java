@@ -45,8 +45,10 @@ public class Reparacion {
     public enum EstadoReparacion {
         PENDIENTE("Pendiente"),
         EN_PROCESO("En Proceso"),
-        TERMINADO("Terminado"),
+        LISTO_COBRAR("Listo para Cobrar"),
+        COBRADO("Cobrado"),
         CANCELADO("Cancelado");
+
         @Getter
         private final String estado;
 

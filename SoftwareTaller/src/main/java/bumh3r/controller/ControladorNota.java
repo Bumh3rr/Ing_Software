@@ -151,6 +151,15 @@ public class ControladorNota extends Controller {
                                 JOptionPane.QUESTION_MESSAGE,
                                 null, Nota.EstadoNota.values(), notaN.getEstado());
                 if (estado == null) return;
+                if (estado == Nota.EstadoNota.CANCELADO) {
+                    int confirm = JOptionPane.showConfirmDialog(null, "¿Está seguro de cancelar la nota? \nTodas las reparaciones se cancelaran", "Confirmar Cancelación", JOptionPane.YES_NO_OPTION);
+                    if (confirm != JOptionPane.YES_OPTION) return;
+                    for (Dispositivo dispositivo : notaN.getDispositivos()) {
+                        for (Reparacion reparacion : dispositivo.getReparaciones()) {
+                            reparacion.setEstado(Reparacion.EstadoReparacion.CANCELADO);
+                        }
+                    }
+                }
                 notaN.setEstado(estado);
                 actualizarNota(notaN);
                 runnable.run();
@@ -174,12 +183,14 @@ public class ControladorNota extends Controller {
     private void mostrarPantallaVisualizarReparaciones(List<Reparacion> reparaciones) {
         PanelModalInfoReparacion panelDetailRepair = new PanelModalInfoReparacion();
         panelDetailRepair.installEventUpdateStatusCardRepair((reparacion, refresh) -> {
+            Reparacion.EstadoReparacion[] estados = {Reparacion.EstadoReparacion.PENDIENTE, Reparacion.EstadoReparacion.EN_PROCESO, Reparacion.EstadoReparacion.LISTO_COBRAR, Reparacion.EstadoReparacion.CANCELADO};
             Reparacion.EstadoReparacion estado = (Reparacion.EstadoReparacion)
                     JOptionPane.showInputDialog(panelDetailRepair,
                             "Seleccione el nuevo estado",
                             "Actualizar Estado",
                             JOptionPane.QUESTION_MESSAGE,
-                            null, Reparacion.EstadoReparacion.values(), reparacion.getEstado());
+
+                            null, estados, null);
             if (estado == null) return;
             reparacion.setEstado(estado);
             actualizarReparacion(reparacion);
@@ -258,7 +269,6 @@ public class ControladorNota extends Controller {
                     Notify.getInstance().showToast(Toast.Type.WARNING, "Agregue al menos una reparación");
                     return;
                 }
-                log.info("Reparaciones: {}", panelAddReparacion.getRepairs());
                 value.setReparaciones(panelAddReparacion.getRepairs());
                 panelAddNota.addCardDevice(value);
                 panelAddDispositivo.cleanValue();
@@ -295,7 +305,7 @@ public class ControladorNota extends Controller {
         PoolThreads.getInstance().execute(() -> {
             List<Empleado> list = Collections.emptyList();
             try {
-                list = this.empleadoDao.findAll();
+                list = this.empleadoDao.findAllActive();
             } catch (Exception e) {
                 Notify.getInstance().showToast(Toast.Type.ERROR, "Error al obtener las empleados\n" + "Causa: " + e.getLocalizedMessage());
             }

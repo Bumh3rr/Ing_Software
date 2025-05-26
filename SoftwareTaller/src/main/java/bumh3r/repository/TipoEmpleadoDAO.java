@@ -4,25 +4,16 @@ package bumh3r.repository;
 import bumh3r.model.TipoEmpleado;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import lombok.Cleanup;
 
 public class TipoEmpleadoDAO {
 
     public List<TipoEmpleado> getList() {
-        EntityManager em = JPAUtil.getEntityManager();
-        try {
-            em.getTransaction().begin();
-            List<TipoEmpleado> tipoEmpleados = em.createQuery("SELECT e FROM TipoEmpleado e", TipoEmpleado.class).getResultList();
-            em.getTransaction().commit();
-            return tipoEmpleados;
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            e.printStackTrace();
-            throw e;
-        } finally {
-            em.close();
-        }
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return entityManager
+                .createQuery("SELECT e FROM TipoEmpleado e", TipoEmpleado.class)
+                .getResultList();
     }
 
 }

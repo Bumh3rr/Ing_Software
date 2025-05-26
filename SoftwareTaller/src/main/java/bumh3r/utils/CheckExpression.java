@@ -3,9 +3,8 @@ package bumh3r.utils;
 public class CheckExpression {
 
     public static boolean isNameValid(String input) {
-        return input.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]{3,}+$");
+        return input.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ_\\-\\s]{2,}+$");
     }
-
     public static boolean isValidAddress(String address) {
         return address.matches("^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\\s,\\-\\.\\#]+$");
     }

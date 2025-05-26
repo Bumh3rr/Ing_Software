@@ -42,10 +42,10 @@ public class AllFormsMain {
     }
 
     public static void formInit(Form form) {
-        SwingUtilities.invokeLater(() -> form.formInit());
+        SwingUtilities.invokeLater(form::formInit);
     }
 
     public static void formOpen(Form form) {
-        SwingUtilities.invokeLater(() -> form.formOpen());
+        SwingUtilities.invokeLater(form::formOpen);
     }
 }

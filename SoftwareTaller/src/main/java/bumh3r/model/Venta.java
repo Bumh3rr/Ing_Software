@@ -4,6 +4,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -33,19 +34,22 @@ public class Venta {
     private Long id;
     @CreationTimestamp
     private LocalDateTime fecha;
-    private Float precioTotal;
     @Enumerated(EnumType.STRING)
     private Estado estado;
+
+    private Float total;
+    private Float descuento;
+    private Float abono;
 
     @ManyToOne
     @JoinColumn(name = "nota_id")
     private Nota nota;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "venta_id")
-    private List<DetalleVenta> dispositivos;
+    private List<DetalleVenta> detalles;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "venta_id")
     private List<Pago> pagos;
 

@@ -101,8 +101,8 @@ public class ControladorInventario extends Controller {
                 registrarRefaccion(value);
             });
         }
-        if (panelAddRefaccion.getCategory().getItemCount() == 1) obtenerListCategoria();
-        if (panelAddRefaccion.getProveedor().getItemCount() == 1) obtenerListProveedor();
+        obtenerListCategoria();
+        obtenerListProveedor();
         showPanel(panelAddRefaccion, "Agregar nueva refacción", "ic_inventario.svg", ID, null, false);
     }
 
@@ -159,7 +159,7 @@ public class ControladorInventario extends Controller {
     public boolean validarDatosRefaccion(RefaccionRequest value) {
         // Datos requeridos
         Toast.closeAll();
-        if (CheckInput.isInvalidInput(value.nombre(), CheckExpression::isNameValid, "Nombre", "solo debe contener letras"))
+        if (CheckInput.isInvalidInput(value.nombre(), CheckExpression::isValidAddress, "Nombre", "solo debe contener letras"))
             return true;
         if (CheckInput.isNullInput(value.categoria(), "Categoria")) return true;
         if (CheckInput.isNullInput(value.stock(), "Stock")) return true;

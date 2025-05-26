@@ -3,6 +3,7 @@ package bumh3r.repository;
 import bumh3r.model.Proveedor;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import lombok.Cleanup;
 
 public class ProveedorDao {
     public Proveedor save(Proveedor proveedor) {
@@ -26,19 +27,10 @@ public class ProveedorDao {
     }
 
     public List<Proveedor> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-        try {
-            em.getTransaction().begin();
-            List<Proveedor> proveedores = em.createQuery("SELECT e FROM Proveedor e", Proveedor.class).getResultList();
-            em.getTransaction().commit();
-            return proveedores;
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            throw e;
-        } finally {
-            em.close();
-        }
+        @Cleanup
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        return entityManager
+                .createQuery("SELECT e FROM Proveedor e", Proveedor.class)
+                .getResultList();
     }
 }

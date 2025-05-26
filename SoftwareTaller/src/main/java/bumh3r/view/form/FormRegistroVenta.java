@@ -49,7 +49,7 @@ public class FormRegistroVenta extends Form {
 
     @Override
     public void formInit() {
-//        containerCards.installDependent1(this.controladorVentas.nn);
+        containerCards.installDependent1(this.controladorVentas.mostrarPantallaRegistroDeVenta());
         PoolThreads.getInstance().execute(getEventFormInit());
     }
 
@@ -61,6 +61,10 @@ public class FormRegistroVenta extends Form {
     public void installEventSearch(Runnable event) {
         search.addActionListener((x) -> event.run());
         input_search.addActionListener((x) -> event.run());
+    }
+
+    public void installEventFilterByDate(Runnable event) {
+        datePicker.addDateSelectionListener((x) -> event.run());
     }
 
     public FormRegistroVenta() {
@@ -101,4 +105,6 @@ public class FormRegistroVenta extends Form {
     public void addAllCards(List<Nota> list) {
         containerCards.addItemsAll(list);
     }
+
+
 }

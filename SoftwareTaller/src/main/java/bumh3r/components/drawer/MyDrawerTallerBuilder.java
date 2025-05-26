@@ -8,6 +8,7 @@ import bumh3r.view.form.*;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.util.Arrays;
 import javax.swing.JComponent;
+import lombok.extern.slf4j.Slf4j;
 import raven.modal.drawer.DrawerPanel;
 import raven.modal.drawer.data.Item;
 import raven.modal.drawer.data.MenuItem;
@@ -20,6 +21,7 @@ import raven.modal.drawer.simple.footer.SimpleFooterData;
 import raven.modal.drawer.simple.header.SimpleHeaderData;
 import raven.modal.option.Option;
 
+@Slf4j
 public class MyDrawerTallerBuilder extends SimpleDrawerBuilder {
 
     private final int SHADOW_SIZE = 12;
@@ -61,10 +63,8 @@ public class MyDrawerTallerBuilder extends SimpleDrawerBuilder {
                 new Item("Empleados", "employee.svg", FormEmployee.class),
                 new Item("Control Usuarios", "ic_users.svg", FormControlUsuario.class),
                 new Item("Cerrar Sesión", "logout.svg")
-
         };
         simpleMenuOption.setMenuStyle(new MenuStyle() {
-
             @Override
             public void styleMenu(JComponent component) {
                 component.putClientProperty(FlatClientProperties.STYLE, getDrawerBackgroundStyle());
@@ -76,6 +76,14 @@ public class MyDrawerTallerBuilder extends SimpleDrawerBuilder {
         simpleMenuOption.addMenuEvent((action,index)->{
             System.out.println("Drawer menu selected " + Arrays.toString(index));
             Class<?> itemClass = action.getItem().getItemClass();
+
+            if (index[0] == 7){
+                FormsManager.closeSession();
+                action.consume();
+                return;
+            }
+
+
             if (itemClass == null || !Form.class.isAssignableFrom(itemClass)) {
                 action.consume();
                 return;
@@ -94,7 +102,7 @@ public class MyDrawerTallerBuilder extends SimpleDrawerBuilder {
 
     @Override
     public int getDrawerWidth() {
-        return 220 + SHADOW_SIZE;
+        return 260 + SHADOW_SIZE;
     }
 
     @Override

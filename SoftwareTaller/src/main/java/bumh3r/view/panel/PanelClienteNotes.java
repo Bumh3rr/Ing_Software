@@ -19,7 +19,6 @@ public class PanelClienteNotes extends Panel {
 
     public PanelClienteNotes(Cliente cliente) {
         this.cliente = cliente;
-        log.info("Notas: {}", cliente.getNotas());
         initComponents();
         init();
     }
