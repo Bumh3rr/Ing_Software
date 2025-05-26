@@ -66,7 +66,10 @@ public class EmpleadoDAO {
         @Cleanup
         EntityManager entityManager = JPAUtil.getEntityManager();
         return entityManager
-                .createQuery("SELECT e FROM Empleado e LEFT JOIN Usuario u ON e.id = u.empleado.id WHERE u.empleado.id IS NULL AND e.isActivo = true", Empleado.class)
+                .createQuery("SELECT e FROM Empleado e " +
+                                "LEFT JOIN Usuario u ON e.id = u.empleado.id " +
+                                "WHERE u.empleado.id IS NULL AND e.isActivo = true AND e.tipoEmpleado.id != 2",
+                        Empleado.class)
                 .getResultList();
 
     }

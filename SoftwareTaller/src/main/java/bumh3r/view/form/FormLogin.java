@@ -4,15 +4,14 @@ import bumh3r.components.button.ButtonDefault;
 import bumh3r.components.input.InputPassword;
 import bumh3r.components.input.InputText;
 import bumh3r.controller.LoginController;
-import bumh3r.notifications.Notify;
 import bumh3r.request.UsuarioLogin;
 import bumh3r.system.form.Form;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import java.util.prefs.Preferences;
 import javax.swing.*;
 import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
-import raven.modal.Toast;
 
 import static bumh3r.utils.PathResources.Icon.modal;
 
@@ -26,10 +25,34 @@ public class FormLogin extends Form {
     private JLabel lbTitle;
     private JLabel description;
 
+    public void installEventLogin(Runnable runnable) {
+        loginButton.addActionListener(event -> runnable.run());
+        passwordField.addActionListener(event -> runnable.run());
+    }
 
     @Override
     public void installController() {
         new LoginController(this);
+    }
+
+    @Override
+    public void formInit() {
+        setValue();
+    }
+
+    @Override
+    public void formOpen() {
+        setValue();
+    }
+
+    public void setValue(){
+        Preferences preferences = Preferences.userRoot();
+        String userName = preferences.get("username", "");
+        String password = preferences.get("password", "");
+        boolean remember = preferences.getBoolean("remember", false);
+        userField.setText(userName);
+        passwordField.setText(password);
+        rememberBox.setSelected(remember);
     }
 
     public FormLogin() {
@@ -40,49 +63,20 @@ public class FormLogin extends Form {
     private void initComponents() {
         userField = new InputText("Ingresa tu Usuario", 45).setIcon(modal + "user_login.svg");
         passwordField = new InputPassword("Ingresa tu Contraseña", 45).setIcon(modal + "password.svg");
-
         rememberBox = new JCheckBox("Recordar");
         lbTitle = new JLabel("Inicio de Sesión");
         lbTitle.putClientProperty(FlatClientProperties.STYLE, ""
                 + "font:bold +15");
-        description = new JLabel("Por favor inicia sesión para acceder a tu cuenta") {
-            @Override
-            public void updateUI() {
-                putClientProperty(FlatClientProperties.STYLE, ""
-                        + "[light]foreground:lighten(@foreground,30%);"
-                        + "[dark]foreground:darken(@foreground,30%)");
-                super.updateUI();
-            }
-        };
+        description = new JLabel("Por favor inicia sesión para acceder a tu cuenta");
+        description.putClientProperty(FlatClientProperties.STYLE, ""
+                + "[light]foreground:lighten(@foreground,30%);"
+                + "[dark]foreground:darken(@foreground,30%)");
         loginButton = new ButtonDefault("Iniciar Sesión");
         loginButton.setHorizontalTextPosition(JButton.LEADING);
         loginButton.setIcon(new FlatSVGIcon(modal + "next.svg"));
         loginButton.putClientProperty(FlatClientProperties.STYLE, ""
                 + "foreground:#FFFFFF;"
                 + "iconTextGap:10;");
-    }
-
-    public UsuarioLogin getDataUsuarioLogin() {
-        Toast.closeAll();
-        if (verifyNotEmpty()) return null;
-
-        String userName = userField.getText().strip();
-        String password = String.valueOf(passwordField.getPassword());
-        boolean selected = rememberBox.isSelected();
-
-        return new UsuarioLogin(userName, password, selected);
-    }
-
-    private boolean verifyNotEmpty() {
-        if (userField.getText().isEmpty()) {
-            Notify.getInstance().showToast(Toast.Type.WARNING, "Es requerido el campo Usuario");
-            return true;
-        }
-        if (passwordField.getPassword().length == 0) {
-            Notify.getInstance().showToast(Toast.Type.WARNING, "Es requerido el campo Contraseña");
-            return true;
-        }
-        return false;
     }
 
     private void init() {
@@ -104,7 +98,14 @@ public class FormLogin extends Form {
         updateUI();
     }
 
-    public void cleanFields() {
+    public UsuarioLogin getValue() {
+        String userName = userField.getText().strip();
+        String password = String.valueOf(passwordField.getPassword());
+        boolean selected = rememberBox.isSelected();
+        return new UsuarioLogin(userName, password, selected);
+    }
+
+    public void cleanValue() {
         userField.setText("");
         passwordField.setText("");
         rememberBox.setSelected(false);

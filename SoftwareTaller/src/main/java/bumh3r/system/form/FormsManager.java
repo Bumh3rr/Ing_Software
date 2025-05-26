@@ -102,7 +102,7 @@ public class FormsManager {
             mainForm = null;
             FlatAnimatedLafChange.showSnapshot();
             FormLogin login = (FormLogin) AllFormsMain.getForm(FormLogin.class);
-            if (clean) login.cleanFields();
+            if (clean) login.cleanValue();
             login.formCheckUI();
             frame.getContentPane().removeAll();
             frame.getContentPane().add(login);

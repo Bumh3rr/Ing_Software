@@ -3,11 +3,12 @@ package bumh3r.repository;
 import bumh3r.model.Usuario;
 import jakarta.persistence.EntityManager;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.Cleanup;
 
 public class UsuarioDao {
 
-    public Usuario save(Usuario usuario)throws Exception {
+    public Usuario save(Usuario usuario) throws Exception {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             em.getTransaction().begin();
@@ -70,5 +71,14 @@ public class UsuarioDao {
         } finally {
             em.close();
         }
+    }
+
+    public Usuario verificarUsuario(String username, String password)throws Exception {
+        @Cleanup
+        EntityManager em = JPAUtil.getEntityManager();
+        return em.createQuery("SELECT u FROM Usuario u WHERE u.username = :username AND u.password = :password", Usuario.class)
+                .setParameter("username", username)
+                .setParameter("password", password)
+                .getSingleResult();
     }
 }

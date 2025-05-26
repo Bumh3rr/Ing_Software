@@ -43,12 +43,12 @@ public class ControladorInventario extends Controller {
     private void obtenerListaRefaccion() {
         Toast.closeAll();
         if (Toast.checkPromiseId(KEY)) return;
-        Notify.showPromise("Obteniendo las Refacciones ...",
+        Notify.showPromise("Obteniendo las Refacciones ..",
                 new ToastPromise(KEY) {
                     @Override
                     public void execute(PromiseCallback callback) {
                         try {
-                            callback.update("Obteniendo las Refacciones  ...");
+                            callback.update("Obteniendo las Refacciones ...");
                             List<Refaccion> list = refaccionDao.findAll();
                             if (list.isEmpty()) {
                                 callback.done(Toast.Type.WARNING, "No hay Refacciones registradas");

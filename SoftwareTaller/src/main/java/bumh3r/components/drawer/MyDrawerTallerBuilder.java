@@ -1,5 +1,7 @@
 package bumh3r.components.drawer;
 
+import bumh3r.notifications.Notify;
+import bumh3r.system.form.LoginContext;
 import bumh3r.utils.PathResources;
 import bumh3r.system.form.AllFormsMain;
 import bumh3r.system.form.Form;
@@ -9,6 +11,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import java.util.Arrays;
 import javax.swing.JComponent;
 import lombok.extern.slf4j.Slf4j;
+import raven.modal.Toast;
 import raven.modal.drawer.DrawerPanel;
 import raven.modal.drawer.data.Item;
 import raven.modal.drawer.data.MenuItem;
@@ -39,6 +42,7 @@ public class MyDrawerTallerBuilder extends SimpleDrawerBuilder {
                 .setTitle("Taller de Celulares")
                 .setDescription(null);
     }
+
     @Override
     public SimpleFooterData getSimpleFooterData() {
         return new SimpleFooterData()
@@ -73,16 +77,77 @@ public class MyDrawerTallerBuilder extends SimpleDrawerBuilder {
 
         simpleMenuOption.getMenuStyle().setDrawerLineStyleRenderer(new DrawerStraightDotLineStyle());
         simpleMenuOption.setMenuItemAutoSelectionMode(MenuOption.MenuItemAutoSelectionMode.SELECT_SUB_MENU_LEVEL);
-        simpleMenuOption.addMenuEvent((action,index)->{
+        simpleMenuOption.addMenuEvent((action, index) -> {
             System.out.println("Drawer menu selected " + Arrays.toString(index));
             Class<?> itemClass = action.getItem().getItemClass();
 
-            if (index[0] == 7){
-                FormsManager.closeSession();
-                action.consume();
-                return;
+            // Ventas
+            // Administrador y Gerente
+            if (index.length == 2) {
+                int in = index[0];
+                int jn = index[1];
+                if (in == 3) {
+                    if (jn == 0|| jn == 1) {
+                        if (LoginContext.getInstance().getUsuario().getEmpleado() != null){
+                            if (LoginContext.getInstance().getUsuario().getEmpleado().getTipoEmpleado().getId() != 1){
+                                Toast.closeAll();
+                                Notify.getInstance().showToast(Toast.Type.WARNING, "No tienes permisos para acceder a esta sección");
+                                action.consume();
+                                return;
+                            }
+                        }
+                    }
+                }
             }
 
+            // Notas y Clientes
+            // Recepcionista y Gerente
+            if (index[0] == 1 || index[0] == 4) {
+                if (LoginContext.getInstance().getUsuario().getEmpleado() != null){
+                    if (LoginContext.getInstance().getUsuario().getEmpleado().getTipoEmpleado().getId() != 1){
+                        Toast.closeAll();
+                        Notify.getInstance().showToast(Toast.Type.WARNING, "No tienes permisos para acceder a esta sección");
+                        action.consume();
+                        return;
+                    }
+                }
+            }
+
+
+            // Administración de Usuarios
+            // Solo el Administrador
+            if (index[0] == 6 || index[0] == 5) {
+                if (!LoginContext.getInstance().getUsuario().getIsAdmin()) {
+                    Notify.getInstance().showToast(Toast.Type.WARNING, "No tienes permisos para acceder a esta sección");
+                    action.consume();
+                    return;
+                }
+            }
+
+            // Inventario, Pedidos y Proveedor
+            // Solo el Administrador y Gerente
+            if (index.length == 2) {
+                int in = index[0];
+                int jn = index[1];
+                if (in == 2) {
+                    if (jn == 0|| jn == 1 || jn == 2) {
+                        if (LoginContext.getInstance().getUsuario().getEmpleado() != null){
+                            if (LoginContext.getInstance().getUsuario().getEmpleado().getTipoEmpleado().getId() != 3){
+                                Toast.closeAll();
+                                Notify.getInstance().showToast(Toast.Type.WARNING, "No tienes permisos para acceder a esta sección");
+                                action.consume();
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Cerrar Sesión
+            if (index[0] == 7) {
+                FormsManager.closeSession();
+                return;
+            }
 
             if (itemClass == null || !Form.class.isAssignableFrom(itemClass)) {
                 action.consume();
