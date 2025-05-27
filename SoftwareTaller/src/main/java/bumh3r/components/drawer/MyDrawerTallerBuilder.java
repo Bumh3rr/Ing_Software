@@ -57,7 +57,7 @@ public class MyDrawerTallerBuilder extends SimpleDrawerBuilder {
                 new Item("Inicio", "dashboard.svg", FormInicio.class),
                 new Item("Notas", "forms.svg", FormNotes.class),
                 new Item("Inventario", "ic_inventario.svg")
-                        .subMenu("Productos", FormInventario.class)
+                        .subMenu("Refacciones", FormInventario.class)
                         .subMenu("Pedidos", FormPedidos.class)
                         .subMenu("Proveedor", FormProveedor.class),
                 new Item("Ventas", "ic_sale.svg")

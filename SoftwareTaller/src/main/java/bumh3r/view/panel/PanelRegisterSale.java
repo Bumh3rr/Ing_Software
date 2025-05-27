@@ -87,7 +87,7 @@ public class PanelRegisterSale extends Panel {
         comboBoxMethodPago = new FlatComboBox<>();
         MetodoPago.addItemsMetodoPago(comboBoxMethodPago);
         inputDescuento = new InputFormattedDecimal(0);
-        inputMonto = new InputFormattedDecimal(0);
+        inputMonto = new InputFormattedDecimal(100000);
         precioTotal = new JLabel("$0.00");
         montoAbonado = new JLabel("$0.00");
         subTotal = new JLabel("$0.00");
@@ -229,7 +229,6 @@ public class PanelRegisterSale extends Panel {
             descuentoLabel.setText(String.format("$%.2f", descuento));
             montoAbonado.setText(String.format("$%.2f", abono));
             subTotal.setText(String.format("$%.2f", subTotalValue));
-            SwingUtilities.invokeLater(() -> inputMonto.setLimit(subTotalValue));
         });
     }
 

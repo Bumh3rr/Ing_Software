@@ -159,6 +159,10 @@ public class ControladorVentas extends Controller {
             }
             return false;
         }
+        if (value.pago().monto() > value.subTotal()) {
+            Notify.getInstance().showToast(Toast.Type.WARNING, "El monto del pago no puede ser mayor al subtotal");
+            return true;
+        }
         return false;
     }
 

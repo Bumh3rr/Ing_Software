@@ -64,8 +64,7 @@ public class FormEmployee extends Form {
         panel.putClientProperty(FlatClientProperties.STYLE, ""
                 + "background:null");
         panel.add(buttonAddEmployee, "grow 0,al trail");
-        panel.add(containerCards, "gapx 0 2,grow,push");
-        panel.add(containerCards.getPanelPaginacion(), "grow 0,gapy 0 5,al center");
+        panel.add(containerCards, "gapx 0 2,gapy 0 5,grow,push");
         return panel;
     }
 
