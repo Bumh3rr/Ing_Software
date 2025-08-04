@@ -412,7 +412,7 @@ insert into usuario(username,`password`,fecha_registro,isAdmin,empleado_id) valu
  ('admin','admin',now(),1,null);
 desc usuario;
 insert into tipo_empleado(nombre) values ("Recepcionista"),("Técnico"),("Gerente");
-insert into categoria(nombre) values ("Pantall"),("Bateria"),("Centro de Carga");
+insert into categoria(nombre) values ("Pantalla"),("Bateria"),("Centro de Carga");
 INSERT INTO metodo_pago (id, nombre) VALUES
 (1, 'Efectivo'),
 (2, 'Tarjeta de Crédito'),

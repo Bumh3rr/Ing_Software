@@ -230,6 +230,7 @@ public class ControladorNota extends Controller {
             });
             panelAddNota.installEventSearchCustomer(this::mostrarPantallaBuscarCliente);
             panelAddNota.installEventAddDevice(this::mostrarPantallaAgregarNuevoDispositivo);
+            panelAddNota.installEventCancelar(()->ModalDialog.closeModal(ID));
             panelAddNota.installEventDeleteDevice((dispositivo, runnable) -> panelAddNota.deleteCardDevice(dispositivo));
 
         }

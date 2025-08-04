@@ -71,8 +71,8 @@ public class MainForms extends JPanel {
         buttonRefresh.addActionListener(e -> FormsManager.refresh());
 
         toolBar.add(buttonDrawer);
-        toolBar.add(buttonUndo);
-        toolBar.add(buttonRedo);
+        //toolBar.add(buttonUndo);
+        //toolBar.add(buttonRedo);
         toolBar.add(buttonRefresh);
         panelControl.add(toolBar);
         return panelControl;

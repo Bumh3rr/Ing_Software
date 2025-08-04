@@ -92,8 +92,8 @@ public class FormLogin extends Form {
         panel.add(userField);
         panel.add(new JLabel("Contraseña"), "gapy 10 5");
         panel.add(passwordField);
-        panel.add(rememberBox);
-        panel.add(loginButton, "gapy 0 15");
+//        panel.add(rememberBox);
+        panel.add(loginButton, "gapy 8 15");
         add(panel);
         updateUI();
     }

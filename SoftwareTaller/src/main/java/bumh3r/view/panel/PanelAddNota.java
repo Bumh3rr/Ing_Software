@@ -58,6 +58,10 @@ public class PanelAddNota extends Panel {
         containerCards.installDependent1(event);
     }
 
+    public void installEventCancelar(Runnable event) {
+        buttonCancel.addActionListener((x)-> event.run());
+    }
+
     private void initComponents() {
         containerCards = new ContainerCards<>(CardDevice.class, new ResponsiveLayout(ResponsiveLayout.JustifyContent.FIT_CONTENT, new Dimension(-1, -1), -1, 10));
         precio = new JLabel("$ 0.0");
